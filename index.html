@@ -1364,10 +1364,10 @@
 
         <div style="font-family:'DM Mono',monospace;font-size:11px;color:#f5c842;margin-bottom:6px;">ME — ACORDES (segura cada um)</div>
         <div class="chord-row" style="flex-wrap:wrap;gap:8px;margin-bottom:16px;">
-          <div class="chord-card" onclick="buildKeyboard('kb-ntt-1',{F:{color:'teal'},A:{color:'teal'},C:{color:'teal'},'D#':{color:'red'}})"><div class="chord-name">F7</div></div>
-          <div class="chord-card" onclick="buildKeyboard('kb-ntt-1',{'A#':{color:'teal'},D:{color:'teal'},F:{color:'teal'},'G#':{color:'red'}})"><div class="chord-name">Bb7</div></div>
-          <div class="chord-card" onclick="buildKeyboard('kb-ntt-1',{G:{color:'purple'},B:{color:'yellow'},'A#':{color:'yellow'},D:{color:'teal'}})"><div class="chord-name">Gm7</div></div>
-          <div class="chord-card" onclick="buildKeyboard('kb-ntt-1',{C:{color:'teal'},E:{color:'teal'},G:{color:'teal'},'A#':{color:'red'}})"><div class="chord-name">C7</div></div>
+          <div class="chord-card" onclick="buildKeyboard('kb-ntt-1',{me:['F'],md:['F','A','C','Eb']})"><div class="chord-name">F7</div></div>
+          <div class="chord-card" onclick="buildKeyboard('kb-ntt-1',{me:['Bb'],md:['Bb','D','F','Ab']})"><div class="chord-name">Bb7</div></div>
+          <div class="chord-card" onclick="buildKeyboard('kb-ntt-1',{me:['G'],md:['G','Bb','D','F']})"><div class="chord-name">Gm7</div></div>
+          <div class="chord-card" onclick="buildKeyboard('kb-ntt-1',{me:['C'],md:['C','E','G','Bb']})"><div class="chord-name">C7</div></div>
         </div>
         <div class="keyboard-wrap"><div class="keyboard" id="kb-ntt-1"></div></div>
       </div>
@@ -1443,12 +1443,12 @@
 
         <div style="font-family:'DM Mono',monospace;font-size:11px;color:#f5c842;margin-bottom:6px;">ME — ACORDES (segura cada um)</div>
         <div class="chord-row" style="flex-wrap:wrap;gap:8px;margin-bottom:16px;">
-          <div class="chord-card" onclick="buildKeyboard('kb-bb-1',{F:{color:'teal'},A:{color:'teal'},C:{color:'teal'},'D#':{color:'red'}})"><div class="chord-name">F7</div></div>
-          <div class="chord-card" onclick="buildKeyboard('kb-bb-1',{'A#':{color:'teal'},D:{color:'teal'},F:{color:'teal'},'G#':{color:'red'}})"><div class="chord-name">Bb7</div></div>
-          <div class="chord-card" onclick="buildKeyboard('kb-bb-1',{G:{color:'purple'},B:{color:'yellow'},'A#':{color:'yellow'},D:{color:'teal'}})"><div class="chord-name">Gm7</div></div>
-          <div class="chord-card" onclick="buildKeyboard('kb-bb-1',{C:{color:'teal'},E:{color:'teal'},G:{color:'teal'},'A#':{color:'red'}})"><div class="chord-name">C7</div></div>
-          <div class="chord-card" onclick="buildKeyboard('kb-bb-1',{A:{color:'purple'},C:{color:'yellow'},E:{color:'teal'},G:{color:'yellow'}})"><div class="chord-name">Am7</div></div>
-          <div class="chord-card" onclick="buildKeyboard('kb-bb-1',{D:{color:'purple'},'F#':{color:'yellow'},A:{color:'teal'},C:{color:'red'}})"><div class="chord-name">D7b9</div></div>
+          <div class="chord-card" onclick="buildKeyboard('kb-bb-1',{me:['F'],md:['F','A','C','Eb']})"><div class="chord-name">F7</div></div>
+          <div class="chord-card" onclick="buildKeyboard('kb-bb-1',{me:['Bb'],md:['Bb','D','F','Ab']})"><div class="chord-name">Bb7</div></div>
+          <div class="chord-card" onclick="buildKeyboard('kb-bb-1',{me:['G'],md:['G','Bb','D','F']})"><div class="chord-name">Gm7</div></div>
+          <div class="chord-card" onclick="buildKeyboard('kb-bb-1',{me:['C'],md:['C','E','G','Bb']})"><div class="chord-name">C7</div></div>
+          <div class="chord-card" onclick="buildKeyboard('kb-bb-1',{me:['A'],md:['A','C','E','G']})"><div class="chord-name">Am7</div></div>
+          <div class="chord-card" onclick="buildKeyboard('kb-bb-1',{me:['D'],md:['D','F#','A','C']})"><div class="chord-name">D7b9</div></div>
         </div>
         <div class="keyboard-wrap"><div class="keyboard" id="kb-bb-1"></div></div>
 
@@ -1678,45 +1678,48 @@
 // =====================
 const NOTE_NAMES = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
 
+const _ALIASES = {Db:'C#',Eb:'D#',Gb:'F#',Ab:'G#',Bb:'A#'};
+function _norm(n){ return _ALIASES[n]||n; }
+
+// buildKeyboard(id, { me:['C','E','G'], md:['G','B','D','F'] })  ← novo padrão
+// buildKeyboard(id, { C:{color:'teal'}, ... })                   ← legado (escalas/penta)
 function buildKeyboard(containerId, highlights = {}) {
   const container = document.getElementById(containerId);
   if (!container) return;
   container.innerHTML = '';
 
-  // 2 octaves starting from C3
-  const startOctave = 3;
-  const numOctaves = 2;
-  const whiteKeys = ['C','D','E','F','G','A','B'];
-  const blackOffsets = { 'C#': 22, 'D#': 58, 'F#': 130, 'G#': 166, 'A#': 202 };
-
-  let whiteIndex = 0;
-  let octave = startOctave;
-  const whites = [];
-  const blacks = [];
-
-  for (let o = 0; o < numOctaves; o++) {
-    whiteKeys.forEach(note => {
-      whites.push({ note, octave: startOctave + o });
+  // Detecta novo padrão me/md
+  let hlMap = {};
+  if (highlights.me || highlights.md) {
+    (highlights.me||[]).forEach(n => { hlMap[_norm(n)+'3'] = {color:'yellow'}; });
+    (highlights.md||[]).forEach(n => { hlMap[_norm(n)+'4'] = {color:'blue'}; });
+  } else {
+    // legado: pinta por nome sem oitava (ambas oitavas)
+    Object.entries(highlights).forEach(([note, val]) => {
+      hlMap[_norm(note)+'3'] = val;
+      hlMap[_norm(note)+'4'] = val;
     });
   }
-  // Add final C
-  whites.push({ note: 'C', octave: startOctave + numOctaves });
+
+  const whiteKeys = ['C','D','E','F','G','A','B'];
+  const blackPositions = [{note:'C#',pos:22},{note:'D#',pos:58},{note:'F#',pos:130},{note:'G#',pos:166},{note:'A#',pos:202}];
+  const whites = [];
+  for (let o = 3; o <= 4; o++) whiteKeys.forEach(n => whites.push({note:n, oct:o}));
+  whites.push({note:'C', oct:5});
 
   const totalWidth = whites.length * 36;
   container.style.width = totalWidth + 'px';
   container.style.position = 'relative';
 
-  whites.forEach((w, i) => {
+  whites.forEach(w => {
     const key = document.createElement('div');
     key.className = 'key-white';
-    const hl = highlights[w.note];
+    const hl = hlMap[w.note + w.oct];
     if (hl) key.classList.add('hl-' + hl.color);
-
     const label = document.createElement('div');
     label.className = 'key-label';
-    label.textContent = w.note === 'C' ? w.note + w.octave : w.note;
+    label.textContent = w.note === 'C' ? w.note + w.oct : w.note;
     key.appendChild(label);
-
     if (hl && hl.finger) {
       const fn = document.createElement('div');
       fn.className = 'finger-num';
@@ -1727,34 +1730,18 @@ function buildKeyboard(containerId, highlights = {}) {
     container.appendChild(key);
   });
 
-  // Black keys
-  const blackPattern = [
-    { note:'C#', step: 0 }, { note:'D#', step: 1 },
-    null,
-    { note:'F#', step: 3 }, { note:'G#', step: 4 }, { note:'A#', step: 5 }
-  ];
-
-  for (let o = 0; o < numOctaves; o++) {
-    const octaveOffset = o * 7 * 36;
-    [
-      { note:'C#', pos: 22 },
-      { note:'D#', pos: 58 },
-      { note:'F#', pos: 130 },
-      { note:'G#', pos: 166 },
-      { note:'A#', pos: 202 }
-    ].forEach(b => {
+  for (let o = 3; o <= 4; o++) {
+    const octaveOffset = (o - 3) * 7 * 36;
+    blackPositions.forEach(b => {
       const key = document.createElement('div');
       key.className = 'key-black';
       key.style.left = (octaveOffset + b.pos) + 'px';
-
-      const hl = highlights[b.note];
+      const hl = hlMap[b.note + o];
       if (hl) key.classList.add('hl-' + hl.color);
-
       const label = document.createElement('div');
       label.className = 'key-label';
       label.textContent = b.note;
       key.appendChild(label);
-
       container.appendChild(key);
     });
   }
@@ -1792,22 +1779,21 @@ const SCALES = {
 };
 
 const JAZZ_CHORDS = {
-  // ME = amarelo (raiz), MD = azul (shell: 3ª + 7ª)
-  Dm7:   { D: { color:'yellow', finger:'ME' }, F: { color:'blue', finger:'1' }, C: { color:'blue', finger:'5' } },
-  G7:    { G: { color:'yellow', finger:'ME' }, B: { color:'blue', finger:'1' }, F: { color:'blue', finger:'5' } },
-  Cmaj7: { C: { color:'yellow', finger:'ME' }, E: { color:'blue', finger:'1' }, B: { color:'blue', finger:'5' } },
+  Dm7:   { me:['D'],   md:['D','F','A','C'] },
+  G7:    { me:['G'],   md:['G','B','D','F'] },
+  Cmaj7: { me:['C'],   md:['C','E','G','B'] },
 };
 
 const BLUES12_CHORDS = {
-  F7:  { F: { color:'teal' }, A: { color:'teal' }, C: { color:'teal' }, 'D#': { color:'red' } },
-  Bb7: { 'A#': { color:'teal' }, D: { color:'teal' }, F: { color:'teal' }, 'G#': { color:'red' } },
-  C7:  { C: { color:'teal' }, E: { color:'teal' }, G: { color:'teal' }, 'A#': { color:'red' } },
+  F7:  { me:['F'],  md:['F','A','C','Eb'] },
+  Bb7: { me:['Bb'], md:['Bb','D','F','Ab'] },
+  C7:  { me:['C'],  md:['C','E','G','Bb'] },
 };
 
 const GOSPEL_CHORDS = {
-  Gsus4: { G: { color:'yellow', finger:'ME' }, C: { color:'blue', finger:'1' }, D: { color:'blue', finger:'5' } },
-  G7:    { G: { color:'yellow', finger:'ME' }, B: { color:'blue', finger:'1' }, F: { color:'blue', finger:'5' } },
-  Cmaj7: { C: { color:'yellow', finger:'ME' }, E: { color:'blue', finger:'1' }, B: { color:'blue', finger:'5' } },
+  Gsus4: { me:['G'], md:['G','C','D'] },
+  G7:    { me:['G'], md:['G','B','D','F'] },
+  Cmaj7: { me:['C'], md:['C','E','G','B'] },
 };
 
 // =====================
@@ -1978,10 +1964,10 @@ function markDone(i) {
 // WORSHIP CHORDS
 // =====================
 const WORSHIP_CHORDS = {
-  Cmaj7w: { C:{color:'yellow',finger:'ME'}, E:{color:'blue',finger:'1'}, G:{color:'blue'}, B:{color:'blue',finger:'5'} },
-  G_open: { G:{color:'yellow',finger:'ME'}, B:{color:'blue',finger:'1'}, D:{color:'blue',finger:'5'} },
-  Am7w:   { A:{color:'yellow',finger:'ME'}, C:{color:'blue',finger:'1'}, G:{color:'blue',finger:'5'} },
-  Fmaj9w: { F:{color:'yellow',finger:'ME'}, A:{color:'blue',finger:'1'}, C:{color:'blue'}, G:{color:'blue',finger:'5'} },
+  Cmaj7w: { me:['C'], md:['C','E','G','B'] },
+  G_open: { me:['G'], md:['G','B','D'] },
+  Am7w:   { me:['A'], md:['A','C','E','G'] },
+  Fmaj9w: { me:['F'], md:['F','A','C','E','G'] },
 };
 function showWorshipChord(name) {
   buildKeyboard('kb-worship', WORSHIP_CHORDS[name] || {});
@@ -1994,12 +1980,12 @@ function showWorshipChord(name) {
 // GOSPEL/WORSHIP VOICINGS
 // =====================
 const GW_VOICINGS = {
-  Cmaj9:  { C:{color:'yellow',finger:'ME'}, E:{color:'blue',finger:'1'}, G:{color:'blue'}, B:{color:'blue'}, D:{color:'blue',finger:'5'} },
-  G9sus4: { G:{color:'yellow',finger:'ME'}, C:{color:'blue',finger:'1'}, D:{color:'blue'}, F:{color:'blue'}, A:{color:'blue',finger:'5'} },
-  Am9:    { A:{color:'yellow',finger:'ME'}, C:{color:'blue',finger:'1'}, E:{color:'blue'}, G:{color:'blue'}, B:{color:'blue',finger:'5'} },
-  Fmaj9:  { F:{color:'yellow',finger:'ME'}, A:{color:'blue',finger:'1'}, C:{color:'blue'}, E:{color:'blue'}, G:{color:'blue',finger:'5'} },
-  Dm11:   { D:{color:'yellow',finger:'ME'}, F:{color:'blue',finger:'1'}, A:{color:'blue'}, C:{color:'blue'}, G:{color:'blue',finger:'5'} },
-  C2:     { C:{color:'yellow',finger:'ME'}, E:{color:'blue',finger:'1'}, G:{color:'blue'}, D:{color:'blue',finger:'5'} },
+  Cmaj9:  { me:['C'], md:['C','E','G','B','D'] },
+  G9sus4: { me:['G'], md:['G','C','D','F','A'] },
+  Am9:    { me:['A'], md:['A','C','E','G','B'] },
+  Fmaj9:  { me:['F'], md:['F','A','C','E','G'] },
+  Dm11:   { me:['D'], md:['D','F','A','C','G'] },
+  C2:     { me:['C'], md:['C','E','G','D'] },
 };
 const GW_LABELS = {
   Cmaj9:  'Cmaj9 — C E G B D — som de resolução total, muito usado em finais de música',
@@ -2020,16 +2006,16 @@ function showGWVoicing(name, el) {
 // JUST THE TWO OF US
 // =====================
 const JTTOUS_CHORDS = {
-  Cmaj7:  { C:{color:'yellow',finger:'ME'}, E:{color:'blue',finger:'1'}, B:{color:'blue',finger:'5'} },
-  Em7:    { E:{color:'yellow',finger:'ME'}, G:{color:'blue',finger:'1'}, D:{color:'blue',finger:'5'} },
-  A7:     { A:{color:'yellow',finger:'ME'}, 'C#':{color:'blue',finger:'1'}, G:{color:'blue',finger:'5'} },
-  Dm7:    { D:{color:'yellow',finger:'ME'}, F:{color:'blue',finger:'1'}, C:{color:'blue',finger:'5'} },
-  G7:     { G:{color:'yellow',finger:'ME'}, B:{color:'blue',finger:'1'}, F:{color:'blue',finger:'5'} },
-  Dbmaj7: { 'C#':{color:'yellow',finger:'ME'}, F:{color:'blue',finger:'1'}, C:{color:'blue',finger:'5'} },
-  Fm7:    { F:{color:'yellow',finger:'ME'}, 'G#':{color:'blue',finger:'1'}, 'D#':{color:'blue',finger:'5'} },
-  Bb7:    { 'A#':{color:'yellow',finger:'ME'}, D:{color:'blue',finger:'1'}, 'G#':{color:'blue',finger:'5'} },
-  Ebm7:   { 'D#':{color:'yellow',finger:'ME'}, 'F#':{color:'blue',finger:'1'}, 'C#':{color:'blue',finger:'5'} },
-  Ab7:    { 'G#':{color:'yellow',finger:'ME'}, C:{color:'blue',finger:'1'}, 'F#':{color:'blue',finger:'5'} },
+  Cmaj7:  { me:['C'],  md:['C','E','G','B'] },
+  Em7:    { me:['E'],  md:['E','G','B','D'] },
+  A7:     { me:['A'],  md:['A','C#','E','G'] },
+  Dm7:    { me:['D'],  md:['D','F','A','C'] },
+  G7:     { me:['G'],  md:['G','B','D','F'] },
+  Dbmaj7: { me:['Db'], md:['Db','F','Ab','C'] },
+  Fm7:    { me:['F'],  md:['F','Ab','C','Eb'] },
+  Bb7:    { me:['Bb'], md:['Bb','D','F','Ab'] },
+  Ebm7:   { me:['Eb'], md:['Eb','Gb','Bb','Db'] },
+  Ab7:    { me:['Ab'], md:['Ab','C','Eb','Gb'] },
 };
 const JTTOUS_LABELS = {
   Cmaj7:  'Cmaj7 = ME: C | MD: E + B — I grau, resolução',
@@ -2237,75 +2223,26 @@ buildKeyboard('kb-improv', {
 // Open first block
 toggleBlock(0);
 
-// Build Charlie Parker keyboards
-buildKeyboard('kb-ntt-1', { C:{color:'teal'}, D:{color:'teal'}, F:{color:'teal'}, G:{color:'teal'}, A:{color:'teal'} });
-buildKeyboard('kb-bb-1', { C:{color:'teal'}, D:{color:'teal'}, F:{color:'teal'}, G:{color:'teal'}, A:{color:'yellow'}, 'C#':{color:'red'} });
+// Charlie Parker keyboards — init com primeiro acorde
+buildKeyboard('kb-ntt-1', {me:['F'], md:['F','A','C','Eb']});
+buildKeyboard('kb-bb-1',  {me:['F'], md:['F','A','C','Eb']});
 
-// FOLHA DE REFERÊNCIA — teclado com ME oitava 3 (amarelo) e MD oitava 4 (azul)
-function buildRefKb(id, meNotes, mdNotes) {
-  const aliases = {Db:'C#',Eb:'D#',Gb:'F#',Ab:'G#',Bb:'A#'};
-  const norm = n => aliases[n] || n;
-  const hl = {};
-  (meNotes||[]).forEach(n => { hl[norm(n) + '3'] = {color:'yellow'}; });
-  (mdNotes||[]).forEach(n => { hl[norm(n) + '4'] = {color:'blue'}; });
-  buildKbOctave(id, hl);
-}
-
-function buildKbOctave(containerId, highlights) {
-  const container = document.getElementById(containerId);
-  if (!container) return;
-  container.innerHTML = '';
-  const whiteKeys = ['C','D','E','F','G','A','B'];
-  const blackOffsets = { 'C#':22,'D#':58,'F#':130,'G#':166,'A#':202 };
-  const whites = [];
-  for (let o = 3; o <= 4; o++) whiteKeys.forEach(n => whites.push({note:n,oct:o}));
-  whites.push({note:'C',oct:5});
-  const totalWidth = whites.length * 36;
-  container.style.width = totalWidth + 'px';
-  container.style.position = 'relative';
-  whites.forEach((w, i) => {
-    const key = document.createElement('div');
-    key.className = 'key-white';
-    const k = w.note + w.oct;
-    if (highlights[k]) key.classList.add('hl-' + highlights[k].color);
-    const lbl = document.createElement('div');
-    lbl.className = 'key-label';
-    lbl.textContent = w.note === 'C' ? w.note + w.oct : w.note;
-    key.appendChild(lbl);
-    container.appendChild(key);
-  });
-  for (let o = 3; o <= 4; o++) {
-    const octaveOffset = (o - 3) * 7 * 36;
-    Object.entries(blackOffsets).forEach(([note, pos]) => {
-      const key = document.createElement('div');
-      key.className = 'key-black';
-      key.style.left = (octaveOffset + pos) + 'px';
-      const k = note + o;
-      if (highlights[k]) key.classList.add('hl-' + highlights[k].color);
-      const lbl = document.createElement('div');
-      lbl.className = 'key-label';
-      lbl.textContent = note;
-      key.appendChild(lbl);
-      container.appendChild(key);
-    });
-  }
-}
-
-buildRefKb('kb-ref-dm7',   ['D'], ['D','F','A','C']);
-buildRefKb('kb-ref-g7',    ['G'], ['G','B','D','F']);
-buildRefKb('kb-ref-cmaj7', ['C'], ['C','E','G','B']);
-buildRefKb('kb-ref-f7',    ['F'], ['F','A','C','Eb']);
-buildRefKb('kb-ref-bb7',   ['Bb'],['Bb','D','F','Ab']);
-buildRefKb('kb-ref-c7',    ['C'], ['C','E','G','Bb']);
-buildRefKb('kb-ref-cmaj9', ['C'], ['C','E','G','B','D']);
-buildRefKb('kb-ref-g9sus4',['G'], ['G','C','D','F','A']);
-buildRefKb('kb-ref-am9',   ['A'], ['A','C','E','G','B']);
-buildRefKb('kb-ref-fmaj9', ['F'], ['F','A','C','E','G']);
-buildRefKb('kb-ref-dbmaj7',['Db'],['Db','F','Ab','C']);
-buildRefKb('kb-ref-fm7',   ['F'], ['F','Ab','C','Eb']);
-buildRefKb('kb-ref-ebm7',  ['Eb'],['Eb','Gb','Bb','Db']);
-buildRefKb('kb-ref-ab7',   ['Ab'],['Ab','C','Eb','Gb']);
-buildKeyboard('kb-ref-blues-f', { F:{color:'teal'}, 'G#':{color:'teal'}, 'A#':{color:'teal'}, B:{color:'red'}, C:{color:'teal'}, 'D#':{color:'teal'} });
+// Folha de Referência
+buildKeyboard('kb-ref-dm7',    {me:['D'],  md:['D','F','A','C']});
+buildKeyboard('kb-ref-g7',     {me:['G'],  md:['G','B','D','F']});
+buildKeyboard('kb-ref-cmaj7',  {me:['C'],  md:['C','E','G','B']});
+buildKeyboard('kb-ref-f7',     {me:['F'],  md:['F','A','C','Eb']});
+buildKeyboard('kb-ref-bb7',    {me:['Bb'], md:['Bb','D','F','Ab']});
+buildKeyboard('kb-ref-c7',     {me:['C'],  md:['C','E','G','Bb']});
+buildKeyboard('kb-ref-cmaj9',  {me:['C'],  md:['C','E','G','B','D']});
+buildKeyboard('kb-ref-g9sus4', {me:['G'],  md:['G','C','D','F','A']});
+buildKeyboard('kb-ref-am9',    {me:['A'],  md:['A','C','E','G','B']});
+buildKeyboard('kb-ref-fmaj9',  {me:['F'],  md:['F','A','C','E','G']});
+buildKeyboard('kb-ref-dbmaj7', {me:['Db'], md:['Db','F','Ab','C']});
+buildKeyboard('kb-ref-fm7',    {me:['F'],  md:['F','Ab','C','Eb']});
+buildKeyboard('kb-ref-ebm7',   {me:['Eb'], md:['Eb','Gb','Bb','Db']});
+buildKeyboard('kb-ref-ab7',    {me:['Ab'], md:['Ab','C','Eb','Gb']});
+buildKeyboard('kb-ref-blues-f', {F:{color:'teal'}, 'G#':{color:'teal'}, 'A#':{color:'teal'}, B:{color:'red'}, C:{color:'teal'}, 'D#':{color:'teal'}});
 </script>
 </body>
 </html>
