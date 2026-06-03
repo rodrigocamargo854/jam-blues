@@ -1931,6 +1931,7 @@ const BLOCKS = [
   { label: '08 GW Voicings' },
   { label: '09 Pentatônicas' },
   { label: '10 Improv' },
+  { label: '📄 Referência', id: 'ref' },
 ];
 const done = new Array(BLOCKS.length).fill(false);
 
@@ -1941,7 +1942,8 @@ function buildProgress() {
     const p = document.createElement('div');
     p.className = 'pill' + (done[i] ? ' done' : '');
     p.textContent = (done[i] ? '✓ ' : '') + b.label;
-    p.onclick = () => toggleBlock(i);
+    const blockId = b.id !== undefined ? b.id : i;
+    p.onclick = () => toggleBlock(blockId);
     p.id = 'pill-' + i;
     row.appendChild(p);
   });
@@ -2239,22 +2241,71 @@ toggleBlock(0);
 buildKeyboard('kb-ntt-1', { C:{color:'teal'}, D:{color:'teal'}, F:{color:'teal'}, G:{color:'teal'}, A:{color:'teal'} });
 buildKeyboard('kb-bb-1', { C:{color:'teal'}, D:{color:'teal'}, F:{color:'teal'}, G:{color:'teal'}, A:{color:'yellow'}, 'C#':{color:'red'} });
 
-// FOLHA DE REFERÊNCIA — teclados
-buildKeyboard('kb-ref-dm7',   { D:{color:'yellow'}, F:{color:'blue'}, A:{color:'blue'}, C:{color:'blue'} });
-buildKeyboard('kb-ref-g7',    { G:{color:'yellow'}, B:{color:'blue'}, D:{color:'blue'}, F:{color:'blue'} });
-buildKeyboard('kb-ref-cmaj7', { C:{color:'yellow'}, E:{color:'blue'}, G:{color:'blue'}, B:{color:'blue'} });
-buildKeyboard('kb-ref-f7',    { F:{color:'yellow'}, A:{color:'blue'}, C:{color:'blue'}, 'D#':{color:'blue'} });
-buildKeyboard('kb-ref-bb7',   { 'A#':{color:'yellow'}, D:{color:'blue'}, F:{color:'blue'}, 'G#':{color:'blue'} });
-buildKeyboard('kb-ref-c7',    { C:{color:'yellow'}, E:{color:'blue'}, G:{color:'blue'}, 'A#':{color:'blue'} });
-buildKeyboard('kb-ref-cmaj9', { C:{color:'yellow'}, E:{color:'blue'}, G:{color:'blue'}, B:{color:'blue'}, D:{color:'blue'} });
-buildKeyboard('kb-ref-g9sus4',{ G:{color:'yellow'}, C:{color:'blue'}, D:{color:'blue'}, F:{color:'blue'}, A:{color:'blue'} });
-buildKeyboard('kb-ref-am9',   { A:{color:'yellow'}, C:{color:'blue'}, E:{color:'blue'}, G:{color:'blue'}, B:{color:'blue'} });
-buildKeyboard('kb-ref-fmaj9', { F:{color:'yellow'}, A:{color:'blue'}, C:{color:'blue'}, E:{color:'blue'}, G:{color:'blue'} });
-buildKeyboard('kb-ref-dbmaj7',{ 'C#':{color:'yellow'}, F:{color:'blue'}, 'G#':{color:'blue'}, C:{color:'blue'} });
-buildKeyboard('kb-ref-fm7',   { F:{color:'yellow'}, 'G#':{color:'blue'}, C:{color:'blue'}, 'D#':{color:'blue'} });
-buildKeyboard('kb-ref-ebm7',  { 'D#':{color:'yellow'}, 'F#':{color:'blue'}, 'A#':{color:'blue'}, 'C#':{color:'blue'} });
-buildKeyboard('kb-ref-ab7',   { 'G#':{color:'yellow'}, C:{color:'blue'}, 'D#':{color:'blue'}, 'F#':{color:'blue'} });
-buildKeyboard('kb-ref-blues-f',{ F:{color:'teal'}, 'G#':{color:'teal'}, 'A#':{color:'teal'}, B:{color:'red'}, C:{color:'teal'}, 'D#':{color:'teal'} });
+// FOLHA DE REFERÊNCIA — teclado com ME oitava 3 (amarelo) e MD oitava 4 (azul)
+function buildRefKb(id, meNotes, mdNotes) {
+  const aliases = {Db:'C#',Eb:'D#',Gb:'F#',Ab:'G#',Bb:'A#'};
+  const norm = n => aliases[n] || n;
+  const hl = {};
+  (meNotes||[]).forEach(n => { hl[norm(n) + '3'] = {color:'yellow'}; });
+  (mdNotes||[]).forEach(n => { hl[norm(n) + '4'] = {color:'blue'}; });
+  buildKbOctave(id, hl);
+}
+
+function buildKbOctave(containerId, highlights) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  container.innerHTML = '';
+  const whiteKeys = ['C','D','E','F','G','A','B'];
+  const blackOffsets = { 'C#':22,'D#':58,'F#':130,'G#':166,'A#':202 };
+  const whites = [];
+  for (let o = 3; o <= 4; o++) whiteKeys.forEach(n => whites.push({note:n,oct:o}));
+  whites.push({note:'C',oct:5});
+  const totalWidth = whites.length * 36;
+  container.style.width = totalWidth + 'px';
+  container.style.position = 'relative';
+  whites.forEach((w, i) => {
+    const key = document.createElement('div');
+    key.className = 'key-white';
+    const k = w.note + w.oct;
+    if (highlights[k]) key.classList.add('hl-' + highlights[k].color);
+    const lbl = document.createElement('div');
+    lbl.className = 'key-label';
+    lbl.textContent = w.note === 'C' ? w.note + w.oct : w.note;
+    key.appendChild(lbl);
+    container.appendChild(key);
+  });
+  for (let o = 3; o <= 4; o++) {
+    const octaveOffset = (o - 3) * 7 * 36;
+    Object.entries(blackOffsets).forEach(([note, pos]) => {
+      const key = document.createElement('div');
+      key.className = 'key-black';
+      key.style.left = (octaveOffset + pos) + 'px';
+      const k = note + o;
+      if (highlights[k]) key.classList.add('hl-' + highlights[k].color);
+      const lbl = document.createElement('div');
+      lbl.className = 'key-label';
+      lbl.textContent = note;
+      key.appendChild(lbl);
+      container.appendChild(key);
+    });
+  }
+}
+
+buildRefKb('kb-ref-dm7',   ['D'], ['D','F','A','C']);
+buildRefKb('kb-ref-g7',    ['G'], ['G','B','D','F']);
+buildRefKb('kb-ref-cmaj7', ['C'], ['C','E','G','B']);
+buildRefKb('kb-ref-f7',    ['F'], ['F','A','C','Eb']);
+buildRefKb('kb-ref-bb7',   ['Bb'],['Bb','D','F','Ab']);
+buildRefKb('kb-ref-c7',    ['C'], ['C','E','G','Bb']);
+buildRefKb('kb-ref-cmaj9', ['C'], ['C','E','G','B','D']);
+buildRefKb('kb-ref-g9sus4',['G'], ['G','C','D','F','A']);
+buildRefKb('kb-ref-am9',   ['A'], ['A','C','E','G','B']);
+buildRefKb('kb-ref-fmaj9', ['F'], ['F','A','C','E','G']);
+buildRefKb('kb-ref-dbmaj7',['Db'],['Db','F','Ab','C']);
+buildRefKb('kb-ref-fm7',   ['F'], ['F','Ab','C','Eb']);
+buildRefKb('kb-ref-ebm7',  ['Eb'],['Eb','Gb','Bb','Db']);
+buildRefKb('kb-ref-ab7',   ['Ab'],['Ab','C','Eb','Gb']);
+buildKeyboard('kb-ref-blues-f', { F:{color:'teal'}, 'G#':{color:'teal'}, 'A#':{color:'teal'}, B:{color:'red'}, C:{color:'teal'}, 'D#':{color:'teal'} });
 </script>
 </body>
 </html>
