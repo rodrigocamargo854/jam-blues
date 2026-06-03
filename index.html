@@ -209,6 +209,13 @@
     width: fit-content;
     user-select: none;
   }
+  @media (max-width: 600px) {
+    .keyboard { height: 72px; min-width: unset; }
+    .key-white { width: 22px !important; height: 72px !important; }
+    .key-black { width: 14px !important; height: 44px !important; }
+    .key-label { font-size: 7px !important; }
+    .finger-num { font-size: 10px !important; bottom: 12px !important; }
+  }
   .key-white {
     width: 36px;
     height: 110px;
@@ -310,7 +317,7 @@
   .chord-card:hover { border-color: var(--accent); }
   .chord-card.selected { border-color: var(--accent); background: #f5c84211; }
   .chord-name { font-size: 16px; color: var(--accent); font-weight: 500; }
-  .chord-notes { font-size: 11px; color: var(--muted); margin-top: 3px; }
+  .chord-notes { font-size: 11px; color: #ccc; margin-top: 3px; }
   .chord-hand { font-size: 10px; color: #555; margin-top: 2px; letter-spacing: 1px; }
 
   /* PROGRESSÃO */
@@ -1703,19 +1710,35 @@ function buildKeyboard(containerId, highlights = {}) {
     });
   }
 
+  const isMobile = window.innerWidth <= 600;
+  const ww = isMobile ? 22 : 36;
+  const bw = isMobile ? 14 : 22;
+  const kh = isMobile ? 72 : 110;
+  const bh = isMobile ? 44 : 68;
+
   const whiteKeys = ['C','D','E','F','G','A','B'];
-  const blackPositions = [{note:'C#',pos:22},{note:'D#',pos:58},{note:'F#',pos:130},{note:'G#',pos:166},{note:'A#',pos:202}];
+  // posições relativas das pretas dentro de uma oitava (baseado em ww)
+  const blackOffsets = [
+    {note:'C#', idx:0.6},
+    {note:'D#', idx:1.6},
+    {note:'F#', idx:3.6},
+    {note:'G#', idx:4.6},
+    {note:'A#', idx:5.6},
+  ];
   const whites = [];
   for (let o = 3; o <= 4; o++) whiteKeys.forEach(n => whites.push({note:n, oct:o}));
   whites.push({note:'C', oct:5});
 
-  const totalWidth = whites.length * 36;
+  const totalWidth = whites.length * ww;
   container.style.width = totalWidth + 'px';
+  container.style.height = kh + 'px';
   container.style.position = 'relative';
 
   whites.forEach(w => {
     const key = document.createElement('div');
     key.className = 'key-white';
+    key.style.width = ww + 'px';
+    key.style.height = kh + 'px';
     const hl = hlMap[w.note + w.oct];
     if (hl) key.classList.add('hl-' + hl.color);
     const label = document.createElement('div');
@@ -1733,11 +1756,13 @@ function buildKeyboard(containerId, highlights = {}) {
   });
 
   for (let o = 3; o <= 4; o++) {
-    const octaveOffset = (o - 3) * 7 * 36;
-    blackPositions.forEach(b => {
+    const octaveOffset = (o - 3) * 7 * ww;
+    blackOffsets.forEach(b => {
       const key = document.createElement('div');
       key.className = 'key-black';
-      key.style.left = (octaveOffset + b.pos) + 'px';
+      key.style.width = bw + 'px';
+      key.style.height = bh + 'px';
+      key.style.left = (octaveOffset + b.idx * ww) + 'px';
       const hl = hlMap[b.note + o];
       if (hl) key.classList.add('hl-' + hl.color);
       const label = document.createElement('div');
