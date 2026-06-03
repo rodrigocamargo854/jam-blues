@@ -1482,9 +1482,14 @@
     </div>
     <div class="block-body" id="body-ref">
 
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#f5c842"></div> ME — Mão Esquerda (raiz)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#4a9eff"></div> MD — Mão Direita (acorde)</div>
+      </div>
+
       <!-- 2-5-1 JAZZ -->
-      <div class="section-divider">2-5-1 Jazz — Tom de Dó</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
+      <div class="section-divider" style="font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px;color:var(--accent);margin:16px 0 8px;border-bottom:1px solid var(--border);padding-bottom:4px;">2-5-1 Jazz — Tom de Dó</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
         <span class="prog-chord">Dm7</span>
         <span style="color:#666;align-self:center;">→</span>
         <span class="prog-chord">G7</span>
@@ -1492,25 +1497,28 @@
         <span class="prog-chord">Cmaj7</span>
         <span style="color:#666;align-self:center;font-size:11px;">→ repete</span>
       </div>
-      <div class="chord-row">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:8px;">
         <div class="chord-card">
           <div class="chord-name">Dm7</div>
           <div class="chord-notes">ME: D &nbsp;|&nbsp; MD: D F A C</div>
+          <div class="keyboard-wrap" style="margin-top:8px;"><div class="keyboard" id="kb-ref-dm7"></div></div>
         </div>
         <div class="chord-card">
           <div class="chord-name">G7</div>
           <div class="chord-notes">ME: G &nbsp;|&nbsp; MD: G B D F</div>
+          <div class="keyboard-wrap" style="margin-top:8px;"><div class="keyboard" id="kb-ref-g7"></div></div>
         </div>
         <div class="chord-card">
           <div class="chord-name">Cmaj7</div>
           <div class="chord-notes">ME: C &nbsp;|&nbsp; MD: C E G B</div>
+          <div class="keyboard-wrap" style="margin-top:8px;"><div class="keyboard" id="kb-ref-cmaj7"></div></div>
         </div>
       </div>
       <div class="tip-box">💡 Dedilhado MD: dedo 1 (polegar) na nota mais grave, dedos 2-3-5 nas demais. ME: dedo 5 na raiz grave. Segura 2 tempos cada acorde.</div>
 
       <!-- BLUES 12 COMPASSOS -->
-      <div class="section-divider">Blues 12 Compassos — Tom de Fá</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
+      <div class="section-divider" style="font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px;color:var(--accent);margin:16px 0 8px;border-bottom:1px solid var(--border);padding-bottom:4px;">Blues 12 Compassos — Tom de Fá</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
         <span class="prog-chord">F7</span>
         <span style="color:#666;align-self:center;">→</span>
         <span class="prog-chord">Bb7</span>
@@ -1518,25 +1526,28 @@
         <span class="prog-chord">C7</span>
         <span style="color:#666;align-self:center;font-size:11px;">→ repete</span>
       </div>
-      <div class="chord-row">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:8px;">
         <div class="chord-card">
           <div class="chord-name">F7</div>
           <div class="chord-notes">ME: F &nbsp;|&nbsp; MD: F A C Eb</div>
+          <div class="keyboard-wrap" style="margin-top:8px;"><div class="keyboard" id="kb-ref-f7"></div></div>
         </div>
         <div class="chord-card">
           <div class="chord-name">Bb7</div>
           <div class="chord-notes">ME: Bb &nbsp;|&nbsp; MD: Bb D F Ab</div>
+          <div class="keyboard-wrap" style="margin-top:8px;"><div class="keyboard" id="kb-ref-bb7"></div></div>
         </div>
         <div class="chord-card">
           <div class="chord-name">C7</div>
           <div class="chord-notes">ME: C &nbsp;|&nbsp; MD: C E G Bb</div>
+          <div class="keyboard-wrap" style="margin-top:8px;"><div class="keyboard" id="kb-ref-c7"></div></div>
         </div>
       </div>
       <div class="tip-box">💡 ME faz shuffle: tum-ca-tum-ca. MD improvisa com escala blues de Fá: F Ab Bb B C Eb. Começa a 60 BPM.</div>
 
       <!-- GOSPEL / WORSHIP -->
-      <div class="section-divider">Gospel / Worship — Tom de Dó &nbsp; (I–V–vi–IV)</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
+      <div class="section-divider" style="font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px;color:var(--accent);margin:16px 0 8px;border-bottom:1px solid var(--border);padding-bottom:4px;">Gospel / Worship — Dó (I–V–vi–IV)</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
         <span class="prog-chord">Cmaj9</span>
         <span style="color:#666;align-self:center;">→</span>
         <span class="prog-chord">G9sus4</span>
@@ -1545,47 +1556,64 @@
         <span style="color:#666;align-self:center;">→</span>
         <span class="prog-chord">Fmaj9</span>
       </div>
-      <div class="chord-row">
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:8px;">
         <div class="chord-card">
           <div class="chord-name">Cmaj9</div>
           <div class="chord-notes">ME: C &nbsp;|&nbsp; MD: C E G B D</div>
+          <div class="keyboard-wrap" style="margin-top:8px;"><div class="keyboard" id="kb-ref-cmaj9"></div></div>
         </div>
         <div class="chord-card">
           <div class="chord-name">G9sus4</div>
           <div class="chord-notes">ME: G &nbsp;|&nbsp; MD: G C D F A</div>
+          <div class="keyboard-wrap" style="margin-top:8px;"><div class="keyboard" id="kb-ref-g9sus4"></div></div>
         </div>
         <div class="chord-card">
           <div class="chord-name">Am9</div>
           <div class="chord-notes">ME: A &nbsp;|&nbsp; MD: A C E G B</div>
+          <div class="keyboard-wrap" style="margin-top:8px;"><div class="keyboard" id="kb-ref-am9"></div></div>
         </div>
         <div class="chord-card">
           <div class="chord-name">Fmaj9</div>
           <div class="chord-notes">ME: F &nbsp;|&nbsp; MD: F A C E G</div>
+          <div class="keyboard-wrap" style="margin-top:8px;"><div class="keyboard" id="kb-ref-fmaj9"></div></div>
         </div>
       </div>
       <div class="tip-box">💡 Timbre: Electric Piano + Reverb Hall 14. Toca bem devagar, notas longas. Estilo Sounds of Home.</div>
 
       <!-- JUST THE TWO OF US -->
-      <div class="section-divider">Just The Two Of Us — Tom de Db</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
-        <span class="prog-chord">Dbmaj7</span>
-        <span style="color:#666;align-self:center;">→</span>
-        <span class="prog-chord">Fm7</span>
-        <span style="color:#666;align-self:center;">→</span>
-        <span class="prog-chord">Bb7</span>
-        <span style="color:#666;align-self:center;">→</span>
-        <span class="prog-chord">Ebm7</span>
-        <span style="color:#666;align-self:center;">→</span>
+      <div class="section-divider" style="font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px;color:var(--accent);margin:16px 0 8px;border-bottom:1px solid var(--border);padding-bottom:4px;">Just The Two Of Us — Tom de Db</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+        <span class="prog-chord">Dbmaj7</span><span style="color:#666;align-self:center;">→</span>
+        <span class="prog-chord">Fm7</span><span style="color:#666;align-self:center;">→</span>
+        <span class="prog-chord">Bb7</span><span style="color:#666;align-self:center;">→</span>
+        <span class="prog-chord">Ebm7</span><span style="color:#666;align-self:center;">→</span>
         <span class="prog-chord">Ab7</span>
       </div>
-      <div class="tip-box">
-        💡 Notas de cada acorde:<br>
-        Dbmaj7 = Db F Ab C &nbsp;·&nbsp; Fm7 = F Ab C Eb &nbsp;·&nbsp; Bb7 = Bb D F Ab<br>
-        Ebm7 = Eb Gb Bb Db &nbsp;·&nbsp; Ab7 = Ab C Eb Gb
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:8px;">
+        <div class="chord-card">
+          <div class="chord-name">Dbmaj7</div>
+          <div class="chord-notes">ME: Db &nbsp;|&nbsp; MD: Db F Ab C</div>
+          <div class="keyboard-wrap" style="margin-top:8px;"><div class="keyboard" id="kb-ref-dbmaj7"></div></div>
+        </div>
+        <div class="chord-card">
+          <div class="chord-name">Fm7</div>
+          <div class="chord-notes">ME: F &nbsp;|&nbsp; MD: F Ab C Eb</div>
+          <div class="keyboard-wrap" style="margin-top:8px;"><div class="keyboard" id="kb-ref-fm7"></div></div>
+        </div>
+        <div class="chord-card">
+          <div class="chord-name">Ebm7</div>
+          <div class="chord-notes">ME: Eb &nbsp;|&nbsp; MD: Eb Gb Bb Db</div>
+          <div class="keyboard-wrap" style="margin-top:8px;"><div class="keyboard" id="kb-ref-ebm7"></div></div>
+        </div>
+        <div class="chord-card">
+          <div class="chord-name">Ab7</div>
+          <div class="chord-notes">ME: Ab &nbsp;|&nbsp; MD: Ab C Eb Gb</div>
+          <div class="keyboard-wrap" style="margin-top:8px;"><div class="keyboard" id="kb-ref-ab7"></div></div>
+        </div>
       </div>
 
       <!-- ESCALAS -->
-      <div class="section-divider">Pentatônicas Maiores</div>
+      <div class="section-divider" style="font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px;color:var(--accent);margin:16px 0 8px;border-bottom:1px solid var(--border);padding-bottom:4px;">Pentatônicas Maiores</div>
       <div class="chord-row">
         <div class="chord-card"><div class="chord-name" style="color:#4ecdc4">C maior</div><div class="chord-notes">C — D — E — G — A</div></div>
         <div class="chord-card"><div class="chord-name" style="color:#4ecdc4">F maior</div><div class="chord-notes">F — G — A — C — D</div></div>
@@ -1593,29 +1621,33 @@
         <div class="chord-card"><div class="chord-name" style="color:#4ecdc4">D maior</div><div class="chord-notes">D — E — F# — A — B</div></div>
       </div>
 
-      <div class="section-divider">Pentatônicas Menores</div>
+      <div class="section-divider" style="font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px;color:var(--accent);margin:16px 0 8px;border-bottom:1px solid var(--border);padding-bottom:4px;">Pentatônicas Menores</div>
       <div class="chord-row">
         <div class="chord-card"><div class="chord-name" style="color:#a78bfa">Am menor</div><div class="chord-notes">A — C — D — E — G</div></div>
         <div class="chord-card"><div class="chord-name" style="color:#a78bfa">Dm menor</div><div class="chord-notes">D — F — G — A — C</div></div>
         <div class="chord-card"><div class="chord-name" style="color:#a78bfa">Em menor</div><div class="chord-notes">E — G — A — B — D</div></div>
       </div>
 
-      <div class="section-divider">Escala Blues de Fá</div>
+      <div class="section-divider" style="font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px;color:var(--accent);margin:16px 0 8px;border-bottom:1px solid var(--border);padding-bottom:4px;">Escala Blues de Fá</div>
       <div class="chord-row">
-        <div class="chord-card"><div class="chord-name" style="color:#ff6b6b">Blues F</div><div class="chord-notes">F — Ab — Bb — B — C — Eb</div></div>
+        <div class="chord-card">
+          <div class="chord-name" style="color:#ff6b6b">Blues F</div>
+          <div class="chord-notes">F — Ab — Bb — B — C — Eb</div>
+          <div class="keyboard-wrap" style="margin-top:8px;"><div class="keyboard" id="kb-ref-blues-f"></div></div>
+        </div>
       </div>
 
       <!-- ARPEJOS -->
-      <div class="section-divider">Arpejos — Como Usar</div>
+      <div class="section-divider" style="font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px;color:var(--accent);margin:16px 0 8px;border-bottom:1px solid var(--border);padding-bottom:4px;">Arpejos — Como Usar</div>
       <div class="chord-row">
-        <div class="chord-card"><div class="chord-name">Gmaj7 ↑</div><div class="chord-notes">G — B — D — F# &nbsp;→ sobe</div></div>
-        <div class="chord-card"><div class="chord-name">Gmaj7 ↓</div><div class="chord-notes">F# — D — B — G &nbsp;→ desce</div></div>
+        <div class="chord-card"><div class="chord-name">Gmaj7 ↑</div><div class="chord-notes">G — B — D — F#</div></div>
+        <div class="chord-card"><div class="chord-name">Gmaj7 ↓</div><div class="chord-notes">F# — D — B — G</div></div>
         <div class="chord-card"><div class="chord-name">Cmaj7 ↑↓</div><div class="chord-notes">C — E — G — B — G — E — C</div></div>
       </div>
-      <div class="tip-box">💡 Regra do arpejo: ME segura a raiz grave — MD toca as notas do acorde uma por uma, devagar com reverb. Funciona com qualquer acorde.</div>
+      <div class="tip-box">💡 ME segura a raiz grave — MD toca as notas do acorde uma por uma, devagar com reverb. Funciona com qualquer acorde.</div>
 
       <!-- DEDILHADO -->
-      <div class="section-divider">Dedilhado MD — Regra Geral</div>
+      <div class="section-divider" style="font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px;color:var(--accent);margin:16px 0 8px;border-bottom:1px solid var(--border);padding-bottom:4px;">Dedilhado MD — Regra Geral</div>
       <div class="tip-box" style="line-height:2;">
         Dedo 1 = polegar &nbsp;·&nbsp; Dedo 2 = indicador &nbsp;·&nbsp; Dedo 3 = médio &nbsp;·&nbsp; Dedo 4 = anelar &nbsp;·&nbsp; Dedo 5 = mindinho<br>
         <strong>Acorde de 4 notas:</strong> dedos 1 – 2 – 3 – 5<br>
@@ -1624,7 +1656,7 @@
       </div>
 
       <!-- ROTINA -->
-      <div class="section-divider">Rotina Diária Recomendada</div>
+      <div class="section-divider" style="font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px;color:var(--accent);margin:16px 0 8px;border-bottom:1px solid var(--border);padding-bottom:4px;">Rotina Diária Recomendada</div>
       <div class="tip-box" style="line-height:2.2;">
         ✔ 5 min — Aquecimento: escala de Dó + cromática<br>
         ✔ 8 min — Escala blues de Fá (sobe e desce)<br>
@@ -2206,6 +2238,23 @@ toggleBlock(0);
 // Build Charlie Parker keyboards
 buildKeyboard('kb-ntt-1', { C:{color:'teal'}, D:{color:'teal'}, F:{color:'teal'}, G:{color:'teal'}, A:{color:'teal'} });
 buildKeyboard('kb-bb-1', { C:{color:'teal'}, D:{color:'teal'}, F:{color:'teal'}, G:{color:'teal'}, A:{color:'yellow'}, 'C#':{color:'red'} });
+
+// FOLHA DE REFERÊNCIA — teclados
+buildKeyboard('kb-ref-dm7',   { D:{color:'yellow'}, F:{color:'blue'}, A:{color:'blue'}, C:{color:'blue'} });
+buildKeyboard('kb-ref-g7',    { G:{color:'yellow'}, B:{color:'blue'}, D:{color:'blue'}, F:{color:'blue'} });
+buildKeyboard('kb-ref-cmaj7', { C:{color:'yellow'}, E:{color:'blue'}, G:{color:'blue'}, B:{color:'blue'} });
+buildKeyboard('kb-ref-f7',    { F:{color:'yellow'}, A:{color:'blue'}, C:{color:'blue'}, 'D#':{color:'blue'} });
+buildKeyboard('kb-ref-bb7',   { 'A#':{color:'yellow'}, D:{color:'blue'}, F:{color:'blue'}, 'G#':{color:'blue'} });
+buildKeyboard('kb-ref-c7',    { C:{color:'yellow'}, E:{color:'blue'}, G:{color:'blue'}, 'A#':{color:'blue'} });
+buildKeyboard('kb-ref-cmaj9', { C:{color:'yellow'}, E:{color:'blue'}, G:{color:'blue'}, B:{color:'blue'}, D:{color:'blue'} });
+buildKeyboard('kb-ref-g9sus4',{ G:{color:'yellow'}, C:{color:'blue'}, D:{color:'blue'}, F:{color:'blue'}, A:{color:'blue'} });
+buildKeyboard('kb-ref-am9',   { A:{color:'yellow'}, C:{color:'blue'}, E:{color:'blue'}, G:{color:'blue'}, B:{color:'blue'} });
+buildKeyboard('kb-ref-fmaj9', { F:{color:'yellow'}, A:{color:'blue'}, C:{color:'blue'}, E:{color:'blue'}, G:{color:'blue'} });
+buildKeyboard('kb-ref-dbmaj7',{ 'C#':{color:'yellow'}, F:{color:'blue'}, 'G#':{color:'blue'}, C:{color:'blue'} });
+buildKeyboard('kb-ref-fm7',   { F:{color:'yellow'}, 'G#':{color:'blue'}, C:{color:'blue'}, 'D#':{color:'blue'} });
+buildKeyboard('kb-ref-ebm7',  { 'D#':{color:'yellow'}, 'F#':{color:'blue'}, 'A#':{color:'blue'}, 'C#':{color:'blue'} });
+buildKeyboard('kb-ref-ab7',   { 'G#':{color:'yellow'}, C:{color:'blue'}, 'D#':{color:'blue'}, 'F#':{color:'blue'} });
+buildKeyboard('kb-ref-blues-f',{ F:{color:'teal'}, 'G#':{color:'teal'}, 'A#':{color:'teal'}, B:{color:'red'}, C:{color:'teal'}, 'D#':{color:'teal'} });
 </script>
 </body>
 </html>
