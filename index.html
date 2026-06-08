@@ -7,470 +7,114 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0d0d0d;
-    --surface: #141414;
-    --card: #1a1a1a;
-    --border: #2a2a2a;
-    --accent: #f5c842;
-    --accent2: #4ecdc4;
-    --accent3: #ff6b6b;
-    --accent4: #a78bfa;
-    --text: #e8e8e8;
-    --muted: #666;
-    --white-key: #f0ede6;
-    --black-key: #1a1a1a;
+    --bg:#0d0d0d;--surface:#141414;--card:#1a1a1a;--border:#2a2a2a;
+    --accent:#f5c842;--accent2:#4ecdc4;--accent3:#ff6b6b;--accent4:#a78bfa;
+    --text:#e8e8e8;--muted:#666;--white-key:#f0ede6;--black-key:#1a1a1a;
   }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  /* HEADER */
-  .header {
-    padding: 32px 24px 16px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: baseline;
-    gap: 16px;
-  }
-  .header h1 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(36px, 8vw, 64px);
-    letter-spacing: 2px;
-    color: var(--accent);
-    line-height: 1;
-  }
-  .header .sub {
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    color: var(--muted);
-    letter-spacing: 3px;
-    text-transform: uppercase;
-  }
-
-  /* TIMER GLOBAL */
-  .timer-bar {
-    background: var(--surface);
-    padding: 12px 24px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  .timer-display {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 28px;
-    color: var(--accent);
-    letter-spacing: 2px;
-    min-width: 80px;
-  }
-  .timer-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    flex: 1;
-  }
-  .btn {
-    padding: 8px 18px;
-    border: none;
-    border-radius: 4px;
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    font-weight: 500;
-    cursor: pointer;
-    letter-spacing: 1px;
-    transition: all 0.15s;
-  }
-  .btn-primary { background: var(--accent); color: #000; }
-  .btn-primary:hover { filter: brightness(1.1); }
-  .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); }
-  .btn-ghost:hover { color: var(--text); border-color: var(--text); }
-  .btn-sm { padding: 5px 12px; font-size: 11px; }
-
-  /* PROGRESS PILLS */
-  .progress-row {
-    padding: 16px 24px;
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    border-bottom: 1px solid var(--border);
-  }
-  .pill {
-    padding: 4px 12px;
-    border-radius: 999px;
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 1px;
-    border: 1px solid var(--border);
-    color: var(--muted);
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .pill.done { background: var(--accent); color: #000; border-color: var(--accent); }
-  .pill.active { border-color: var(--accent); color: var(--accent); }
-
-  /* MAIN CONTENT */
-  .content { max-width: 900px; margin: 0 auto; padding: 24px; }
-
-  /* BLOCO DE EXERCÍCIO */
-  .exercise-block {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    margin-bottom: 20px;
-    overflow: hidden;
-    transition: border-color 0.2s;
-  }
-  .exercise-block.active-block { border-color: var(--accent); }
-  .exercise-block.done-block { opacity: 0.6; }
-
-  .block-header {
-    padding: 16px 20px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    cursor: pointer;
-    user-select: none;
-  }
-  .block-num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 22px;
-    color: var(--accent);
-    min-width: 32px;
-  }
-  .block-title {
-    flex: 1;
-  }
-  .block-title h3 {
-    font-size: 15px;
-    font-weight: 500;
-    margin-bottom: 2px;
-  }
-  .block-title .meta {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--muted);
-    letter-spacing: 1px;
-  }
-  .block-tag {
-    padding: 3px 10px;
-    border-radius: 3px;
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-  }
-  .tag-warm { background: #ff6b6b22; color: #ff6b6b; }
-  .tag-blues { background: #4ecdc422; color: #4ecdc4; }
-  .tag-jazz { background: #a78bfa22; color: #a78bfa; }
-  .tag-gospel { background: #f5c84222; color: #f5c842; }
-  .tag-worship { background: #34d39922; color: #34d399; }
-  .tag-penta { background: #f472b622; color: #f472b6; }
-  .tag-improv { background: #fb923c22; color: #fb923c; }
-
-  .block-body {
-    display: none;
-    padding: 0 20px 20px;
-    border-top: 1px solid var(--border);
-  }
-  .block-body.open { display: block; }
-
-  .instruction {
-    font-size: 13px;
-    line-height: 1.7;
-    color: #ccc;
-    margin: 14px 0 10px;
-  }
-  .instruction strong { color: var(--accent); }
-
-  /* KEYBOARD */
-  .keyboard-wrap {
-    margin: 16px 0;
-    overflow-x: auto;
-    padding-bottom: 8px;
-  }
-  .keyboard {
-    display: flex;
-    position: relative;
-    height: 110px;
-    min-width: 420px;
-    width: fit-content;
-    user-select: none;
-  }
-  @media (max-width: 600px) {
-    .keyboard { height: 72px; min-width: unset; }
-    .key-white { width: 22px !important; height: 72px !important; }
-    .key-black { width: 14px !important; height: 44px !important; }
-    .key-label { font-size: 7px !important; }
-    .finger-num { font-size: 10px !important; bottom: 12px !important; }
-  }
-  .key-white {
-    width: 36px;
-    height: 110px;
-    background: var(--white-key);
-    border: 1px solid #bbb;
-    border-top: none;
-    border-radius: 0 0 4px 4px;
-    position: relative;
-    cursor: pointer;
-    transition: background 0.1s;
-    flex-shrink: 0;
-  }
-  .key-white:hover { background: #ddd; }
-  .key-black {
-    width: 22px;
-    height: 68px;
-    background: var(--black-key);
-    position: absolute;
-    top: 0;
-    z-index: 2;
-    border-radius: 0 0 3px 3px;
-    cursor: pointer;
-    transition: background 0.1s;
-  }
-  .key-black:hover { background: #333; }
-
-  /* Highlight colors */
-  .hl-yellow { background: #f5c842 !important; }
-  .hl-teal   { background: #4ecdc4 !important; }
-  .hl-blue   { background: #4a9eff !important; }
-  .hl-red    { background: #ff6b6b !important; }
-  .hl-purple { background: #a78bfa !important; }
-  .hl-orange { background: #fb923c !important; }
-  .hl-green  { background: #34d399 !important; }
-
-  .key-label {
-    position: absolute;
-    bottom: 5px;
-    left: 0;
-    right: 0;
-    text-align: center;
-    font-family: 'DM Mono', monospace;
-    font-size: 9px;
-    color: #555;
-    pointer-events: none;
-  }
-  .key-white .key-label { bottom: 5px; }
-  .key-black .key-label { bottom: 3px; color: #aaa; font-size: 8px; }
-
-  .finger-num {
-    position: absolute;
-    bottom: 18px;
-    left: 0; right: 0;
-    text-align: center;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 14px;
-    color: #000;
-    pointer-events: none;
-    opacity: 0.7;
-  }
-
-  /* LEGEND */
-  .legend {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin: 8px 0;
-  }
-  .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--muted);
-  }
-  .legend-dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 2px;
-  }
-
-  /* CHORD DISPLAY */
-  .chord-row {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin: 12px 0;
-  }
-  .chord-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 10px 14px;
-    cursor: pointer;
-    transition: all 0.15s;
-    font-family: 'DM Mono', monospace;
-  }
-  .chord-card:hover { border-color: var(--accent); }
-  .chord-card.selected { border-color: var(--accent); background: #f5c84211; }
-  .chord-name { font-size: 16px; color: var(--accent); font-weight: 500; }
-  .chord-notes { font-size: 11px; color: #ccc; margin-top: 3px; }
-  .chord-hand { font-size: 10px; color: #555; margin-top: 2px; letter-spacing: 1px; }
-
-  /* PROGRESSÃO */
-  .prog-display {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 14px;
-    margin: 12px 0;
-    font-family: 'DM Mono', monospace;
-  }
-  .prog-title { font-size: 10px; color: var(--muted); letter-spacing: 2px; margin-bottom: 8px; }
-  .prog-chords {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-  .prog-chord {
-    padding: 6px 14px;
-    border-radius: 4px;
-    font-size: 14px;
-    font-weight: 500;
-    border: 1px solid var(--border);
-    cursor: pointer;
-    transition: all 0.15s;
-    position: relative;
-  }
-  .prog-chord:hover { border-color: var(--accent2); }
-  .prog-chord.playing { border-color: var(--accent2); background: #4ecdc422; }
-  .prog-chord .bars { font-size: 9px; color: var(--muted); display: block; text-align: center; }
-
-  /* TIPS */
-  .tip-box {
-    background: #f5c84211;
-    border-left: 3px solid var(--accent);
-    border-radius: 0 6px 6px 0;
-    padding: 10px 14px;
-    margin: 10px 0;
-    font-size: 12px;
-    color: #ccc;
-    font-family: 'DM Mono', monospace;
-    line-height: 1.6;
-  }
-
-  /* DONE BTN */
-  .done-btn {
-    margin-top: 16px;
-    width: 100%;
-    padding: 12px;
-    background: transparent;
-    border: 1px dashed var(--border);
-    border-radius: 6px;
-    color: var(--muted);
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 2px;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-transform: uppercase;
-  }
-  .done-btn:hover { border-color: var(--accent); color: var(--accent); }
-  .done-btn.done { background: #f5c84222; border-color: var(--accent); color: var(--accent); }
-
-  /* BPM CONTROL */
-  .bpm-control {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 10px 0;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 10px 14px;
-  }
-  .bpm-label { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); }
-  .bpm-num { font-family: 'Bebas Neue', sans-serif; font-size: 24px; color: var(--accent); min-width: 48px; text-align: center; }
-  input[type=range] {
-    flex: 1;
-    -webkit-appearance: none;
-    height: 3px;
-    background: var(--border);
-    border-radius: 2px;
-    outline: none;
-  }
-  input[type=range]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 16px;
-    height: 16px;
-    background: var(--accent);
-    border-radius: 50%;
-    cursor: pointer;
-  }
-
-  /* METRONOME */
-  .metro-beat {
-    display: flex;
-    gap: 6px;
-    margin: 8px 0;
-  }
-  .beat-dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: var(--border);
-    transition: background 0.05s;
-  }
-  .beat-dot.on { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
-  .beat-dot.accent { background: var(--accent3); box-shadow: 0 0 8px var(--accent3); }
-
-  .video-links {
-    margin-top: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .video-link {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    text-decoration: none;
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--text);
-    transition: all 0.15s;
-  }
-  .video-link:hover { border-color: #ff6b6b; color: #ff6b6b; }
-  .video-icon { font-size: 16px; }
-    text-align: center;
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 3px;
-    color: var(--muted);
-    padding: 8px 0 4px;
-    text-transform: uppercase;
-  }
-
-  #block-ref .chord-card { width: 100%; }
-
-  @media (max-width: 600px) {
-    .content { padding: 12px; }
-    .header { padding: 20px 16px 12px; }
-  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;}
+  .header{padding:32px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:baseline;gap:16px;}
+  .header h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,8vw,64px);letter-spacing:2px;color:var(--accent);line-height:1;}
+  .header .sub{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;}
+  .timer-bar{background:var(--surface);padding:12px 24px;display:flex;align-items:center;gap:16px;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;}
+  .timer-display{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--accent);letter-spacing:2px;min-width:80px;}
+  .timer-label{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:2px;flex:1;}
+  .btn{padding:8px 18px;border:none;border-radius:4px;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;cursor:pointer;letter-spacing:1px;transition:all 0.15s;}
+  .btn-primary{background:var(--accent);color:#000;}
+  .btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border);}
+  .btn-ghost:hover{color:var(--text);border-color:var(--text);}
+  .btn-sm{padding:5px 12px;font-size:11px;}
+  .progress-row{padding:16px 24px;display:flex;gap:8px;flex-wrap:wrap;border-bottom:1px solid var(--border);}
+  .pill{padding:4px 12px;border-radius:999px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;border:1px solid var(--border);color:var(--muted);cursor:pointer;transition:all 0.2s;}
+  .pill.done{background:var(--accent);color:#000;border-color:var(--accent);}
+  .content{max-width:900px;margin:0 auto;padding:24px;}
+  .exercise-block{background:var(--card);border:1px solid var(--border);border-radius:8px;margin-bottom:20px;overflow:hidden;transition:border-color 0.2s;}
+  .exercise-block.active-block{border-color:var(--accent);}
+  .exercise-block.done-block{opacity:0.6;}
+  .block-header{padding:16px 20px;display:flex;align-items:center;gap:12px;cursor:pointer;user-select:none;}
+  .block-num{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--accent);min-width:32px;}
+  .block-title{flex:1;}
+  .block-title h3{font-size:15px;font-weight:500;margin-bottom:2px;}
+  .block-title .meta{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:1px;}
+  .block-tag{padding:3px 10px;border-radius:3px;font-family:'DM Mono',monospace;font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;}
+  .tag-warm{background:#ff6b6b22;color:#ff6b6b;}
+  .tag-blues{background:#4ecdc422;color:#4ecdc4;}
+  .tag-jazz{background:#a78bfa22;color:#a78bfa;}
+  .tag-gospel{background:#f5c84222;color:#f5c842;}
+  .tag-soul{background:#fb923c22;color:#fb923c;}
+  .tag-worship{background:#34d39922;color:#34d399;}
+  .tag-penta{background:#f472b622;color:#f472b6;}
+  .tag-voz{background:#38bdf822;color:#38bdf8;}
+  .block-body{display:none;padding:0 20px 20px;border-top:1px solid var(--border);}
+  .block-body.open{display:block;}
+  .instruction{font-size:13px;line-height:1.7;color:#ccc;margin:14px 0 10px;}
+  .instruction strong{color:var(--accent);}
+  .keyboard-wrap{margin:16px 0;overflow-x:auto;padding-bottom:8px;}
+  .keyboard{display:flex;position:relative;height:110px;min-width:420px;width:fit-content;user-select:none;}
+  .key-white{width:36px;height:110px;background:var(--white-key);border:1px solid #bbb;border-top:none;border-radius:0 0 4px 4px;position:relative;cursor:pointer;transition:background 0.1s;flex-shrink:0;}
+  .key-white:hover{background:#ddd;}
+  .key-black{width:22px;height:68px;background:var(--black-key);position:absolute;top:0;z-index:2;border-radius:0 0 3px 3px;cursor:pointer;}
+  .hl-yellow{background:#f5c842!important;}
+  .hl-blue{background:#4a9eff!important;}
+  .hl-teal{background:#4ecdc4!important;}
+  .hl-red{background:#ff6b6b!important;}
+  .hl-purple{background:#a78bfa!important;}
+  .hl-orange{background:#fb923c!important;}
+  .hl-green{background:#34d399!important;}
+  .key-label{position:absolute;bottom:5px;left:0;right:0;text-align:center;font-family:'DM Mono',monospace;font-size:9px;color:#555;pointer-events:none;}
+  .key-black .key-label{bottom:3px;color:#aaa;font-size:8px;}
+  .finger-num{position:absolute;bottom:18px;left:0;right:0;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:14px;color:#000;pointer-events:none;opacity:0.7;}
+  .legend{display:flex;gap:12px;flex-wrap:wrap;margin:8px 0;}
+  .legend-item{display:flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);}
+  .legend-dot{width:12px;height:12px;border-radius:2px;}
+  .chord-row{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0;}
+  .chord-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:10px 14px;cursor:pointer;transition:all 0.15s;font-family:'DM Mono',monospace;}
+  .chord-card:hover{border-color:var(--accent);}
+  .chord-card.selected{border-color:var(--accent);background:#f5c84211;}
+  .chord-name{font-size:16px;color:var(--accent);font-weight:500;}
+  .chord-notes{font-size:11px;color:var(--muted);margin-top:3px;}
+  .chord-hand{font-size:10px;color:#555;margin-top:2px;letter-spacing:1px;}
+  .prog-display{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:14px;margin:12px 0;font-family:'DM Mono',monospace;}
+  .prog-title{font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:8px;text-transform:uppercase;}
+  .prog-chords{display:flex;gap:8px;flex-wrap:wrap;}
+  .prog-chord{padding:6px 14px;border-radius:4px;font-size:14px;font-weight:500;border:1px solid var(--border);cursor:pointer;transition:all 0.15s;position:relative;font-family:'DM Mono',monospace;}
+  .prog-chord:hover{border-color:var(--accent2);}
+  .prog-chord.playing{border-color:var(--accent2);background:#4ecdc422;}
+  .prog-chord .bars{font-size:9px;color:var(--muted);display:block;text-align:center;}
+  .tip-box{background:#f5c84211;border-left:3px solid var(--accent);border-radius:0 6px 6px 0;padding:10px 14px;margin:10px 0;font-size:12px;color:#ccc;font-family:'DM Mono',monospace;line-height:1.6;}
+  .voz-box{background:#38bdf811;border-left:3px solid #38bdf8;border-radius:0 6px 6px 0;padding:12px 14px;margin:10px 0;font-size:13px;color:#ccc;font-family:'DM Mono',monospace;line-height:1.9;}
+  .voz-box strong{color:#38bdf8;}
+  .done-btn{margin-top:16px;width:100%;padding:12px;background:transparent;border:1px dashed var(--border);border-radius:6px;color:var(--muted);font-family:'DM Mono',monospace;font-size:12px;letter-spacing:2px;cursor:pointer;transition:all 0.2s;text-transform:uppercase;}
+  .done-btn:hover{border-color:var(--accent);color:var(--accent);}
+  .done-btn.done{background:#f5c84222;border-color:var(--accent);color:var(--accent);}
+  .bpm-control{display:flex;align-items:center;gap:10px;margin:10px 0;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:10px 14px;}
+  .bpm-label{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);}
+  .bpm-num{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--accent);min-width:48px;text-align:center;}
+  input[type=range]{flex:1;-webkit-appearance:none;height:3px;background:var(--border);border-radius:2px;outline:none;}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;background:var(--accent);border-radius:50%;cursor:pointer;}
+  .metro-beat{display:flex;gap:6px;margin:8px 0;}
+  .beat-dot{width:12px;height:12px;border-radius:50%;background:var(--border);transition:background 0.05s;}
+  .beat-dot.on{background:var(--accent);box-shadow:0 0 8px var(--accent);}
+  .beat-dot.accent{background:var(--accent3);box-shadow:0 0 8px var(--accent3);}
+  .video-links{margin-top:12px;display:flex;flex-direction:column;gap:6px;}
+  .video-link{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--surface);border:1px solid var(--border);border-radius:6px;text-decoration:none;font-family:'DM Mono',monospace;font-size:11px;color:var(--text);transition:all 0.15s;}
+  .video-link:hover{border-color:#ff6b6b;color:#ff6b6b;}
+  .video-icon{font-size:16px;}
+  .sec-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin:16px 0 8px;}
+  .note-seq{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0;align-items:center;}
+  .note-pill{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:4px 10px;font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--accent);letter-spacing:1px;}
+  .note-pill.blue{color:#4a9eff;border-color:#4a9eff44;}
+  .note-pill.red{color:#ff6b6b;border-color:#ff6b6b44;}
+  .note-pill.teal{color:#4ecdc4;border-color:#4ecdc444;}
+  .sep{font-family:'DM Mono',monospace;font-size:11px;color:#444;align-self:center;}
+  @media(max-width:600px){.content{padding:12px;}.header{padding:20px 16px 12px;}.keyboard{height:72px;min-width:unset;}.key-white{width:22px!important;height:72px!important;}.key-black{width:14px!important;height:44px!important;}.key-label{font-size:7px!important;}}
 </style>
 </head>
 <body>
 
 <div class="header">
   <h1>Treino Matinal</h1>
-  <span class="sub">Piano / Teclado — Jazz & Blues</span>
+  <span class="sub">Jazz · Soul · Gospel · Voz</span>
 </div>
 
 <div class="timer-bar">
@@ -483,1793 +127,588 @@
 </div>
 
 <div class="progress-row" id="progressRow"></div>
-
 <div class="content">
 
-  <!-- 1. AQUECIMENTO FÍSICO -->
-  <div class="exercise-block" id="block-0">
-    <div class="block-header" onclick="toggleBlock(0)">
-      <div class="block-num">01</div>
-      <div class="block-title">
-        <h3>Aquecimento Físico</h3>
-        <div class="meta">5 MIN — Postura + dedos + cromática</div>
-      </div>
-      <span class="block-tag tag-warm">WARM UP</span>
-    </div>
-    <div class="block-body" id="body-0">
-      <div class="instruction">
-        <strong>Antes de tocar qualquer nota</strong> — esses 5 minutos evitam lesão e deixam seus dedos responsivos.<br><br>
-        1. Sacuda os braços soltos 10x — soltar ombros<br>
-        2. Massageie cada dedo por 5 segundos<br>
-        3. Abra e feche as mãos 10x<br>
-        4. Sente bem: pés no chão, cotovelos na altura do teclado, pulsos soltos<br>
-        5. Toque a <strong>escala cromática</strong> de Dó a Dó, muito lento
-      </div>
-
-      <div class="section-divider">Escala Cromática — Mão Direita</div>
-      <div class="keyboard-wrap">
-        <div class="keyboard" id="kb-chromatic"></div>
-      </div>
-      <div class="legend">
-        <div class="legend-item"><div class="legend-dot" style="background:#f5c842"></div> Toque (ordem)</div>
-      </div>
-
-      <div class="bpm-control">
-        <span class="bpm-label">BPM</span>
-        <span class="bpm-num" id="bpm-0">60</span>
-        <input type="range" min="40" max="120" value="60" oninput="document.getElementById('bpm-0').textContent=this.value">
-        <button class="btn btn-ghost btn-sm" onclick="toggleMetro('metro-0', document.getElementById('bpm-0').textContent)">METRO</button>
-      </div>
-      <div class="metro-beat" id="metro-0"></div>
-
-      <div class="tip-box">
-        💡 Dedilhado MD: C(1) C#(1) D(2) D#(2) E(3) F(1) F#(1) G(2) G#(2) A(3) A#(3) B(4) C(1)<br>
-        Cruza o polegar sob o 3º dedo em E→F. Metrônomo primeiro nos tempos 1 e 3.
-      </div>
-      <div class="video-links">
-        <a class="video-link" href="https://www.youtube.com/watch?v=2RuYnCHHmB4" target="_blank"><span class="video-icon">▶</span> Piano Warm Up Exercises for Beginners</a>
-        <a class="video-link" href="https://www.youtube.com/watch?v=l3HkGPBDQnI" target="_blank"><span class="video-icon">▶</span> Chromatic Scale Piano Tutorial — Finger Exercises</a>
-      </div>
-
-      <button class="done-btn" id="done-0" onclick="markDone(0)">✓ FEITO</button>
-    </div>
+<!-- 01 AQUECIMENTO -->
+<div class="exercise-block" id="block-0">
+  <div class="block-header" onclick="toggleBlock(0)">
+    <div class="block-num">01</div>
+    <div class="block-title"><h3>Aquecimento</h3><div class="meta">5 MIN — Postura + dedos + cromática</div></div>
+    <span class="block-tag tag-warm">WARM UP</span>
   </div>
-
-  <!-- 2. ESCALA PENTATÔNICA BLUES -->
-  <div class="exercise-block" id="block-1">
-    <div class="block-header" onclick="toggleBlock(1)">
-      <div class="block-num">02</div>
-      <div class="block-title">
-        <h3>Escala Blues — Pentatônica Menor</h3>
-        <div class="meta">8 MIN — A blue note que cria o feel</div>
-      </div>
-      <span class="block-tag tag-blues">BLUES</span>
+  <div class="block-body" id="body-0">
+    <div class="instruction">
+      <strong>Antes de tocar</strong> — esses 5 minutos evitam lesão e deixam os dedos responsivos.<br><br>
+      1. Sacuda os braços soltos 10x<br>
+      2. Massageie cada dedo 5 segundos<br>
+      3. Abra e feche as mãos 10x<br>
+      4. Sente bem: pés no chão, cotovelos na altura do teclado<br>
+      5. Toque a escala cromática de Dó a Dó devagar
     </div>
-    <div class="block-body" id="body-1">
-      <div class="instruction">
-        A <strong>escala blues</strong> é a ferramenta #1 para improvisar em blues e jazz. Em Dó:<br>
-        <strong>C — Eb — F — F# — G — Bb — C</strong><br>
-        O F# é a "blue note" — cria tensão e choro. Toque suave e depois <em>bende</em> mentalmente para o G.
-      </div>
-
-      <div class="section-divider">Pentatônica Blues em Dó — clique nos acordes para visualizar</div>
-      <div class="chord-row">
-        <div class="chord-card selected" onclick="selectScale('blues-c', this)">
-          <div class="chord-name">Dó Blues</div>
-          <div class="chord-notes">C Eb F F# G Bb</div>
-          <div class="chord-hand">C menor + blue note</div>
-        </div>
-        <div class="chord-card" onclick="selectScale('blues-f', this)">
-          <div class="chord-name">Fá Blues</div>
-          <div class="chord-notes">F Ab Bb B C Eb</div>
-          <div class="chord-hand">IV grau</div>
-        </div>
-        <div class="chord-card" onclick="selectScale('blues-g', this)">
-          <div class="chord-name">Sol Blues</div>
-          <div class="chord-notes">G Bb C C# D F</div>
-          <div class="chord-hand">V grau</div>
-        </div>
-      </div>
-
-      <div class="keyboard-wrap">
-        <div class="keyboard" id="kb-blues"></div>
-      </div>
-      <div class="legend">
-        <div class="legend-item"><div class="legend-dot" style="background:#4ecdc4"></div> Escala Blues</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#ff6b6b"></div> Blue Note</div>
-      </div>
-
-      <div class="bpm-control">
-        <span class="bpm-label">BPM</span>
-        <span class="bpm-num" id="bpm-1">70</span>
-        <input type="range" min="50" max="140" value="70" oninput="document.getElementById('bpm-1').textContent=this.value">
-        <button class="btn btn-ghost btn-sm" onclick="toggleMetro('metro-1', document.getElementById('bpm-1').textContent)">METRO</button>
-      </div>
-      <div class="metro-beat" id="metro-1"></div>
-
-      <div class="tip-box">
-        💡 Exercício: suba e desça 3x lento → acelere 10 BPM → repita. Depois toque só as 3 primeiras notas e improvise em cima delas. Menos é mais no blues.
-      </div>
-      <div class="video-links">
-        <a class="video-link" href="https://www.youtube.com/watch?v=YfnCMB7gHcE" target="_blank"><span class="video-icon">▶</span> Blues Scale Piano — Como tocar e improvisar</a>
-        <a class="video-link" href="https://www.youtube.com/watch?v=DPWP7JxKPpA" target="_blank"><span class="video-icon">▶</span> Pentatônica Menor Blues — Tutorial Completo</a>
-      </div>
-
-      <button class="done-btn" id="done-1" onclick="markDone(1)">✓ FEITO</button>
+    <div class="sec-label">Escala Cromática — todas as 12 notas em ordem</div>
+    <div class="keyboard-wrap"><div class="keyboard" id="kb-chromatic"></div></div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#f5c842"></div> Toque em ordem: C C# D D# E F F# G G# A A# B C</div>
     </div>
+    <div class="bpm-control">
+      <span class="bpm-label">BPM</span>
+      <span class="bpm-num" id="bpm-0">60</span>
+      <input type="range" min="40" max="120" value="60" oninput="document.getElementById('bpm-0').textContent=this.value">
+      <button class="btn btn-ghost btn-sm" onclick="toggleMetro('metro-0',document.getElementById('bpm-0').textContent)">METRO</button>
+    </div>
+    <div class="metro-beat" id="metro-0"></div>
+    <div class="tip-box">💡 Dedilhado: C(1) C#(1) D(2) D#(2) E(3) F(1) F#(1) G(2) G#(2) A(3) A#(3) B(4) C(1)<br>Cruza o polegar sob o 3º dedo em E→F.</div>
+    <button class="done-btn" id="done-0" onclick="markDone(0)">✓ FEITO</button>
   </div>
+</div>
 
-  <!-- 3. 12 COMPASSOS BLUES -->
-  <div class="exercise-block" id="block-2">
-    <div class="block-header" onclick="toggleBlock(2)">
-      <div class="block-num">03</div>
-      <div class="block-title">
-        <h3>12 Compassos Blues em Fá</h3>
-        <div class="meta">8 MIN — Shuffle + dominantes de 7ª</div>
-      </div>
-      <span class="block-tag tag-blues">BLUES</span>
-    </div>
-    <div class="block-body" id="body-2">
-      <div class="instruction">
-        O coração do blues. <strong>3 acordes dominantes de 7ª</strong> em 12 compassos.<br>
-        Mão esquerda: padrão shuffle (5ª → 6ª alternando).<br>
-        Mão direita: improvisação com pentatônica blues de Fá.
-      </div>
-
-      <div class="section-divider">Estrutura — clique para ver o acorde no teclado</div>
-      <div class="prog-display">
-        <div class="prog-title">12 COMPASSOS EM FÁ — clique em cada acorde</div>
-        <div class="prog-chords">
-          <div class="prog-chord" style="color:#4ecdc4;border-color:#4ecdc444" onclick="showChord('F7')">F7<span class="bars">1-2-3-4</span></div>
-          <div class="prog-chord" style="color:#4ecdc4;border-color:#4ecdc444" onclick="showChord('Bb7')">Bb7<span class="bars">5-6</span></div>
-          <div class="prog-chord" style="color:#4ecdc4;border-color:#4ecdc444" onclick="showChord('F7')">F7<span class="bars">7-8</span></div>
-          <div class="prog-chord" style="color:#ff6b6b;border-color:#ff6b6b44" onclick="showChord('C7')">C7<span class="bars">9</span></div>
-          <div class="prog-chord" style="color:#4ecdc4;border-color:#4ecdc444" onclick="showChord('Bb7')">Bb7<span class="bars">10</span></div>
-          <div class="prog-chord" style="color:#4ecdc4;border-color:#4ecdc444" onclick="showChord('F7')">F7<span class="bars">11</span></div>
-          <div class="prog-chord" style="color:#ff6b6b;border-color:#ff6b6b44" onclick="showChord('C7')">C7<span class="bars">12</span></div>
-        </div>
-      </div>
-
-      <div class="keyboard-wrap">
-        <div class="keyboard" id="kb-blues12"></div>
-      </div>
-      <div class="legend">
-        <div class="legend-item"><div class="legend-dot" style="background:#4ecdc4"></div> Notas do acorde</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#ff6b6b"></div> 7ª dominante</div>
-      </div>
-
-      <div class="bpm-control">
-        <span class="bpm-label">BPM</span>
-        <span class="bpm-num" id="bpm-2">80</span>
-        <input type="range" min="60" max="160" value="80" oninput="document.getElementById('bpm-2').textContent=this.value">
-        <button class="btn btn-ghost btn-sm" onclick="toggleMetro('metro-2', document.getElementById('bpm-2').textContent)">METRO</button>
-      </div>
-      <div class="metro-beat" id="metro-2"></div>
-
-      <div class="tip-box">
-        💡 Shuffle ME: [F+C] → [F+D] → [F+C] → [F+D] por compasso. 
-        Metrônomo nos tempos 2 e 4 (feel de jazz/blues). 
-        Objetivo: tocar os 12 compassos sem parar 3x seguidas.
-      </div>
-      <div class="video-links">
-        <a class="video-link" href="https://www.youtube.com/watch?v=NMOGvsxXdaQ" target="_blank"><span class="video-icon">▶</span> 12 Bar Blues em 7 minutos — Iniciante (começa aqui)</a>
-        <a class="video-link" href="https://www.youtube.com/watch?v=HAGH-5S2EJM" target="_blank"><span class="video-icon">▶</span> Shuffle Blues Passo a Passo — Mão Separada</a>
-        <a class="video-link" href="https://www.youtube.com/watch?v=8lrqbt9WBKs" target="_blank"><span class="video-icon">▶</span> Blues Shuffle — Piano With Jonny (avançado)</a>
-      </div>
-
-      <button class="done-btn" id="done-2" onclick="markDone(2)">✓ FEITO</button>
-    </div>
+<!-- 02 ESCALA BLUES -->
+<div class="exercise-block" id="block-1">
+  <div class="block-header" onclick="toggleBlock(1)">
+    <div class="block-num">02</div>
+    <div class="block-title"><h3>Escala Blues</h3><div class="meta">8 MIN — A blue note que cria o feel</div></div>
+    <span class="block-tag tag-blues">BLUES</span>
   </div>
-
-  <!-- 4. ii-V-I JAZZ -->
-  <div class="exercise-block" id="block-3">
-    <div class="block-header" onclick="toggleBlock(3)">
-      <div class="block-num">04</div>
-      <div class="block-title">
-        <h3>Progressão ii-V-I Jazz</h3>
-        <div class="meta">10 MIN — Shell voicings + guide tones</div>
-      </div>
-      <span class="block-tag tag-jazz">JAZZ</span>
+  <div class="block-body" id="body-1">
+    <div class="instruction">
+      A <strong>escala blues</strong> é a base do improviso. Em Fá:<br>
+      <strong>F — Ab — Bb — B — C — Eb</strong><br>
+      O B natural é a "blue note" — cria tensão e choro.
     </div>
-    <div class="block-body" id="body-3">
-      <div class="instruction">
-        O <strong>ii-V-I é o DNA do jazz</strong>. 80% das músicas usa isso. Em Dó:<br>
-        <strong>Dm7 → G7 → Cmaj7</strong><br>
-        Comece com shell voicings (3ª + 7ª) — 2 notas apenas. São as notas que definem o acorde.
-      </div>
-
-      <div class="section-divider">Shell Voicings — clique para visualizar no teclado</div>
-      <div class="chord-row">
-        <div class="chord-card selected" onclick="showJazzChord('Dm7', this)">
-          <div class="chord-name">Dm7</div>
-          <div class="chord-notes">D — F — A — C</div>
-          <div class="chord-hand">Shell: F + C</div>
-        </div>
-        <div class="chord-card" onclick="showJazzChord('G7', this)">
-          <div class="chord-name">G7</div>
-          <div class="chord-notes">G — B — D — F</div>
-          <div class="chord-hand">Shell: B + F</div>
-        </div>
-        <div class="chord-card" onclick="showJazzChord('Cmaj7', this)">
-          <div class="chord-name">Cmaj7</div>
-          <div class="chord-notes">C — E — G — B</div>
-          <div class="chord-hand">Shell: E + B</div>
-        </div>
-      </div>
-
-      <div class="keyboard-wrap">
-        <div class="keyboard" id="kb-jazz"></div>
-      </div>
-      <div class="legend">
-        <div class="legend-item"><div class="legend-dot" style="background:#f5c842"></div> ME — Mão Esquerda (raiz)</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#4a9eff"></div> MD — Mão Direita (shell: 3ª + 7ª)</div>
-      </div>
-
-      <div class="prog-display">
-        <div class="prog-title">GUIDE TONES — Como as notas se movem</div>
-        <div style="font-family:'DM Mono',monospace;font-size:12px;color:#ccc;line-height:2;">
-          Dm7: <span style="color:#f5c842">F</span> + <span style="color:#f5c842">C</span> &nbsp;→&nbsp; 
-          G7: <span style="color:#ff6b6b">B</span> + <span style="color:#ff6b6b">F</span> &nbsp;→&nbsp; 
-          Cmaj7: <span style="color:#4ecdc4">E</span> + <span style="color:#4ecdc4">B</span><br>
-          <span style="color:#666;font-size:10px">C→B = meio tom ↓ &nbsp;&nbsp; F permanece → F &nbsp;&nbsp; B→E = quarta ↓</span>
-        </div>
-      </div>
-
-      <div class="bpm-control">
-        <span class="bpm-label">BPM</span>
-        <span class="bpm-num" id="bpm-3">60</span>
-        <input type="range" min="40" max="120" value="60" oninput="document.getElementById('bpm-3').textContent=this.value">
-        <button class="btn btn-ghost btn-sm" onclick="toggleMetro('metro-3', document.getElementById('bpm-3').textContent)">METRO</button>
-      </div>
-      <div class="metro-beat" id="metro-3"></div>
-
-      <div class="tip-box">
-        💡 Toque ii-V-I em Dó até memorizar. Depois tente em Sol (Am7→D7→Gmaj7) e em Fá (Gm7→C7→Fmaj7). 
-        O objetivo é conseguir tocar em qualquer tom — começa pelas 3 tonalidades mais comuns.
-      </div>
-      <div class="video-links">
-        <a class="video-link" href="https://www.youtube.com/watch?v=_ldxtscmCpo" target="_blank"><span class="video-icon">▶</span> Shell Voicings para Jazz — Iniciante (começa aqui)</a>
-        <a class="video-link" href="https://www.youtube.com/watch?v=WJd5xh7eAQo" target="_blank"><span class="video-icon">▶</span> Jazz Piano Iniciante — Aula 4: Shell Voicings</a>
-        <a class="video-link" href="https://www.youtube.com/watch?v=NGeVdFkoxsQ" target="_blank"><span class="video-icon">▶</span> ii-V-I em todas as tonalidades</a>
-      </div>
-
-      <button class="done-btn" id="done-3" onclick="markDone(3)">✓ FEITO</button>
+    <div class="chord-row">
+      <div class="chord-card selected" onclick="selectScale('blues-f',this)"><div class="chord-name">Fá Blues</div><div class="chord-notes">F Ab Bb B C Eb</div></div>
+      <div class="chord-card" onclick="selectScale('blues-c',this)"><div class="chord-name">Dó Blues</div><div class="chord-notes">C Eb F F# G Bb</div></div>
+      <div class="chord-card" onclick="selectScale('blues-g',this)"><div class="chord-name">Sol Blues</div><div class="chord-notes">G Bb C C# D F</div></div>
     </div>
+    <div class="keyboard-wrap"><div class="keyboard" id="kb-blues"></div></div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#4ecdc4"></div> Escala Blues</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#ff6b6b"></div> Blue Note</div>
+    </div>
+    <div class="voz-box">
+      🎤 <strong>Exercício de voz:</strong> toque cada nota e <strong>cante junto</strong>.<br>
+      Sobe: F — Ab — Bb — B — C — Eb<br>
+      Desce: Eb — C — B — Bb — Ab — F<br>
+      Não precisa voz bonita — só afinado. Isso treina o ouvido interno.
+    </div>
+    <div class="bpm-control">
+      <span class="bpm-label">BPM</span>
+      <span class="bpm-num" id="bpm-1">70</span>
+      <input type="range" min="50" max="140" value="70" oninput="document.getElementById('bpm-1').textContent=this.value">
+      <button class="btn btn-ghost btn-sm" onclick="toggleMetro('metro-1',document.getElementById('bpm-1').textContent)">METRO</button>
+    </div>
+    <div class="metro-beat" id="metro-1"></div>
+    <button class="done-btn" id="done-1" onclick="markDone(1)">✓ FEITO</button>
   </div>
+</div>
 
-  <!-- 5. COMPING CHARLESTON -->
-  <div class="exercise-block" id="block-4">
-    <div class="block-header" onclick="toggleBlock(4)">
-      <div class="block-num">05</div>
-      <div class="block-title">
-        <h3>Comping Jazz — Charleston</h3>
-        <div class="meta">8 MIN — Ritmo que define o jazz</div>
-      </div>
-      <span class="block-tag tag-jazz">JAZZ</span>
-    </div>
-    <div class="block-body" id="body-4">
-      <div class="instruction">
-        O <strong>Charleston</strong> é o padrão rítmico mais importante do jazz. 
-        Bate no tempo 1 e no "e do 2" (antecipação). Coloca swing em qualquer acorde.<br><br>
-        <strong>Padrão:</strong><br>
-        Tempo: &nbsp; 1 &nbsp; e &nbsp; 2 &nbsp; e &nbsp; 3 &nbsp; e &nbsp; 4<br>
-        Toca: &nbsp;&nbsp; ♩ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ♪
-      </div>
-
-      <div class="prog-display">
-        <div class="prog-title">RHYTHM GRID — CHARLESTON vs REVERSE</div>
-        <div style="display:grid;gap:8px;">
-          <div style="font-family:'DM Mono',monospace;font-size:12px;">
-            <span style="color:#666">Charleston: &nbsp;&nbsp;&nbsp;</span>
-            <span style="background:#f5c84233;padding:3px 8px;border-radius:3px;color:#f5c842">1</span>
-            <span style="color:#333;padding:3px 8px"> · </span>
-            <span style="background:#f5c84233;padding:3px 8px;border-radius:3px;color:#f5c842">e2</span>
-            <span style="color:#333;padding:3px 8px"> · &nbsp;· &nbsp;·</span>
-          </div>
-          <div style="font-family:'DM Mono',monospace;font-size:12px;">
-            <span style="color:#666">Rev.Charleston: </span>
-            <span style="color:#333;padding:3px 8px">· </span>
-            <span style="background:#4ecdc433;padding:3px 8px;border-radius:3px;color:#4ecdc4">e1</span>
-            <span style="background:#4ecdc433;padding:3px 8px;border-radius:3px;color:#4ecdc4">2</span>
-            <span style="color:#333;padding:3px 8px"> · &nbsp;·</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="keyboard-wrap">
-        <div class="keyboard" id="kb-comp"></div>
-      </div>
-
-      <div class="bpm-control">
-        <span class="bpm-label">BPM</span>
-        <span class="bpm-num" id="bpm-4">65</span>
-        <input type="range" min="50" max="130" value="65" oninput="document.getElementById('bpm-4').textContent=this.value">
-        <button class="btn btn-ghost btn-sm" onclick="toggleMetro('metro-4', document.getElementById('bpm-4').textContent)">METRO</button>
-      </div>
-      <div class="metro-beat" id="metro-4"></div>
-
-      <div class="tip-box">
-        💡 Metrônomo nos tempos 2 e 4. Toque só o Charleston com a mão esquerda no Dm7 por 2 minutos até o ritmo sair natural. Depois adicione a mão direita improvisando a escala de Dó maior.
-      </div>
-      <div class="video-links">
-        <a class="video-link" href="https://www.youtube.com/watch?v=I9ZMBelNaWk" target="_blank"><span class="video-icon">▶</span> Charleston Rhythm Piano — Jazz Comping Tutorial</a>
-        <a class="video-link" href="https://www.youtube.com/watch?v=6s1GfMXCRwk" target="_blank"><span class="video-icon">▶</span> Jazz Piano Comping Patterns para Iniciante</a>
-      </div>
-
-      <button class="done-btn" id="done-4" onclick="markDone(4)">✓ FEITO</button>
-    </div>
+<!-- 03 12 COMPASSOS -->
+<div class="exercise-block" id="block-2">
+  <div class="block-header" onclick="toggleBlock(2)">
+    <div class="block-num">03</div>
+    <div class="block-title"><h3>12 Compassos Blues em Fá</h3><div class="meta">8 MIN — Shuffle + improv</div></div>
+    <span class="block-tag tag-blues">BLUES</span>
   </div>
-
-  <!-- 6. GOSPEL SUS CHORDS -->
-  <div class="exercise-block" id="block-5">
-    <div class="block-header" onclick="toggleBlock(5)">
-      <div class="block-num">06</div>
-      <div class="block-title">
-        <h3>Gospel — Sus Chords & Walk Ups</h3>
-        <div class="meta">6 MIN — O som que enche o ambiente</div>
-      </div>
-      <span class="block-tag tag-gospel">GOSPEL</span>
+  <div class="block-body" id="body-2">
+    <div class="instruction">
+      <strong>3 acordes em 12 compassos.</strong><br>
+      ME faz o shuffle (tum-ca), MD improvisa com a escala blues de Fá.<br>
+      🟡 Amarelo = ME (raiz) &nbsp;|&nbsp; 🔵 Azul = MD (acorde)
     </div>
-    <div class="block-body" id="body-5">
-      <div class="instruction">
-        Sus chords criam <strong>tensão antes de resolver</strong>. São a assinatura do gospel moderno.<br>
-        <strong>Gsus4 → G7 → Cmaj7</strong> — sente a tensão resolvendo? Isso é gospel.<br><br>
-        Walk Up: Dm → Eb → F (cromático subindo ao IV grau)
+    <div class="prog-display">
+      <div class="prog-title">12 Compassos em Fá — clique para ver no teclado</div>
+      <div class="prog-chords">
+        <div class="prog-chord" style="color:#4ecdc4;border-color:#4ecdc444" onclick="showChord12('F7')">F7<span class="bars">1-2-3-4</span></div>
+        <div class="prog-chord" style="color:#4ecdc4;border-color:#4ecdc444" onclick="showChord12('Bb7')">Bb7<span class="bars">5-6</span></div>
+        <div class="prog-chord" style="color:#4ecdc4;border-color:#4ecdc444" onclick="showChord12('F7')">F7<span class="bars">7-8</span></div>
+        <div class="prog-chord" style="color:#ff6b6b;border-color:#ff6b6b44" onclick="showChord12('C7')">C7<span class="bars">9</span></div>
+        <div class="prog-chord" style="color:#4ecdc4;border-color:#4ecdc444" onclick="showChord12('Bb7')">Bb7<span class="bars">10</span></div>
+        <div class="prog-chord" style="color:#4ecdc4;border-color:#4ecdc444" onclick="showChord12('F7')">F7<span class="bars">11-12</span></div>
       </div>
-
-      <div class="chord-row">
-        <div class="chord-card selected" onclick="showGospelChord('Gsus4', this)">
-          <div class="chord-name">Gsus4</div>
-          <div class="chord-notes">G — C — D (sem B!)</div>
-          <div class="chord-hand">Tensão</div>
-        </div>
-        <div class="chord-card" onclick="showGospelChord('G7', this)">
-          <div class="chord-name">G7</div>
-          <div class="chord-notes">G — B — D — F</div>
-          <div class="chord-hand">Dominante</div>
-        </div>
-        <div class="chord-card" onclick="showGospelChord('Cmaj7', this)">
-          <div class="chord-name">Cmaj7</div>
-          <div class="chord-notes">C — E — G — B</div>
-          <div class="chord-hand">Resolução</div>
-        </div>
-      </div>
-
-      <div class="keyboard-wrap">
-        <div class="keyboard" id="kb-gospel"></div>
-      </div>
-
-      <div class="tip-box">
-        💡 Repita Gsus4 → G7 → Cmaj7 até sentir a tensão/resolução. 
-        Depois adicione a progressão 3-6-2-5-1: Em7 → Am7 → Dm7 → G7 → Cmaj7.
-      </div>
-      <div class="video-links">
-        <a class="video-link" href="https://www.youtube.com/watch?v=ZPabFqOPrkg" target="_blank"><span class="video-icon">▶</span> I-vi-IV-V Gospel/Worship — Tutorial Iniciante</a>
-        <a class="video-link" href="https://www.youtube.com/watch?v=T1nQAthiHr8" target="_blank"><span class="video-icon">▶</span> Sus Chords Piano — Como criar tensão e resolução</a>
-      </div>
-
-      <button class="done-btn" id="done-5" onclick="markDone(5)">✓ FEITO</button>
     </div>
+    <div class="keyboard-wrap"><div class="keyboard" id="kb-blues12"></div></div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#f5c842"></div> ME — raiz</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#4a9eff"></div> MD — acorde</div>
+    </div>
+    <div class="voz-box">
+      🎤 <strong>Call and Response vocal:</strong><br>
+      ME faz shuffle no F7 → MD improvisa 2 notas → <strong>você canta as mesmas notas</strong><br>
+      Teclado fala, voz responde. Isso é blues de verdade!
+    </div>
+    <div class="bpm-control">
+      <span class="bpm-label">BPM</span>
+      <span class="bpm-num" id="bpm-2">75</span>
+      <input type="range" min="60" max="160" value="75" oninput="document.getElementById('bpm-2').textContent=this.value">
+      <button class="btn btn-ghost btn-sm" onclick="toggleMetro('metro-2',document.getElementById('bpm-2').textContent)">METRO</button>
+    </div>
+    <div class="metro-beat" id="metro-2"></div>
+    <div class="tip-box">💡 Shuffle ME: [F+C] → [F+D] → [F+C] → [F+D]. Metrônomo nos tempos 2 e 4.</div>
+    <div class="video-links">
+      <a class="video-link" href="https://www.youtube.com/watch?v=NMOGvsxXdaQ" target="_blank"><span class="video-icon">▶</span> 12 Bar Blues em 7 minutos — Iniciante</a>
+      <a class="video-link" href="https://www.youtube.com/watch?v=HAGH-5S2EJM" target="_blank"><span class="video-icon">▶</span> Shuffle Blues Passo a Passo</a>
+    </div>
+    <button class="done-btn" id="done-2" onclick="markDone(2)">✓ FEITO</button>
   </div>
+</div>
 
-  <!-- 7. WORSHIP -->
-  <div class="exercise-block" id="block-6">
-    <div class="block-header" onclick="toggleBlock(6)">
-      <div class="block-num">07</div>
-      <div class="block-title">
-        <h3>Worship — Estilo "Sounds of Home"</h3>
-        <div class="meta">8 MIN — Ambiente, presença, Rhodes</div>
-      </div>
-      <span class="block-tag tag-worship">WORSHIP</span>
-    </div>
-    <div class="block-body" id="body-6">
-      <div class="instruction">
-        Esse é o estilo do canal que você mandou. Som ambiente, íntimo, presente.<br>
-        <strong>Timbre no teclado:</strong> Electric Piano (Rhodes/Wurlitzer) + reverb longo + toque suave.<br><br>
-        <strong>Fórmula do estilo:</strong><br>
-        — ME: acordes abertos (raiz + 5ª com oitava, sem 3ª)<br>
-        — MD: melodia simples, notas longas, muita pausa<br>
-        — Progressão: I → V → vi → IV (a mais usada no worship)
-      </div>
-
-      <div class="prog-display">
-        <div class="prog-title">PROGRESSÃO I–V–vi–IV em Dó — clique para ver no teclado</div>
-        <div class="prog-chords">
-          <div class="prog-chord" style="color:#34d399;border-color:#34d39944" onclick="showWorshipChord('Cmaj7w')">Cmaj7<span class="bars">I</span></div>
-          <div class="prog-chord" style="color:#34d399;border-color:#34d39944" onclick="showWorshipChord('G_open')">G/B<span class="bars">V</span></div>
-          <div class="prog-chord" style="color:#34d399;border-color:#34d39944" onclick="showWorshipChord('Am7w')">Am7<span class="bars">vi</span></div>
-          <div class="prog-chord" style="color:#34d399;border-color:#34d39944" onclick="showWorshipChord('Fmaj9w')">Fmaj9<span class="bars">IV</span></div>
-        </div>
-      </div>
-
-      <div class="keyboard-wrap">
-        <div class="keyboard" id="kb-worship"></div>
-      </div>
-      <div class="legend">
-        <div class="legend-item"><div class="legend-dot" style="background:#34d399"></div> Acorde aberto (worship)</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#38bdf8"></div> Extensão (9ª / 7ª)</div>
-      </div>
-
-      <div class="bpm-control">
-        <span class="bpm-label">BPM</span>
-        <span class="bpm-num" id="bpm-6">65</span>
-        <input type="range" min="40" max="100" value="65" oninput="document.getElementById('bpm-6').textContent=this.value">
-        <button class="btn btn-ghost btn-sm" onclick="toggleMetro('metro-6', document.getElementById('bpm-6').textContent)">METRO</button>
-      </div>
-      <div class="metro-beat" id="metro-6"></div>
-
-      <div class="tip-box">
-        🎹 Segredo do som "Sounds of Home": toque BEM devagar, deixe as notas soarem completas antes de trocar o acorde. Menos é mais. Coloca bastante reverb e toca como se a família estivesse ao redor.
-      </div>
-      <div class="video-links">
-        <a class="video-link" href="https://www.youtube.com/watch?v=xonJT0LLTK8" target="_blank"><span class="video-icon">▶</span> Sounds of Home — Referência de estilo worship</a>
-        <a class="video-link" href="https://www.youtube.com/watch?v=ZPabFqOPrkg" target="_blank"><span class="video-icon">▶</span> I-V-vi-IV Worship Piano — Tutorial</a>
-      </div>
-
-      <button class="done-btn" id="done-6" onclick="markDone(6)">✓ FEITO</button>
-    </div>
+<!-- 04 2-5-1 JAZZ -->
+<div class="exercise-block" id="block-3">
+  <div class="block-header" onclick="toggleBlock(3)">
+    <div class="block-num">04</div>
+    <div class="block-title"><h3>2-5-1 Jazz</h3><div class="meta">10 MIN — O DNA do jazz</div></div>
+    <span class="block-tag tag-jazz">JAZZ</span>
   </div>
-
-  <!-- 8. GOSPEL/WORSHIP VOICINGS -->
-  <div class="exercise-block" id="block-7b">
-    <div class="block-header" onclick="toggleBlock('7b')">
-      <div class="block-num">08</div>
-      <div class="block-title">
-        <h3>Gospel/Worship Voicings</h3>
-        <div class="meta">10 MIN — Os acordes que criam o som</div>
-      </div>
-      <span class="block-tag tag-worship">WORSHIP</span>
+  <div class="block-body" id="body-3">
+    <div class="instruction">
+      <strong>2-5-1 = 2º, 5º e 1º acorde do campo harmônico.</strong><br>
+      Em Dó: <strong>Dm7 → G7 → Cmaj7</strong><br>
+      🟡 Amarelo = ME (raiz grave) &nbsp;|&nbsp; 🔵 Azul = MD (4 notas do acorde)
     </div>
-    <div class="block-body" id="body-7b">
-      <div class="instruction">
-        Os voicings do gospel/worship são mais <strong>cheios e ricos</strong> que o jazz básico.<br>
-        Aqui estão os mais usados — clique em cada um pra ver no teclado.<br><br>
-        <strong>Exercício 1:</strong> Toca cada voicing e segura 4 tempos. Ouve o som.<br>
-        <strong>Exercício 2:</strong> Conecta eles em sequência I → vi → IV → V.<br>
-        <strong>Exercício 3:</strong> Adiciona MD improvisando com pentatônica maior de Dó.
+    <div class="chord-row">
+      <div class="chord-card selected" onclick="showJazzChord('Dm7',this)">
+        <div class="chord-name">Dm7</div><div class="chord-notes">D — F — A — C</div><div class="chord-hand">2º grau — tensão</div>
       </div>
-
-      <div style="margin:12px 0 6px;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;">▸ VOICINGS ESSENCIAIS — clique para ver no teclado</div>
-      <div class="chord-row" style="flex-wrap:wrap;">
-        <div class="chord-card selected" onclick="showGWVoicing('Cmaj9', this)">
-          <div class="chord-name" style="color:#34d399">Cmaj9</div>
-          <div class="chord-notes">C E G B D</div>
-          <div class="chord-hand">I — resolução total</div>
-        </div>
-        <div class="chord-card" onclick="showGWVoicing('G9sus4', this)">
-          <div class="chord-name" style="color:#34d399">G9sus4</div>
-          <div class="chord-notes">G C D F A</div>
-          <div class="chord-hand">V — tensão worship</div>
-        </div>
-        <div class="chord-card" onclick="showGWVoicing('Am9', this)">
-          <div class="chord-name" style="color:#34d399">Am9</div>
-          <div class="chord-notes">A C E G B</div>
-          <div class="chord-hand">vi — emoção</div>
-        </div>
-        <div class="chord-card" onclick="showGWVoicing('Fmaj9', this)">
-          <div class="chord-name" style="color:#34d399">Fmaj9</div>
-          <div class="chord-notes">F A C E G</div>
-          <div class="chord-hand">IV — estabilidade</div>
-        </div>
-        <div class="chord-card" onclick="showGWVoicing('Dm11', this)">
-          <div class="chord-name" style="color:#34d399">Dm11</div>
-          <div class="chord-notes">D F A C G</div>
-          <div class="chord-hand">ii — transição suave</div>
-        </div>
-        <div class="chord-card" onclick="showGWVoicing('C2', this)">
-          <div class="chord-name" style="color:#34d399">Cadd9</div>
-          <div class="chord-notes">C E G D</div>
-          <div class="chord-hand">I aberto — worship simples</div>
-        </div>
+      <div class="chord-card" onclick="showJazzChord('G7',this)">
+        <div class="chord-name">G7</div><div class="chord-notes">G — B — D — F</div><div class="chord-hand">5º grau — dominante</div>
       </div>
-
-      <div class="keyboard-wrap">
-        <div class="keyboard" id="kb-gw-voicing"></div>
+      <div class="chord-card" onclick="showJazzChord('Cmaj7',this)">
+        <div class="chord-name">Cmaj7</div><div class="chord-notes">C — E — G — B</div><div class="chord-hand">1º grau — resolução</div>
       </div>
-      <div class="legend">
-        <div class="legend-item"><div class="legend-dot" style="background:#34d399"></div> Raiz + 3ª + 5ª</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#4ecdc4"></div> Extensão (7ª, 9ª, 11ª)</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#ff6b6b"></div> Nota especial (sus/tensão)</div>
-      </div>
-      <div id="gw-label" style="font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);margin-top:8px;"></div>
-
-      <div style="margin:14px 0 6px;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;">▸ PROGRESSÕES GOSPEL/WORSHIP MAIS USADAS</div>
-      <div class="prog-display">
-        <div class="prog-title">PROGRESSÃO 1 — I vi IV V (worship clássico)</div>
-        <div class="prog-chords">
-          <div class="prog-chord" style="color:#34d399;border-color:#34d39944">Cmaj9<span class="bars">I</span></div>
-          <div class="prog-chord" style="color:#34d399;border-color:#34d39944">Am9<span class="bars">vi</span></div>
-          <div class="prog-chord" style="color:#34d399;border-color:#34d39944">Fmaj9<span class="bars">IV</span></div>
-          <div class="prog-chord" style="color:#ff6b6b;border-color:#ff6b6b44">G9sus4<span class="bars">V</span></div>
-        </div>
-      </div>
-      <div class="prog-display">
-        <div class="prog-title">PROGRESSÃO 2 — ii V I (gospel resolvendo)</div>
-        <div class="prog-chords">
-          <div class="prog-chord" style="color:#34d399;border-color:#34d39944">Dm11<span class="bars">ii</span></div>
-          <div class="prog-chord" style="color:#ff6b6b;border-color:#ff6b6b44">G9sus4<span class="bars">V</span></div>
-          <div class="prog-chord" style="color:#34d399;border-color:#34d39944">Cmaj9<span class="bars">I</span></div>
-        </div>
-      </div>
-      <div class="prog-display">
-        <div class="prog-title">PROGRESSÃO 3 — I V vi IV (Sounds of Home)</div>
-        <div class="prog-chords">
-          <div class="prog-chord" style="color:#34d399;border-color:#34d39944">Cadd9<span class="bars">I</span></div>
-          <div class="prog-chord" style="color:#34d399;border-color:#34d39944">G9sus4<span class="bars">V</span></div>
-          <div class="prog-chord" style="color:#34d399;border-color:#34d39944">Am9<span class="bars">vi</span></div>
-          <div class="prog-chord" style="color:#34d399;border-color:#34d39944">Fmaj9<span class="bars">IV</span></div>
-        </div>
-      </div>
-
-      <div class="bpm-control">
-        <span class="bpm-label">BPM</span>
-        <span class="bpm-num" id="bpm-7b">60</span>
-        <input type="range" min="40" max="100" value="60" oninput="document.getElementById('bpm-7b').textContent=this.value">
-        <button class="btn btn-ghost btn-sm" onclick="toggleMetro('metro-7b', document.getElementById('bpm-7b').textContent)">METRO</button>
-      </div>
-      <div class="metro-beat" id="metro-7b"></div>
-
-      <div class="tip-box">
-        🎹 Segredo do gospel: as extensões (9ª, 11ª) enchem o som sem precisar tocar muitas notas. Toca o Cmaj9 bem devagar e ouve cada nota soar — é isso que separa o gospel do pop simples.<br><br>
-        ME: toca a raiz + 5ª grave. MD: toca o voicing completo. Reverb longo sempre.
-      </div>
-      <div class="video-links">
-        <a class="video-link" href="https://www.youtube.com/watch?v=ZPabFqOPrkg" target="_blank"><span class="video-icon">▶</span> Worship Voicings — I vi IV V Tutorial</a>
-        <a class="video-link" href="https://livekeyboardist.com/easyworshipchords" target="_blank"><span class="video-icon">▶</span> Easy Worship Chord Voicing — 90% das músicas</a>
-        <a class="video-link" href="https://www.youtube.com/watch?v=T1nQAthiHr8" target="_blank"><span class="video-icon">▶</span> Gospel/Worship Piano Voicings Completo</a>
-      </div>
-
-      <button class="done-btn" id="done-7b" onclick="markDone('7b')">✓ FEITO</button>
     </div>
+    <div class="keyboard-wrap"><div class="keyboard" id="kb-jazz"></div></div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#f5c842"></div> ME — raiz grave</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#4a9eff"></div> MD — acorde completo</div>
+    </div>
+    <div class="voz-box">
+      🎤 <strong>Melisma jazz — exercício:</strong><br>
+      Toque Dm7 → G7 → Cmaj7 devagar.<br>
+      Na resolução do Cmaj7 cante: <strong>"C — ah — ah — E"</strong> deslizando suave.<br>
+      Esse deslize vocal em cima da resolução é melisma. Repita até sair natural.
+    </div>
+    <div class="bpm-control">
+      <span class="bpm-label">BPM</span>
+      <span class="bpm-num" id="bpm-3">60</span>
+      <input type="range" min="40" max="120" value="60" oninput="document.getElementById('bpm-3').textContent=this.value">
+      <button class="btn btn-ghost btn-sm" onclick="toggleMetro('metro-3',document.getElementById('bpm-3').textContent)">METRO</button>
+    </div>
+    <div class="metro-beat" id="metro-3"></div>
+    <div class="tip-box">💡 Dedilhado MD: dedo 1 na nota mais grave, dedos 2-3-5 nas demais. ME: dedo 5 na raiz grave.</div>
+    <div class="video-links">
+      <a class="video-link" href="https://www.youtube.com/watch?v=_ldxtscmCpo" target="_blank"><span class="video-icon">▶</span> Shell Voicings para Jazz — Iniciante</a>
+      <a class="video-link" href="https://www.youtube.com/watch?v=NGeVdFkoxsQ" target="_blank"><span class="video-icon">▶</span> ii-V-I em todas as tonalidades</a>
+    </div>
+    <button class="done-btn" id="done-3" onclick="markDone(3)">✓ FEITO</button>
   </div>
+</div>
 
-  <!-- 9. PENTATÔNICAS — TODAS AS 24 -->
-  <div class="exercise-block" id="block-7">
-    <div class="block-header" onclick="toggleBlock(7)">
-      <div class="block-num">08</div>
-      <div class="block-title">
-        <h3>Pentatônicas — Todas as 24 Tonalidades</h3>
-        <div class="meta">10 MIN — Maiores e menores, todas as 12 notas</div>
-      </div>
-      <span class="block-tag tag-penta">PENTA</span>
-    </div>
-    <div class="block-body" id="body-7">
-      <div class="instruction">
-        <strong>Pentatônica Maior</strong> = 1 – 2 – 3 – 5 – 6 &nbsp;→&nbsp; som alegre, worship, pop<br>
-        <strong>Pentatônica Menor</strong> = 1 – b3 – 4 – 5 – b7 &nbsp;→&nbsp; som melancólico, blues, jazz<br><br>
-        Clique em qualquer tonalidade abaixo para ver as notas no teclado.
-      </div>
-
-      <div style="margin:14px 0 8px;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;">▸ MAIORES — 12 tonalidades</div>
-      <div class="chord-row" id="penta-major-row" style="flex-wrap:wrap;gap:8px;"></div>
-
-      <div style="margin:14px 0 8px;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;">▸ MENORES — 12 tonalidades</div>
-      <div class="chord-row" id="penta-minor-row" style="flex-wrap:wrap;gap:8px;"></div>
-
-      <div class="keyboard-wrap" style="margin-top:14px;">
-        <div class="keyboard" id="kb-penta"></div>
-      </div>
-      <div class="legend">
-        <div class="legend-item"><div class="legend-dot" style="background:#4a9eff"></div> Pentatônica Maior</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#a78bfa"></div> Pentatônica Menor</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#ff6b6b"></div> Tônica (raiz)</div>
-      </div>
-      <div id="penta-label" style="font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);margin-top:8px;"></div>
-
-      <div class="tip-box">
-        💡 Treino semanal recomendado: Semana 1 → C, F, Bb &nbsp;|&nbsp; Semana 2 → Eb, Ab, Db &nbsp;|&nbsp; Semana 3 → G, D, A &nbsp;|&nbsp; Semana 4 → E, B, F#.<br>
-        Em qualquer música: descobre o tom → toca a pentatônica maior daquele tom → 90% das notas funcionam.
-      </div>
-      <div class="video-links">
-        <a class="video-link" href="https://www.youtube.com/watch?v=YfnCMB7gHcE" target="_blank"><span class="video-icon">▶</span> Pentatônica em todas as tonalidades — Tutorial</a>
-        <a class="video-link" href="https://www.youtube.com/watch?v=DPWP7JxKPpA" target="_blank"><span class="video-icon">▶</span> Como usar pentatônica em qualquer música</a>
-      </div>
-
-      <button class="done-btn" id="done-7" onclick="markDone(7)">✓ FEITO</button>
-    </div>
+<!-- 05 SOUL/FUNK -->
+<div class="exercise-block" id="block-4">
+  <div class="block-header" onclick="toggleBlock(4)">
+    <div class="block-num">05</div>
+    <div class="block-title"><h3>Soul / Funk Groove</h3><div class="meta">8 MIN — Stevie Wonder · Earth Wind Fire · R&B</div></div>
+    <span class="block-tag tag-soul">SOUL</span>
   </div>
-
-  <!-- 9. IMPROVISAÇÃO LIVRE -->
-  <div class="exercise-block" id="block-8">
-    <div class="block-header" onclick="toggleBlock(6)">
-      <div class="block-num">09</div>
-      <div class="block-title">
-        <h3>Improvisação Livre</h3>
-        <div class="meta">5 MIN — Sem pensar, só sentir</div>
-      </div>
-      <span class="block-tag tag-improv">IMPROV</span>
+  <div class="block-body" id="body-4">
+    <div class="instruction">
+      Soul e funk usam os mesmos acordes do jazz mas com <strong>ritmo sincopado e groovy</strong>.<br>
+      O segredo é o <strong>espaço entre as notas</strong> — nota curta, acento no 2 e no 4.<br>
+      Progressão: <strong>Em7 → A7 → Dmaj7</strong> (2-5-1 em Ré)
     </div>
-    <div class="block-body" id="body-8">
-      <div class="instruction">
-        Último bloco. <strong>Esqueça a técnica</strong> por 5 minutos.<br>
-        Toque o que vier com a escala blues de Dó. Repita frases, faça pausas, respire pelo piano.<br><br>
-        <strong>Dica de frasear jazz:</strong><br>
-        — Comece uma frase NO tempo (1 ou 3)<br>
-        — Resolva FORA do tempo (e do 2, e do 4)<br>
-        — Use SILÊNCIO — pausa é nota
+    <div class="chord-row">
+      <div class="chord-card selected" onclick="showSoulChord('Em7',this)">
+        <div class="chord-name">Em7</div><div class="chord-notes">E — G — B — D</div><div class="chord-hand">2º grau</div>
       </div>
-
-      <div class="keyboard-wrap">
-        <div class="keyboard" id="kb-improv"></div>
+      <div class="chord-card" onclick="showSoulChord('A7',this)">
+        <div class="chord-name">A7</div><div class="chord-notes">A — C# — E — G</div><div class="chord-hand">5º grau</div>
       </div>
-      <div class="legend">
-        <div class="legend-item"><div class="legend-dot" style="background:#fb923c"></div> Notas seguras (pentatônica)</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#ff6b6b"></div> Blue note (tensão)</div>
+      <div class="chord-card" onclick="showSoulChord('Dmaj7',this)">
+        <div class="chord-name">Dmaj7</div><div class="chord-notes">D — F# — A — C#</div><div class="chord-hand">1º grau</div>
       </div>
-
-      <div class="bpm-control">
-        <span class="bpm-label">BPM</span>
-        <span class="bpm-num" id="bpm-8">75</span>
-        <input type="range" min="50" max="160" value="75" oninput="document.getElementById('bpm-8').textContent=this.value">
-        <button class="btn btn-ghost btn-sm" onclick="toggleMetro('metro-8', document.getElementById('bpm-8').textContent)">METRO</button>
+      <div class="chord-card" onclick="showSoulChord('Bm7',this)">
+        <div class="chord-name">Bm7</div><div class="chord-notes">B — D — F# — A</div><div class="chord-hand">6º grau</div>
       </div>
-      <div class="metro-beat" id="metro-8"></div>
-
-      <div class="tip-box">
-        🎹 Ear training: depois de improvisar, <strong>cante o que tocou</strong>. Isso treina o ouvido interno — a ferramenta mais importante de qualquer músico de jazz.
-      </div>
-
-      <button class="done-btn" id="done-8" onclick="markDone(8)">✓ FEITO — TREINO COMPLETO!</button>
     </div>
+    <div class="keyboard-wrap"><div class="keyboard" id="kb-soul"></div></div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#f5c842"></div> ME — raiz</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#4a9eff"></div> MD — acorde</div>
+    </div>
+    <div class="prog-display">
+      <div class="prog-title">Ritmo Soul — Padrão de Groove</div>
+      <div style="font-family:'DM Mono',monospace;font-size:13px;color:#ccc;line-height:2.4;">
+        Tempo:&nbsp;&nbsp; 1 &nbsp;&nbsp; e &nbsp;&nbsp; <span style="color:#fb923c">2</span> &nbsp;&nbsp; e &nbsp;&nbsp; 3 &nbsp;&nbsp; e &nbsp;&nbsp; <span style="color:#fb923c">4</span>&nbsp;&nbsp; e<br>
+        ME:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#f5c842">♩</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#f5c842">♩</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#f5c842">♩</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#f5c842">♩</span><br>
+        MD:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#4a9eff">♩</span> &nbsp;&nbsp; <span style="color:#4a9eff">♪</span> &nbsp;&nbsp; <span style="color:#4a9eff">♩</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#4a9eff">♪</span> &nbsp;<span style="color:#ff6b6b">♩</span><br>
+        <span style="color:#555;font-size:10px">♩ = longa &nbsp;·&nbsp; ♪ = curta antecipada (sincopada)</span>
+      </div>
+    </div>
+    <div class="sec-label">Just The Two Of Us — Progressão R&B</div>
+    <div class="prog-display">
+      <div class="prog-title">Tom de Db — clique para ver no teclado</div>
+      <div class="prog-chords">
+        <div class="prog-chord" style="color:#fb923c;border-color:#fb923c44" onclick="showSoulChord('Dbmaj7',this)">Dbmaj7<span class="bars">I</span></div>
+        <div class="prog-chord" style="color:#fb923c;border-color:#fb923c44" onclick="showSoulChord('Fm7',this)">Fm7<span class="bars">iii</span></div>
+        <div class="prog-chord" style="color:#fb923c;border-color:#fb923c44" onclick="showSoulChord('Bb7',this)">Bb7<span class="bars">V/ii</span></div>
+        <div class="prog-chord" style="color:#fb923c;border-color:#fb923c44" onclick="showSoulChord('Ebm7',this)">Ebm7<span class="bars">ii</span></div>
+        <div class="prog-chord" style="color:#fb923c;border-color:#fb923c44" onclick="showSoulChord('Ab7',this)">Ab7<span class="bars">V</span></div>
+      </div>
+    </div>
+    <div class="voz-box">
+      🎤 <strong>Melisma Soul — exercício:</strong><br>
+      Toque Em7 → A7 → Dmaj7.<br>
+      Na resolução do Dmaj7 cante: <strong>"D — ah — F# — aaah"</strong> deslizando.<br>
+      Esse deslize entre notas em cima de uma sílaba É o melisma soul/gospel.<br>
+      Referência: Stevie Wonder — "Isn't She Lovely" — ouça como a voz passeia.
+    </div>
+    <div class="bpm-control">
+      <span class="bpm-label">BPM</span>
+      <span class="bpm-num" id="bpm-4">80</span>
+      <input type="range" min="60" max="140" value="80" oninput="document.getElementById('bpm-4').textContent=this.value">
+      <button class="btn btn-ghost btn-sm" onclick="toggleMetro('metro-4',document.getElementById('bpm-4').textContent)">METRO</button>
+    </div>
+    <div class="metro-beat" id="metro-4"></div>
+    <div class="tip-box">💡 Timbre: Electric Piano + chorus leve + reverb médio. Toque notas curtas e solte rápido — o groove vem do espaço entre as notas.</div>
+    <button class="done-btn" id="done-4" onclick="markDone(4)">✓ FEITO</button>
   </div>
+</div>
 
-  <!-- GUIA DO LIVRO -->
-  <div class="exercise-block" id="block-book">
-
-  <!-- ESCALAS E MODOS — TRADUTOR -->
-  <div class="exercise-block" id="block-scales">
-    <div class="block-header" onclick="toggleBlock('scales')">
-      <div class="block-num">🎼</div>
-      <div class="block-title">
-        <h3>Escalas & Modos — Tradutor de Notas</h3>
-        <div class="meta">Viu as letras em qualquer lugar? Clica e toca!</div>
-      </div>
-      <span class="block-tag tag-jazz">TEORIA</span>
-    </div>
-    <div class="block-body" id="body-scales">
-
-      <div class="instruction">
-        Qualquer conjunto de letras que você ver — no Color Tree, no livro, em qualquer lugar — <strong>são as teclas que você aperta.</strong><br><br>
-        Clica em qualquer escala abaixo pra ver as notas no teclado.<br>
-        <strong>Como escala:</strong> toca uma por vez ↑↓ &nbsp;|&nbsp; <strong>Como acorde:</strong> toca todas juntas
-      </div>
-
-      <div style="margin:14px 0 6px;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;">▸ ESCALAS MAIORES</div>
-      <div class="chord-row" id="scales-major-row" style="flex-wrap:wrap;gap:8px;"></div>
-
-      <div style="margin:14px 0 6px;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;">▸ ESCALAS MENORES</div>
-      <div class="chord-row" id="scales-minor-row" style="flex-wrap:wrap;gap:8px;"></div>
-
-      <div style="margin:14px 0 6px;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;">▸ MODOS — JAZZ & GOSPEL</div>
-      <div class="chord-row" id="scales-modes-row" style="flex-wrap:wrap;gap:8px;"></div>
-
-      <div style="margin:14px 0 6px;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;">▸ ESCALAS BLUES</div>
-      <div class="chord-row" id="scales-blues-row" style="flex-wrap:wrap;gap:8px;"></div>
-
-      <div class="keyboard-wrap" style="margin-top:14px;">
-        <div class="keyboard" id="kb-scales"></div>
-      </div>
-      <div id="scales-name" style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:#f5c842;margin-top:8px;letter-spacing:2px;"></div>
-      <div id="scales-notes" style="font-family:'DM Mono',monospace;font-size:12px;color:#ccc;margin-top:4px;"></div>
-      <div id="scales-desc" style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);margin-top:4px;"></div>
-
-      <div class="tip-box" style="margin-top:14px;">
-        💡 <strong>Regra de ouro:</strong> viu letras → são notas → são teclas.<br>
-        Toca as notas uma por vez = escala (melodia/improv)<br>
-        Toca as notas juntas = acorde (harmonia)<br>
-        É sempre isso — não importa de onde vieram as letras.
-      </div>
-
-    </div>
+<!-- 06 GOSPEL / WORSHIP -->
+<div class="exercise-block" id="block-5">
+  <div class="block-header" onclick="toggleBlock(5)">
+    <div class="block-num">06</div>
+    <div class="block-title"><h3>Gospel & Worship</h3><div class="meta">10 MIN — Sus chords · Voicings ricos · Sounds of Home</div></div>
+    <span class="block-tag tag-gospel">GOSPEL</span>
   </div>
-    <div class="block-header" onclick="toggleBlock('book')">
-      <div class="block-num">📖</div>
-      <div class="block-title">
-        <h3>Guia — Hal Leonard Blues Piano</h3>
-        <div class="meta">Onde cada capítulo se encaixa no seu treino</div>
-      </div>
-      <span class="block-tag tag-blues">LIVRO</span>
+  <div class="block-body" id="body-5">
+    <div class="instruction">
+      Gospel usa acordes com extensões ricas (9ª, 11ª) e sus chords que criam tensão antes de resolver.<br>
+      <strong>Regra:</strong> ME toca a raiz grave, MD toca o voicing completo. Reverb longo sempre.
     </div>
-    <div class="block-body" id="body-book">
-
-      <div class="instruction">
-        Use este guia para saber <strong>o que estudar no livro</strong> em cada fase. Leia à noite, pratique de manhã.
+    <div class="sec-label">Sus Chord — Tensão e Resolução</div>
+    <div class="chord-row">
+      <div class="chord-card selected" onclick="showGospelChord('Gsus4',this)">
+        <div class="chord-name">Gsus4</div><div class="chord-notes">G — C — D (sem B)</div><div class="chord-hand">Tensão</div>
       </div>
-
-      <div style="margin:14px 0 6px;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;">▸ AGORA — SEU FOCO ATUAL</div>
-
-      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
-        <div style="background:var(--surface);border:1px solid #f5c84244;border-radius:6px;padding:12px 16px;">
-          <div style="font-family:'DM Mono',monospace;font-size:11px;color:#f5c842;margin-bottom:4px;">CAP. 3 — PÁG. 15–24 → BLOCO 03</div>
-          <div style="font-size:13px;color:#ccc;line-height:1.6;">
-            <strong style="color:#f5c842">Padrões de Mão Esquerda:</strong><br>
-            • Padrão 1a: raiz + 5ª alternando (shuffle básico) — <em>comece aqui</em><br>
-            • Padrão 1b: adiciona a 7ª no tempo 3<br>
-            • Padrão 1c: movimento b3→3 (boogie woogie)<br>
-            • Walking Bass (pág. 23): ME "caminha" entre os acordes — próximo passo depois do shuffle
-          </div>
-        </div>
-
-        <div style="background:var(--surface);border:1px solid #f5c84244;border-radius:6px;padding:12px 16px;">
-          <div style="font-family:'DM Mono',monospace;font-size:11px;color:#f5c842;margin-bottom:4px;">CAP. 2 — PÁG. 8–9 → BLOCO 02</div>
-          <div style="font-size:13px;color:#ccc;line-height:1.6;">
-            <strong style="color:#f5c842">Escalas Blues:</strong> todas as 12 tonalidades com partitura.<br>
-            Bom pra confirmar as notas que você tá tocando no teclado interativo.
-          </div>
-        </div>
+      <div class="chord-card" onclick="showGospelChord('G7',this)">
+        <div class="chord-name">G7</div><div class="chord-notes">G — B — D — F</div><div class="chord-hand">Dominante</div>
       </div>
-
-      <div style="margin:14px 0 6px;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;">▸ PRÓXIMA FASE — 1 a 2 MESES</div>
-
-      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:12px 16px;opacity:0.7;">
-          <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:4px;">CAP. 4 — PÁG. 25–39 → BLOCO 04 + 05</div>
-          <div style="font-size:13px;color:#ccc;line-height:1.6;">
-            Voicings e Comping: tríades, dominante 7ª/9ª, padrão "7-3", turnarounds.<br>
-            <em>Não pule para cá antes do shuffle estar automático.</em>
-          </div>
-        </div>
-
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:12px 16px;opacity:0.7;">
-          <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:4px;">CAP. 5 — PÁG. 40–57 → BLOCO 09</div>
-          <div style="font-size:13px;color:#ccc;line-height:1.6;">
-            Técnicas de MD: grace notes, paralelas, drone notes, crossover licks, tremolos.<br>
-            <em>É o que vai fazer seu solo soar profissional.</em>
-          </div>
-        </div>
+      <div class="chord-card" onclick="showGospelChord('Cmaj7',this)">
+        <div class="chord-name">Cmaj7</div><div class="chord-notes">C — E — G — B</div><div class="chord-hand">Resolução</div>
       </div>
-
-      <div style="margin:14px 0 6px;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;">▸ MÚSICAS DO CAPÍTULO 6 — METAS</div>
-
-      <div style="display:flex;flex-direction:column;gap:6px;">
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;">
-          <div>
-            <div style="font-family:'DM Mono',monospace;font-size:12px;color:#f5c842;">Every Night I Have the Blues</div>
-            <div style="font-size:11px;color:var(--muted);">Pág. 65 — estilo Memphis Slim — sua música alvo!</div>
-          </div>
-          <span style="font-family:'DM Mono',monospace;font-size:10px;color:#34d399;border:1px solid #34d399;padding:2px 8px;border-radius:3px;">META</span>
-        </div>
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;">
-          <div>
-            <div style="font-family:'DM Mono',monospace;font-size:12px;color:#ccc;">Meade's Boogie</div>
-            <div style="font-size:11px;color:var(--muted);">Pág. 58 — boogie woogie, ME intensa</div>
-          </div>
-          <span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);border:1px solid var(--border);padding:2px 8px;border-radius:3px;">FASE 2</span>
-        </div>
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;">
-          <div>
-            <div style="font-family:'DM Mono',monospace;font-size:12px;color:#ccc;">Fat Cat Blues</div>
-            <div style="font-size:11px;color:var(--muted);">Pág. 71 — estilo Fats Domino, New Orleans</div>
-          </div>
-          <span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);border:1px solid var(--border);padding:2px 8px;border-radius:3px;">FASE 3</span>
-        </div>
-      </div>
-
-      <div class="tip-box" style="margin-top:14px;">
-        🎯 Rotina recomendada: <strong>manhã</strong> → treino matinal (esta página) &nbsp;|&nbsp; <strong>noite</strong> → 15min lendo o livro no capítulo atual. Em 1 mês você vai estar tocando "Every Night I Have the Blues" completa.
-      </div>
-
-      <div style="margin:20px 0 6px;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;">▸ MÚSICA ESPECIAL — JUST THE TWO OF US</div>
-
-      <div style="background:var(--surface);border:1px solid #a78bfa44;border-radius:8px;padding:16px;margin-bottom:12px;">
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:#a78bfa;letter-spacing:2px;margin-bottom:4px;">Just The Two Of Us</div>
-        <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:12px;">Bill Withers / Grover Washington Jr. — Jazz/Soul</div>
-
-        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:8px;">PROGRESSÃO ORIGINAL — Db maior</div>
-        <div class="prog-display" style="margin-bottom:12px;">
-          <div class="prog-title">VERSÃO ORIGINAL (Db) — mais difícil</div>
-          <div class="prog-chords">
-            <div class="prog-chord" style="color:#a78bfa;border-color:#a78bfa44" onclick="showJTTOUS('Dbmaj7')">Dbmaj7<span class="bars">I</span></div>
-            <div class="prog-chord" style="color:#a78bfa;border-color:#a78bfa44" onclick="showJTTOUS('Fm7')">Fm7<span class="bars">iii</span></div>
-            <div class="prog-chord" style="color:#ff6b6b;border-color:#ff6b6b44" onclick="showJTTOUS('Bb7')">Bb7<span class="bars">V/ii</span></div>
-            <div class="prog-chord" style="color:#a78bfa;border-color:#a78bfa44" onclick="showJTTOUS('Ebm7')">Ebm7<span class="bars">ii</span></div>
-            <div class="prog-chord" style="color:#ff6b6b;border-color:#ff6b6b44" onclick="showJTTOUS('Ab7')">Ab7<span class="bars">V</span></div>
-          </div>
-        </div>
-
-        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:8px;">VERSÃO SIMPLIFICADA — C maior (começa aqui)</div>
-        <div class="prog-display" style="margin-bottom:12px;">
-          <div class="prog-title">VERSÃO EM DÓ — mais fácil, mesma progressão</div>
-          <div class="prog-chords">
-            <div class="prog-chord" style="color:#4ecdc4;border-color:#4ecdc444" onclick="showJTTOUS('Cmaj7')">Cmaj7<span class="bars">I</span></div>
-            <div class="prog-chord" style="color:#4ecdc4;border-color:#4ecdc444" onclick="showJTTOUS('Em7')">Em7<span class="bars">iii</span></div>
-            <div class="prog-chord" style="color:#ff6b6b;border-color:#ff6b6b44" onclick="showJTTOUS('A7')">A7<span class="bars">V/ii</span></div>
-            <div class="prog-chord" style="color:#4ecdc4;border-color:#4ecdc444" onclick="showJTTOUS('Dm7')">Dm7<span class="bars">ii</span></div>
-            <div class="prog-chord" style="color:#ff6b6b;border-color:#ff6b6b44" onclick="showJTTOUS('G7')">G7<span class="bars">V</span></div>
-          </div>
-        </div>
-
-        <div class="keyboard-wrap">
-          <div class="keyboard" id="kb-jttous"></div>
-        </div>
-        <div class="legend">
-          <div class="legend-item"><div class="legend-dot" style="background:#a78bfa"></div> Raiz</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#f5c842"></div> 3ª + 7ª (shell)</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#4ecdc4"></div> 5ª</div>
-        </div>
-        <div id="jttous-label" style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);margin-top:8px;"></div>
-
-        <div class="tip-box" style="margin-top:12px;">
-          🎹 <strong>Como tocar:</strong><br>
-          ME: raiz grave de cada acorde<br>
-          MD: shell voicing (raiz + 3ª + 7ª) — igual bloco 04<br><br>
-          <strong>Ritmo:</strong> segura cada acorde 2 compassos, toca devagar com reverb.<br>
-          <strong>Melodia:</strong> depois de memorizar os acordes, adiciona a melodia na MD.<br><br>
-          <strong>Nota:</strong> o Bb7 e Ab7 (ou A7 e G7) são dominantes que criam tensão antes de resolver — isso é o ii-V-I que você já conhece!
-        </div>
-      </div>
-
     </div>
+    <div class="keyboard-wrap"><div class="keyboard" id="kb-gospel"></div></div>
+    <div class="sec-label" style="margin-top:16px;">Voicings Gospel/Worship</div>
+    <div class="chord-row">
+      <div class="chord-card selected" onclick="showGWVoicing('Cmaj9',this)">
+        <div class="chord-name" style="color:#34d399">Cmaj9</div><div class="chord-notes">C E G B D</div><div class="chord-hand">I total</div>
+      </div>
+      <div class="chord-card" onclick="showGWVoicing('G9sus4',this)">
+        <div class="chord-name" style="color:#34d399">G9sus4</div><div class="chord-notes">G C D F A</div><div class="chord-hand">V tensão</div>
+      </div>
+      <div class="chord-card" onclick="showGWVoicing('Am9',this)">
+        <div class="chord-name" style="color:#34d399">Am9</div><div class="chord-notes">A C E G B</div><div class="chord-hand">vi emoção</div>
+      </div>
+      <div class="chord-card" onclick="showGWVoicing('Fmaj9',this)">
+        <div class="chord-name" style="color:#34d399">Fmaj9</div><div class="chord-notes">F A C E G</div><div class="chord-hand">IV estável</div>
+      </div>
+    </div>
+    <div class="keyboard-wrap"><div class="keyboard" id="kb-gw"></div></div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#f5c842"></div> ME — raiz</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#4a9eff"></div> MD — voicing</div>
+    </div>
+    <div id="gw-label" style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);margin-top:6px;"></div>
+    <div class="prog-display" style="margin-top:12px;">
+      <div class="prog-title">I — V — vi — IV (Way Maker / Sounds of Home)</div>
+      <div class="prog-chords">
+        <div class="prog-chord" style="color:#34d399;border-color:#34d39944">Cmaj9<span class="bars">I</span></div>
+        <div class="prog-chord" style="color:#34d399;border-color:#34d39944">G9sus4<span class="bars">V</span></div>
+        <div class="prog-chord" style="color:#34d399;border-color:#34d39944">Am9<span class="bars">vi</span></div>
+        <div class="prog-chord" style="color:#34d399;border-color:#34d39944">Fmaj9<span class="bars">IV</span></div>
+      </div>
+    </div>
+    <div class="voz-box">
+      🎤 <strong>Apojatura gospel — exercício:</strong><br>
+      Apojatura = nota vizinha que desliza para a nota alvo.<br>
+      Na progressão gospel, no Cmaj9 cante:<br>
+      <strong>B → C</strong> (sobe meio tom) ou <strong>D → C</strong> (desce um tom)<br>
+      Esse pequeño deslize vocal é a assinatura do gospel. Repita em cada resolução.
+    </div>
+    <div class="bpm-control">
+      <span class="bpm-label">BPM</span>
+      <span class="bpm-num" id="bpm-5">60</span>
+      <input type="range" min="40" max="100" value="60" oninput="document.getElementById('bpm-5').textContent=this.value">
+      <button class="btn btn-ghost btn-sm" onclick="toggleMetro('metro-5',document.getElementById('bpm-5').textContent)">METRO</button>
+    </div>
+    <div class="metro-beat" id="metro-5"></div>
+    <div class="tip-box">💡 Timbre: Electric Piano + Reverb Hall 14 + Chorus 6. Devagar, notas longas. Menos é mais.</div>
+    <div class="video-links">
+      <a class="video-link" href="https://www.youtube.com/watch?v=xonJT0LLTK8" target="_blank"><span class="video-icon">▶</span> Sounds of Home — Referência worship</a>
+      <a class="video-link" href="https://www.youtube.com/watch?v=ZPabFqOPrkg" target="_blank"><span class="video-icon">▶</span> I-V-vi-IV Worship Tutorial</a>
+    </div>
+    <button class="done-btn" id="done-5" onclick="markDone(5)">✓ FEITO</button>
   </div>
+</div>
 
-  <!-- BLOCO CHARLIE PARKER -->
-  <div class="block-wrap">
-    <div class="block-header" onclick="toggleBlock('parker')">
-      <div class="block-num">🎷</div>
-      <div class="block-info">
-        <div class="block-title">Charlie Parker — Now's The Time &amp; Billie's Bounce</div>
-        <div class="block-meta">Solo transcrito · ME acordes · MD melodia bebop</div>
-      </div>
-      <div class="block-time">Meta</div>
-    </div>
-    <div class="block-body" id="body-parker">
-
-      <!-- NOW'S THE TIME -->
-      <div style="margin-bottom:24px;">
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:#f5c842;letter-spacing:1px;margin-bottom:8px;">NOW'S THE TIME</div>
-        <div class="tip-box" style="margin-bottom:12px;">
-          Blues de 12 compassos em <strong>Fá</strong>. ME toca os acordes, MD toca o solo nota por nota.<br>
-          Começa 70 BPM — quando sair limpo aumenta 5 BPM por dia.
-        </div>
-
-        <div style="font-family:'DM Mono',monospace;font-size:11px;color:#f5c842;margin-bottom:6px;">LINHA 1 — F7</div>
-        <div class="chord-row" style="flex-wrap:wrap;gap:6px;margin-bottom:12px;">
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;">C</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;">D</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;">F</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;">G</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;">A</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;">C</div></div>
-          <div style="width:100%;height:1px;"></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;">C</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;">A</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;">G</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;">F</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;">D</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;">C</div></div>
-        </div>
-
-        <div style="font-family:'DM Mono',monospace;font-size:11px;color:#4ecdc4;margin-bottom:6px;">LINHA 2 — Bb7 → B° → F7</div>
-        <div class="chord-row" style="flex-wrap:wrap;gap:6px;margin-bottom:12px;">
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#4ecdc4;">C</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#4ecdc4;">Bb</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#4ecdc4;">A</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#4ecdc4;">G</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#4ecdc4;">F</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#ff6b6b;">Eb</div></div>
-          <div style="width:100%;height:1px;"></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#4ecdc4;">D</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#4ecdc4;">Eb</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#4ecdc4;">F</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#4ecdc4;">G</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#4ecdc4;">A</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#4ecdc4;">G</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#4ecdc4;">F</div></div>
-        </div>
-
-        <div style="font-family:'DM Mono',monospace;font-size:11px;color:#a78bfa;margin-bottom:6px;">LINHA 3 — Gm7 → C7 → F7 → C7</div>
-        <div class="chord-row" style="flex-wrap:wrap;gap:6px;margin-bottom:16px;">
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#a78bfa;">Eb</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#a78bfa;">D</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#a78bfa;">C</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#a78bfa;">Bb</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#a78bfa;">Ab</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#a78bfa;">G</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#a78bfa;">F</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#a78bfa;">Eb</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#a78bfa;">D</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#a78bfa;">C</div></div>
-        </div>
-
-        <div style="font-family:'DM Mono',monospace;font-size:11px;color:#f5c842;margin-bottom:6px;">ME — ACORDES (segura cada um)</div>
-        <div class="chord-row" style="flex-wrap:wrap;gap:8px;margin-bottom:16px;">
-          <div class="chord-card" onclick="buildKeyboard('kb-ntt-1',{me:['F'],md:['F','A','C','Eb']})"><div class="chord-name">F7</div></div>
-          <div class="chord-card" onclick="buildKeyboard('kb-ntt-1',{me:['Bb'],md:['Bb','D','F','Ab']})"><div class="chord-name">Bb7</div></div>
-          <div class="chord-card" onclick="buildKeyboard('kb-ntt-1',{me:['G'],md:['G','Bb','D','F']})"><div class="chord-name">Gm7</div></div>
-          <div class="chord-card" onclick="buildKeyboard('kb-ntt-1',{me:['C'],md:['C','E','G','Bb']})"><div class="chord-name">C7</div></div>
-        </div>
-        <div class="keyboard-wrap"><div class="keyboard" id="kb-ntt-1"></div></div>
-      </div>
-
-      <!-- BILLIE'S BOUNCE -->
-      <div style="margin-top:28px;padding-top:20px;border-top:1px solid var(--border);">
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:#ff6b6b;letter-spacing:1px;margin-bottom:8px;">BILLIE'S BOUNCE</div>
-        <div class="tip-box" style="margin-bottom:12px;">
-          Blues bebop em <strong>Fá</strong> — mais cromático que Now's The Time. Mesmo formato: ME segura acorde, MD sola em cima.
-        </div>
-
-        <div style="font-family:'DM Mono',monospace;font-size:11px;color:#f5c842;margin-bottom:6px;">LINHA 1 — F7 → Bb7 B° → F7</div>
-        <div class="chord-row" style="flex-wrap:wrap;gap:6px;margin-bottom:12px;">
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;">C</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;">D</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;">F</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;">G</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;">A</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;">C</div></div>
-          <div style="width:100%;height:1px;"></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#ff6b6b;">Bb</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#ff6b6b;">Ab</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#ff6b6b;">G</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#ff6b6b;">F</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#ff6b6b;">Eb</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#ff6b6b;">D</div></div>
-        </div>
-
-        <div style="font-family:'DM Mono',monospace;font-size:11px;color:#4ecdc4;margin-bottom:6px;">LINHA 2 — Bb7 → F7 → Am7 D7b9</div>
-        <div class="chord-row" style="flex-wrap:wrap;gap:6px;margin-bottom:12px;">
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#4ecdc4;">Bb</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#4ecdc4;">C</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#ff6b6b;">Db</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#4ecdc4;">Eb</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#4ecdc4;">F</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#4ecdc4;">Eb</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#4ecdc4;">D</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#4ecdc4;">C</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#4ecdc4;">Bb</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#4ecdc4;">Ab</div></div>
-          <div style="width:100%;height:1px;"></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#ff6b6b;">G</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#ff6b6b;">A</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#ff6b6b;">Bb</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#ff6b6b;">C</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#ff6b6b;">C#</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#ff6b6b;">D</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#ff6b6b;">F#</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#ff6b6b;">A</div></div>
-        </div>
-
-        <div style="font-family:'DM Mono',monospace;font-size:11px;color:#a78bfa;margin-bottom:6px;">LINHA 3 — Gm7 → C7 → F7 D7#9 → Gm7 C7</div>
-        <div class="chord-row" style="flex-wrap:wrap;gap:6px;margin-bottom:16px;">
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#a78bfa;">G</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#a78bfa;">A</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#a78bfa;">Bb</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#a78bfa;">C</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#a78bfa;">D</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#a78bfa;">Eb</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#a78bfa;">D</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#a78bfa;">C</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#a78bfa;">Bb</div></div>
-          <div style="width:100%;height:1px;"></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#a78bfa;">A</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#a78bfa;">G</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#a78bfa;">F</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#a78bfa;">D</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#a78bfa;">C</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#a78bfa;">D</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#a78bfa;">F</div></div>
-          <div class="chord-card" style="min-width:36px;text-align:center;"><div class="chord-name" style="font-size:16px;color:#a78bfa;">G</div></div>
-        </div>
-
-        <div style="font-family:'DM Mono',monospace;font-size:11px;color:#f5c842;margin-bottom:6px;">ME — ACORDES (segura cada um)</div>
-        <div class="chord-row" style="flex-wrap:wrap;gap:8px;margin-bottom:16px;">
-          <div class="chord-card" onclick="buildKeyboard('kb-bb-1',{me:['F'],md:['F','A','C','Eb']})"><div class="chord-name">F7</div></div>
-          <div class="chord-card" onclick="buildKeyboard('kb-bb-1',{me:['Bb'],md:['Bb','D','F','Ab']})"><div class="chord-name">Bb7</div></div>
-          <div class="chord-card" onclick="buildKeyboard('kb-bb-1',{me:['G'],md:['G','Bb','D','F']})"><div class="chord-name">Gm7</div></div>
-          <div class="chord-card" onclick="buildKeyboard('kb-bb-1',{me:['C'],md:['C','E','G','Bb']})"><div class="chord-name">C7</div></div>
-          <div class="chord-card" onclick="buildKeyboard('kb-bb-1',{me:['A'],md:['A','C','E','G']})"><div class="chord-name">Am7</div></div>
-          <div class="chord-card" onclick="buildKeyboard('kb-bb-1',{me:['D'],md:['D','F#','A','C']})"><div class="chord-name">D7b9</div></div>
-        </div>
-        <div class="keyboard-wrap"><div class="keyboard" id="kb-bb-1"></div></div>
-
-        <div class="tip-box" style="margin-top:16px;">
-          🎷 <strong>Como estudar:</strong><br>
-          1. Ouça o original: <strong>Charlie Parker — Billie's Bounce (1945)</strong> no Spotify/YouTube<br>
-          2. ME só — toque os acordes nos 12 compassos até ficar automático<br>
-          3. MD só — toque o solo devagar, nota por nota, sem ritmo<br>
-          4. Junte as mãos a 50 BPM → aumente 5 BPM por semana<br><br>
-          🎯 <strong>Meta:</strong> tocar a 70 BPM limpo = você já é bebop! 🎹
-        </div>
-
-        <div style="margin-top:12px;">
-          <a href="https://www.youtube.com/watch?v=oyBQnWLEPfk" target="_blank" class="chord-card" style="display:inline-block;text-decoration:none;color:var(--text);padding:8px 12px;">
-            ▶ Charlie Parker — Billie's Bounce (original)
-          </a>
-        </div>
-      </div>
-
-    </div>
+<!-- 07 MELISMAS & VOZ -->
+<div class="exercise-block" id="block-6">
+  <div class="block-header" onclick="toggleBlock(6)">
+    <div class="block-num">07</div>
+    <div class="block-title"><h3>Melismas & Voz</h3><div class="meta">8 MIN — Apojatura · Deslize · Call and Response</div></div>
+    <span class="block-tag tag-voz">VOZ</span>
   </div>
-
-  <!-- BLOCO FOLHA DE REFERÊNCIA -->
-  <div class="exercise-block" id="block-ref">
-    <div class="block-header" onclick="toggleBlock('ref')">
-      <div class="block-num">📄</div>
-      <div class="block-title">
-        <h3>Folha de Referência — Progressões & Escalas</h3>
-        <div class="meta">2-5-1 · Blues · Gospel · Worship · Pentatônicas · Arpejos</div>
-      </div>
+  <div class="block-body" id="body-6">
+    <div class="instruction">
+      <strong>Melisma</strong> = várias notas em uma sílaba. É a essência do gospel, soul e blues vocal.<br>
+      <strong>Apojatura</strong> = nota de apoio que desliza para a nota principal.<br>
+      Esses exercícios treinam voz + teclado juntos.
     </div>
-    <div class="block-body" id="body-ref">
 
-      <div class="legend">
-        <div class="legend-item"><div class="legend-dot" style="background:#f5c842"></div> ME — Mão Esquerda (raiz)</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#4a9eff"></div> MD — Mão Direita (acorde)</div>
-      </div>
-
-      <!-- 2-5-1 JAZZ -->
-      <div class="section-divider" style="font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px;color:var(--accent);margin:16px 0 8px;border-bottom:1px solid var(--border);padding-bottom:4px;">2-5-1 Jazz — Tom de Dó</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
-        <span class="prog-chord">Dm7</span>
-        <span style="color:#666;align-self:center;">→</span>
-        <span class="prog-chord">G7</span>
-        <span style="color:#666;align-self:center;">→</span>
-        <span class="prog-chord">Cmaj7</span>
-        <span style="color:#666;align-self:center;font-size:11px;">→ repete</span>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:8px;width:100%;">
-        <div class="chord-card">
-          <div class="chord-name">Dm7</div>
-          <div class="chord-notes">ME: D &nbsp;|&nbsp; MD: D F A C</div>
-          <div class="keyboard-wrap" style="margin-top:8px;"><div class="keyboard" id="kb-ref-dm7"></div></div>
-        </div>
-        <div class="chord-card">
-          <div class="chord-name">G7</div>
-          <div class="chord-notes">ME: G &nbsp;|&nbsp; MD: G B D F</div>
-          <div class="keyboard-wrap" style="margin-top:8px;"><div class="keyboard" id="kb-ref-g7"></div></div>
-        </div>
-        <div class="chord-card">
-          <div class="chord-name">Cmaj7</div>
-          <div class="chord-notes">ME: C &nbsp;|&nbsp; MD: C E G B</div>
-          <div class="keyboard-wrap" style="margin-top:8px;"><div class="keyboard" id="kb-ref-cmaj7"></div></div>
-        </div>
-      </div>
-      <div class="tip-box">💡 Dedilhado MD: dedo 1 (polegar) na nota mais grave, dedos 2-3-5 nas demais. ME: dedo 5 na raiz grave. Segura 2 tempos cada acorde.</div>
-
-      <!-- BLUES 12 COMPASSOS -->
-      <div class="section-divider" style="font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px;color:var(--accent);margin:16px 0 8px;border-bottom:1px solid var(--border);padding-bottom:4px;">Blues 12 Compassos — Tom de Fá</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
-        <span class="prog-chord">F7</span>
-        <span style="color:#666;align-self:center;">→</span>
-        <span class="prog-chord">Bb7</span>
-        <span style="color:#666;align-self:center;">→</span>
-        <span class="prog-chord">C7</span>
-        <span style="color:#666;align-self:center;font-size:11px;">→ repete</span>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:8px;width:100%;">
-        <div class="chord-card">
-          <div class="chord-name">F7</div>
-          <div class="chord-notes">ME: F &nbsp;|&nbsp; MD: F A C Eb</div>
-          <div class="keyboard-wrap" style="margin-top:8px;"><div class="keyboard" id="kb-ref-f7"></div></div>
-        </div>
-        <div class="chord-card">
-          <div class="chord-name">Bb7</div>
-          <div class="chord-notes">ME: Bb &nbsp;|&nbsp; MD: Bb D F Ab</div>
-          <div class="keyboard-wrap" style="margin-top:8px;"><div class="keyboard" id="kb-ref-bb7"></div></div>
-        </div>
-        <div class="chord-card">
-          <div class="chord-name">C7</div>
-          <div class="chord-notes">ME: C &nbsp;|&nbsp; MD: C E G Bb</div>
-          <div class="keyboard-wrap" style="margin-top:8px;"><div class="keyboard" id="kb-ref-c7"></div></div>
-        </div>
-      </div>
-      <div class="tip-box">💡 ME faz shuffle: tum-ca-tum-ca. MD improvisa com escala blues de Fá: F Ab Bb B C Eb. Começa a 60 BPM.</div>
-
-      <!-- GOSPEL / WORSHIP -->
-      <div class="section-divider" style="font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px;color:var(--accent);margin:16px 0 8px;border-bottom:1px solid var(--border);padding-bottom:4px;">Gospel / Worship — Dó (I–V–vi–IV)</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
-        <span class="prog-chord">Cmaj9</span>
-        <span style="color:#666;align-self:center;">→</span>
-        <span class="prog-chord">G9sus4</span>
-        <span style="color:#666;align-self:center;">→</span>
-        <span class="prog-chord">Am9</span>
-        <span style="color:#666;align-self:center;">→</span>
-        <span class="prog-chord">Fmaj9</span>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:8px;width:100%;">
-        <div class="chord-card">
-          <div class="chord-name">Cmaj9</div>
-          <div class="chord-notes">ME: C &nbsp;|&nbsp; MD: C E G B D</div>
-          <div class="keyboard-wrap" style="margin-top:8px;"><div class="keyboard" id="kb-ref-cmaj9"></div></div>
-        </div>
-        <div class="chord-card">
-          <div class="chord-name">G9sus4</div>
-          <div class="chord-notes">ME: G &nbsp;|&nbsp; MD: G C D F A</div>
-          <div class="keyboard-wrap" style="margin-top:8px;"><div class="keyboard" id="kb-ref-g9sus4"></div></div>
-        </div>
-        <div class="chord-card">
-          <div class="chord-name">Am9</div>
-          <div class="chord-notes">ME: A &nbsp;|&nbsp; MD: A C E G B</div>
-          <div class="keyboard-wrap" style="margin-top:8px;"><div class="keyboard" id="kb-ref-am9"></div></div>
-        </div>
-        <div class="chord-card">
-          <div class="chord-name">Fmaj9</div>
-          <div class="chord-notes">ME: F &nbsp;|&nbsp; MD: F A C E G</div>
-          <div class="keyboard-wrap" style="margin-top:8px;"><div class="keyboard" id="kb-ref-fmaj9"></div></div>
-        </div>
-      </div>
-      <div class="tip-box">💡 Timbre: Electric Piano + Reverb Hall 14. Toca bem devagar, notas longas. Estilo Sounds of Home.</div>
-
-      <!-- JUST THE TWO OF US -->
-      <div class="section-divider" style="font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px;color:var(--accent);margin:16px 0 8px;border-bottom:1px solid var(--border);padding-bottom:4px;">Just The Two Of Us — Tom de Db</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
-        <span class="prog-chord">Dbmaj7</span><span style="color:#666;align-self:center;">→</span>
-        <span class="prog-chord">Fm7</span><span style="color:#666;align-self:center;">→</span>
-        <span class="prog-chord">Bb7</span><span style="color:#666;align-self:center;">→</span>
-        <span class="prog-chord">Ebm7</span><span style="color:#666;align-self:center;">→</span>
-        <span class="prog-chord">Ab7</span>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:8px;width:100%;">
-        <div class="chord-card">
-          <div class="chord-name">Dbmaj7</div>
-          <div class="chord-notes">ME: Db &nbsp;|&nbsp; MD: Db F Ab C</div>
-          <div class="keyboard-wrap" style="margin-top:8px;"><div class="keyboard" id="kb-ref-dbmaj7"></div></div>
-        </div>
-        <div class="chord-card">
-          <div class="chord-name">Fm7</div>
-          <div class="chord-notes">ME: F &nbsp;|&nbsp; MD: F Ab C Eb</div>
-          <div class="keyboard-wrap" style="margin-top:8px;"><div class="keyboard" id="kb-ref-fm7"></div></div>
-        </div>
-        <div class="chord-card">
-          <div class="chord-name">Ebm7</div>
-          <div class="chord-notes">ME: Eb &nbsp;|&nbsp; MD: Eb Gb Bb Db</div>
-          <div class="keyboard-wrap" style="margin-top:8px;"><div class="keyboard" id="kb-ref-ebm7"></div></div>
-        </div>
-        <div class="chord-card">
-          <div class="chord-name">Ab7</div>
-          <div class="chord-notes">ME: Ab &nbsp;|&nbsp; MD: Ab C Eb Gb</div>
-          <div class="keyboard-wrap" style="margin-top:8px;"><div class="keyboard" id="kb-ref-ab7"></div></div>
-        </div>
-      </div>
-
-      <!-- ESCALAS -->
-      <div class="section-divider" style="font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px;color:var(--accent);margin:16px 0 8px;border-bottom:1px solid var(--border);padding-bottom:4px;">Pentatônicas Maiores</div>
-      <div class="chord-row">
-        <div class="chord-card"><div class="chord-name" style="color:#4ecdc4">C maior</div><div class="chord-notes">C — D — E — G — A</div></div>
-        <div class="chord-card"><div class="chord-name" style="color:#4ecdc4">F maior</div><div class="chord-notes">F — G — A — C — D</div></div>
-        <div class="chord-card"><div class="chord-name" style="color:#4ecdc4">G maior</div><div class="chord-notes">G — A — B — D — E</div></div>
-        <div class="chord-card"><div class="chord-name" style="color:#4ecdc4">D maior</div><div class="chord-notes">D — E — F# — A — B</div></div>
-      </div>
-
-      <div class="section-divider" style="font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px;color:var(--accent);margin:16px 0 8px;border-bottom:1px solid var(--border);padding-bottom:4px;">Pentatônicas Menores</div>
-      <div class="chord-row">
-        <div class="chord-card"><div class="chord-name" style="color:#a78bfa">Am menor</div><div class="chord-notes">A — C — D — E — G</div></div>
-        <div class="chord-card"><div class="chord-name" style="color:#a78bfa">Dm menor</div><div class="chord-notes">D — F — G — A — C</div></div>
-        <div class="chord-card"><div class="chord-name" style="color:#a78bfa">Em menor</div><div class="chord-notes">E — G — A — B — D</div></div>
-      </div>
-
-      <div class="section-divider" style="font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px;color:var(--accent);margin:16px 0 8px;border-bottom:1px solid var(--border);padding-bottom:4px;">Escala Blues de Fá</div>
-      <div class="chord-row">
-        <div class="chord-card">
-          <div class="chord-name" style="color:#ff6b6b">Blues F</div>
-          <div class="chord-notes">F — Ab — Bb — B — C — Eb</div>
-          <div class="keyboard-wrap" style="margin-top:8px;"><div class="keyboard" id="kb-ref-blues-f"></div></div>
-        </div>
-      </div>
-
-      <!-- ARPEJOS -->
-      <div class="section-divider" style="font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px;color:var(--accent);margin:16px 0 8px;border-bottom:1px solid var(--border);padding-bottom:4px;">Arpejos — Como Usar</div>
-      <div class="chord-row">
-        <div class="chord-card"><div class="chord-name">Gmaj7 ↑</div><div class="chord-notes">G — B — D — F#</div></div>
-        <div class="chord-card"><div class="chord-name">Gmaj7 ↓</div><div class="chord-notes">F# — D — B — G</div></div>
-        <div class="chord-card"><div class="chord-name">Cmaj7 ↑↓</div><div class="chord-notes">C — E — G — B — G — E — C</div></div>
-      </div>
-      <div class="tip-box">💡 ME segura a raiz grave — MD toca as notas do acorde uma por uma, devagar com reverb. Funciona com qualquer acorde.</div>
-
-      <!-- DEDILHADO -->
-      <div class="section-divider" style="font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px;color:var(--accent);margin:16px 0 8px;border-bottom:1px solid var(--border);padding-bottom:4px;">Dedilhado MD — Regra Geral</div>
-      <div class="tip-box" style="line-height:2;">
-        Dedo 1 = polegar &nbsp;·&nbsp; Dedo 2 = indicador &nbsp;·&nbsp; Dedo 3 = médio &nbsp;·&nbsp; Dedo 4 = anelar &nbsp;·&nbsp; Dedo 5 = mindinho<br>
-        <strong>Acorde de 4 notas:</strong> dedos 1 – 2 – 3 – 5<br>
-        <strong>Shell (2 notas):</strong> dedo 1 (grave) e dedo 5 (aguda)<br>
-        <strong>Arpejo:</strong> 1-2-3-4-5 subindo, 5-4-3-2-1 descendo
-      </div>
-
-      <!-- ROTINA -->
-      <div class="section-divider" style="font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px;color:var(--accent);margin:16px 0 8px;border-bottom:1px solid var(--border);padding-bottom:4px;">Rotina Diária Recomendada</div>
-      <div class="tip-box" style="line-height:2.2;">
-        ✔ 5 min — Aquecimento: escala de Dó + cromática<br>
-        ✔ 8 min — Escala blues de Fá (sobe e desce)<br>
-        ✔ 8 min — Shuffle blues: F7 → Bb7 → C7<br>
-        ✔ 10 min — 2-5-1 em Dó: Dm7 → G7 → Cmaj7<br>
-        ✔ 6 min — Worship: Cmaj9 → G9sus4 → Am9 → Fmaj9<br>
-        ✔ 5 min — Arpejo livre em cima dos acordes<br>
-        ✔ Meta: Charlie Parker — Billie's Bounce 🎷
-      </div>
-
+    <div class="sec-label">Exercício 1 — Melisma na Pentatônica de Dó</div>
+    <div class="voz-box">
+      🎹 MD toca: <strong>C → E → G → A → G → E → C</strong><br>
+      🎤 Cante junto: uma sílaba "aah" para todas as notas subindo, uma para descer.<br>
+      Repete 3x subindo e 3x descendo. Depois muda para Fá maior.
     </div>
+    <div class="note-seq">
+      <span class="note-pill">C</span><span class="note-pill">E</span><span class="note-pill">G</span><span class="note-pill">A</span><span class="note-pill">G</span><span class="note-pill">E</span><span class="note-pill">C</span>
+    </div>
+    <div class="keyboard-wrap"><div class="keyboard" id="kb-mel1"></div></div>
+
+    <div class="sec-label" style="margin-top:16px;">Exercício 2 — Apojatura (3 tipos)</div>
+    <div class="voz-box">
+      Apojatura = nota vizinha que "escorrega" para a nota alvo. Não pule — deslize!<br><br>
+      Tipo 1 — meio tom acima descendo: <strong>B → C</strong><br>
+      Tipo 2 — tom acima descendo: <strong>D → C</strong><br>
+      Tipo 3 — blues: <strong>Ab → G</strong><br><br>
+      🎹 Toque os dois → 🎤 Cante deslizando entre eles
+    </div>
+    <div class="note-seq">
+      <span class="note-pill blue">B</span><span class="sep">→</span><span class="note-pill">C</span>
+      <span class="sep" style="margin:0 12px;">|</span>
+      <span class="note-pill blue">D</span><span class="sep">→</span><span class="note-pill">C</span>
+      <span class="sep" style="margin:0 12px;">|</span>
+      <span class="note-pill red">Ab</span><span class="sep">→</span><span class="note-pill teal">G</span>
+    </div>
+    <div class="keyboard-wrap"><div class="keyboard" id="kb-mel2"></div></div>
+
+    <div class="sec-label" style="margin-top:16px;">Exercício 3 — Call and Response Vocal</div>
+    <div class="voz-box">
+      A base de todo gospel e blues:<br>
+      🎹 Teclado "pergunta" — improvise 2 notas (ex: F → Ab)<br>
+      🎤 Voz "responde" — cante as mesmas 2 notas<br>
+      🎹 Improvise mais 2 notas → 🎤 Cante de volta<br><br>
+      Vai alternando. Comece devagar, depois acelera.
+    </div>
+
+    <div class="sec-label" style="margin-top:16px;">Exercício 4 — Arpejo Cantado (Worship)</div>
+    <div class="voz-box">
+      🎹 ME segura Cmaj9 (C grave)<br>
+      🎹 MD faz arpejo: <strong>C → E → G → B → D</strong> subindo devagar<br>
+      🎤 Cante cada nota junto<br><br>
+      Depois desce: <strong>D → B → G → E → C</strong><br>
+      Com reverb fica incrível — esse é o som worship.
+    </div>
+    <div class="note-seq">
+      <span class="note-pill">C</span><span class="note-pill">E</span><span class="note-pill">G</span><span class="note-pill">B</span><span class="note-pill">D</span>
+      <span class="sep">↑ ↓</span>
+      <span class="note-pill">D</span><span class="note-pill">B</span><span class="note-pill">G</span><span class="note-pill">E</span><span class="note-pill">C</span>
+    </div>
+    <div class="keyboard-wrap"><div class="keyboard" id="kb-mel3"></div></div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#f5c842"></div> ME — raiz</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#4a9eff"></div> MD — arpejo</div>
+    </div>
+    <div class="bpm-control">
+      <span class="bpm-label">BPM</span>
+      <span class="bpm-num" id="bpm-6">55</span>
+      <input type="range" min="40" max="100" value="55" oninput="document.getElementById('bpm-6').textContent=this.value">
+      <button class="btn btn-ghost btn-sm" onclick="toggleMetro('metro-6',document.getElementById('bpm-6').textContent)">METRO</button>
+    </div>
+    <div class="metro-beat" id="metro-6"></div>
+    <div class="tip-box">💡 Não precisa de voz bonita — precisa de voz afinada. Comece sussurrando. O importante é o ouvido conectar o que toca com o que canta.</div>
+    <button class="done-btn" id="done-6" onclick="markDone(6)">✓ FEITO</button>
   </div>
+</div>
 
-</div> <!-- /content -->
+<!-- 08 PENTATÔNICAS -->
+<div class="exercise-block" id="block-7">
+  <div class="block-header" onclick="toggleBlock(7)">
+    <div class="block-num">08</div>
+    <div class="block-title"><h3>Pentatônicas — 24 Tonalidades</h3><div class="meta">10 MIN — Maiores e menores</div></div>
+    <span class="block-tag tag-penta">PENTA</span>
+  </div>
+  <div class="block-body" id="body-7">
+    <div class="instruction">
+      <strong>Maior</strong> = alegre, worship, lo-fi &nbsp;|&nbsp; <strong>Menor</strong> = melancólico, blues, jazz<br>
+      Clique para ver as notas no teclado.
+    </div>
+    <div class="sec-label">▸ MAIORES</div>
+    <div class="chord-row" id="penta-major-row" style="flex-wrap:wrap;gap:8px;"></div>
+    <div class="sec-label" style="margin-top:12px;">▸ MENORES</div>
+    <div class="chord-row" id="penta-minor-row" style="flex-wrap:wrap;gap:8px;"></div>
+    <div class="keyboard-wrap" style="margin-top:14px;"><div class="keyboard" id="kb-penta"></div></div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#4a9eff"></div> Maior</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#a78bfa"></div> Menor</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#ff6b6b"></div> Tônica</div>
+    </div>
+    <div id="penta-label" style="font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);margin-top:8px;"></div>
+    <div class="voz-box" style="margin-top:12px;">
+      🎤 <strong>Desafio:</strong> escolha uma pentatônica, toque e cante cada nota.<br>
+      Improvise na MD e cante o que tocar — isso é ear training real!
+    </div>
+    <div class="tip-box">💡 Semana 1: C F G &nbsp;|&nbsp; Semana 2: Bb Eb Ab &nbsp;|&nbsp; Semana 3: D A E &nbsp;|&nbsp; Semana 4: B F# Db</div>
+    <button class="done-btn" id="done-7" onclick="markDone(7)">✓ FEITO</button>
+  </div>
+</div>
 
+<!-- 09 CHARLIE PARKER META -->
+<div class="exercise-block" id="block-8">
+  <div class="block-header" onclick="toggleBlock(8)">
+    <div class="block-num">🎷</div>
+    <div class="block-title"><h3>Charlie Parker — Billie's Bounce</h3><div class="meta">META — Solo em letras · 70 BPM</div></div>
+    <span class="block-tag tag-jazz">META</span>
+  </div>
+  <div class="block-body" id="body-8">
+    <div class="instruction">
+      Blues bebop em Fá. ME segura o acorde, MD toca o solo nota por nota.<br>
+      <strong>Começa sem metrônomo</strong> — só decora as notas. Depois coloca o tempo.
+    </div>
+    <div class="sec-label">ME — Acordes (clique para ver)</div>
+    <div class="chord-row" style="flex-wrap:wrap;gap:8px;">
+      <div class="chord-card" onclick="buildKb('kb-parker',{me:['F'],md:['F','A','C','Eb']})"><div class="chord-name">F7</div></div>
+      <div class="chord-card" onclick="buildKb('kb-parker',{me:['Bb'],md:['Bb','D','F','Ab']})"><div class="chord-name">Bb7</div></div>
+      <div class="chord-card" onclick="buildKb('kb-parker',{me:['G'],md:['G','Bb','D','F']})"><div class="chord-name">Gm7</div></div>
+      <div class="chord-card" onclick="buildKb('kb-parker',{me:['C'],md:['C','E','G','Bb']})"><div class="chord-name">C7</div></div>
+      <div class="chord-card" onclick="buildKb('kb-parker',{me:['A'],md:['A','C','E','G']})"><div class="chord-name">Am7</div></div>
+      <div class="chord-card" onclick="buildKb('kb-parker',{me:['D'],md:['D','F#','A','C']})"><div class="chord-name">D7</div></div>
+    </div>
+    <div class="keyboard-wrap"><div class="keyboard" id="kb-parker"></div></div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#f5c842"></div> ME — raiz</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#4a9eff"></div> MD — acorde</div>
+    </div>
+    <div class="sec-label" style="margin-top:16px;">MD — Solo Linha 1 (F7)</div>
+    <div class="note-seq">
+      <span class="note-pill">C</span><span class="note-pill">D</span><span class="note-pill">F</span><span class="note-pill">G</span><span class="note-pill">A</span><span class="note-pill">C</span>
+      <span style="width:100%"></span>
+      <span class="note-pill teal">C</span><span class="note-pill teal">A</span><span class="note-pill teal">G</span><span class="note-pill teal">F</span><span class="note-pill teal">D</span><span class="note-pill teal">C</span>
+    </div>
+    <div class="sec-label">MD — Solo Linha 2 (Bb7 → F7 → Am7)</div>
+    <div class="note-seq">
+      <span class="note-pill">Bb</span><span class="note-pill">C</span><span class="note-pill red">Db</span><span class="note-pill">Eb</span><span class="note-pill">F</span><span class="note-pill">Eb</span><span class="note-pill">D</span><span class="note-pill">C</span><span class="note-pill">Bb</span><span class="note-pill">Ab</span>
+      <span style="width:100%"></span>
+      <span class="note-pill red">G</span><span class="note-pill red">A</span><span class="note-pill red">Bb</span><span class="note-pill red">C</span><span class="note-pill red">C#</span><span class="note-pill red">D</span><span class="note-pill red">F#</span><span class="note-pill red">A</span>
+    </div>
+    <div class="sec-label">MD — Solo Linha 3 (Gm7 → C7 → F7)</div>
+    <div class="note-seq">
+      <span class="note-pill blue">G</span><span class="note-pill blue">A</span><span class="note-pill blue">Bb</span><span class="note-pill blue">C</span><span class="note-pill blue">D</span><span class="note-pill blue">Eb</span><span class="note-pill blue">D</span><span class="note-pill blue">C</span><span class="note-pill blue">Bb</span>
+      <span style="width:100%"></span>
+      <span class="note-pill blue">A</span><span class="note-pill blue">G</span><span class="note-pill blue">F</span><span class="note-pill blue">D</span><span class="note-pill blue">C</span><span class="note-pill blue">D</span><span class="note-pill blue">F</span><span class="note-pill blue">G</span>
+    </div>
+    <div class="tip-box" style="margin-top:12px;">
+      🎷 <strong>Como estudar:</strong> ME só → MD só → junta a 50 BPM → sobe 5 BPM por semana.<br>
+      🎯 Meta: 70 BPM limpo = você já é bebop!
+    </div>
+    <div class="video-links">
+      <a class="video-link" href="https://www.youtube.com/watch?v=oyBQnWLEPfk" target="_blank"><span class="video-icon">▶</span> Charlie Parker — Billie's Bounce (original 1945)</a>
+    </div>
+    <button class="done-btn" id="done-8" onclick="markDone(8)">✓ FEITO — TREINO COMPLETO!</button>
+  </div>
+</div>
+
+</div><!-- /content -->
 <script>
-// =====================
-// KEYBOARD RENDERER
-// =====================
-const NOTE_NAMES = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
-
-const _ALIASES = {Db:'C#',Eb:'D#',Gb:'F#',Ab:'G#',Bb:'A#'};
-function _norm(n){ return _ALIASES[n]||n; }
-
-// buildKeyboard(id, { me:['C','E','G'], md:['G','B','D','F'] })  ← novo padrão
-// buildKeyboard(id, { C:{color:'teal'}, ... })                   ← legado (escalas/penta)
-function buildKeyboard(containerId, highlights = {}) {
-  const container = document.getElementById(containerId);
-  if (!container) return;
-  container.innerHTML = '';
-
-  // Detecta novo padrão me/md
-  let hlMap = {};
-  if (highlights.me || highlights.md) {
-    (highlights.me||[]).forEach(n => { hlMap[_norm(n)+'3'] = {color:'yellow'}; });
-    (highlights.md||[]).forEach(n => { hlMap[_norm(n)+'4'] = {color:'blue'}; });
-  } else {
-    // legado: pinta por nome sem oitava (ambas oitavas)
-    Object.entries(highlights).forEach(([note, val]) => {
-      hlMap[_norm(note)+'3'] = val;
-      hlMap[_norm(note)+'4'] = val;
-    });
+// ===== KEYBOARD ENGINE =====
+const _AL={Db:'C#',Eb:'D#',Gb:'F#',Ab:'G#',Bb:'A#'};
+function _n(n){return _AL[n]||n;}
+function buildKb(id,cfg){
+  const el=document.getElementById(id);if(!el)return;el.innerHTML='';
+  let hlMap={};
+  if(cfg.me!==undefined||cfg.md!==undefined){
+    (cfg.me||[]).forEach(n=>{hlMap[_n(n)+'3']={color:'yellow'};});
+    (cfg.md||[]).forEach(n=>{hlMap[_n(n)+'4']={color:'blue'};});
+  }else{
+    Object.entries(cfg).forEach(([note,val])=>{hlMap[_n(note)+'3']=val;hlMap[_n(note)+'4']=val;});
   }
-
-  const isMobile = window.innerWidth <= 600;
-  const ww = isMobile ? 22 : 36;
-  const bw = isMobile ? 14 : 22;
-  const kh = isMobile ? 72 : 110;
-  const bh = isMobile ? 44 : 68;
-
-  const whiteKeys = ['C','D','E','F','G','A','B'];
-  // posições relativas das pretas dentro de uma oitava (baseado em ww)
-  const blackOffsets = [
-    {note:'C#', idx:0.6},
-    {note:'D#', idx:1.6},
-    {note:'F#', idx:3.6},
-    {note:'G#', idx:4.6},
-    {note:'A#', idx:5.6},
-  ];
-  const whites = [];
-  for (let o = 3; o <= 4; o++) whiteKeys.forEach(n => whites.push({note:n, oct:o}));
-  whites.push({note:'C', oct:5});
-
-  const totalWidth = whites.length * ww;
-  container.style.width = totalWidth + 'px';
-  container.style.height = kh + 'px';
-  container.style.position = 'relative';
-
-  whites.forEach(w => {
-    const key = document.createElement('div');
-    key.className = 'key-white';
-    key.style.width = ww + 'px';
-    key.style.height = kh + 'px';
-    const hl = hlMap[w.note + w.oct];
-    if (hl) key.classList.add('hl-' + hl.color);
-    const label = document.createElement('div');
-    label.className = 'key-label';
-    label.textContent = w.note === 'C' ? w.note + w.oct : w.note;
-    key.appendChild(label);
-    if (hl && hl.finger) {
-      const fn = document.createElement('div');
-      fn.className = 'finger-num';
-      fn.textContent = hl.finger;
-      if (hl.color !== 'yellow') fn.style.color = '#fff';
-      key.appendChild(fn);
-    }
-    container.appendChild(key);
+  const ww=36,bw=22,kh=110,bh=68;
+  const whites=['C','D','E','F','G','A','B'];
+  const blacks=[{n:'C#',i:0.6},{n:'D#',i:1.6},{n:'F#',i:3.6},{n:'G#',i:4.6},{n:'A#',i:5.6}];
+  const ws=[];for(let o=3;o<=4;o++)whites.forEach(n=>ws.push({n,o}));ws.push({n:'C',o:5});
+  el.style.width=(ws.length*ww)+'px';el.style.height=kh+'px';el.style.position='relative';
+  ws.forEach(w=>{
+    const k=document.createElement('div');k.className='key-white';k.style.width=ww+'px';k.style.height=kh+'px';
+    const hl=hlMap[w.n+w.o];if(hl)k.classList.add('hl-'+hl.color);
+    const lb=document.createElement('div');lb.className='key-label';lb.textContent=w.n==='C'?w.n+w.o:w.n;k.appendChild(lb);
+    if(hl?.finger){const fn=document.createElement('div');fn.className='finger-num';fn.textContent=hl.finger;k.appendChild(fn);}
+    el.appendChild(k);
   });
-
-  for (let o = 3; o <= 4; o++) {
-    const octaveOffset = (o - 3) * 7 * ww;
-    blackOffsets.forEach(b => {
-      const key = document.createElement('div');
-      key.className = 'key-black';
-      key.style.width = bw + 'px';
-      key.style.height = bh + 'px';
-      key.style.left = (octaveOffset + b.idx * ww) + 'px';
-      const hl = hlMap[b.note + o];
-      if (hl) key.classList.add('hl-' + hl.color);
-      const label = document.createElement('div');
-      label.className = 'key-label';
-      label.textContent = b.note;
-      key.appendChild(label);
-      container.appendChild(key);
-    });
-  }
+  for(let o=3;o<=4;o++){const off=(o-3)*7*ww;blacks.forEach(b=>{
+    const k=document.createElement('div');k.className='key-black';k.style.width=bw+'px';k.style.height=bh+'px';k.style.left=(off+b.i*ww)+'px';
+    const hl=hlMap[b.n+o];if(hl)k.classList.add('hl-'+hl.color);
+    const lb=document.createElement('div');lb.className='key-label';lb.textContent=b.n;k.appendChild(lb);el.appendChild(k);
+  });}
 }
+function buildKeyboard(id,cfg){buildKb(id,cfg);}
 
-// =====================
-// HIGHLIGHT DEFINITIONS
-// =====================
-const SCALES = {
-  'blues-c': {
-    C:  { color: 'teal', finger: '1' },
-    Eb: { color: 'teal', finger: '2' }, // D# on keyboard
-    'D#': { color: 'teal' },
-    F:  { color: 'teal', finger: '2' },
-    'F#': { color: 'red' }, // blue note
-    G:  { color: 'teal', finger: '4' },
-    'A#': { color: 'teal' }, // Bb
-  },
-  'blues-f': {
-    F: { color: 'teal', finger: '1' },
-    'G#': { color: 'teal' }, // Ab
-    'A#': { color: 'teal', finger: '2' }, // Bb
-    B:  { color: 'red' }, // B natural = blue note of F
-    C:  { color: 'teal', finger: '4' },
-    'D#': { color: 'teal' }, // Eb
-  },
-  'blues-g': {
-    G:  { color: 'teal', finger: '1' },
-    'A#': { color: 'teal' }, // Bb
-    C:  { color: 'teal', finger: '2' },
-    'C#': { color: 'red' }, // blue note
-    D:  { color: 'teal', finger: '4' },
-    F:  { color: 'teal' },
-  }
-};
+// ===== CHORD DATA =====
+const BLUES12={F7:{me:['F'],md:['F','A','C','Eb']},Bb7:{me:['Bb'],md:['Bb','D','F','Ab']},C7:{me:['C'],md:['C','E','G','Bb']}};
+const JAZZ_CH={Dm7:{me:['D'],md:['D','F','A','C']},G7:{me:['G'],md:['G','B','D','F']},Cmaj7:{me:['C'],md:['C','E','G','B']}};
+const SOUL_CH={Em7:{me:['E'],md:['E','G','B','D']},A7:{me:['A'],md:['A','C#','E','G']},Dmaj7:{me:['D'],md:['D','F#','A','C#']},Bm7:{me:['B'],md:['B','D','F#','A']},Dbmaj7:{me:['Db'],md:['Db','F','Ab','C']},Fm7:{me:['F'],md:['F','Ab','C','Eb']},Bb7:{me:['Bb'],md:['Bb','D','F','Ab']},Ebm7:{me:['Eb'],md:['Eb','Gb','Bb','Db']},Ab7:{me:['Ab'],md:['Ab','C','Eb','Gb']}};
+const GOSPEL_CH={Gsus4:{me:['G'],md:['G','C','D']},G7:{me:['G'],md:['G','B','D','F']},Cmaj7:{me:['C'],md:['C','E','G','B']}};
+const GW_CH={Cmaj9:{me:['C'],md:['C','E','G','B','D']},G9sus4:{me:['G'],md:['G','C','D','F','A']},Am9:{me:['A'],md:['A','C','E','G','B']},Fmaj9:{me:['F'],md:['F','A','C','E','G']}};
+const GW_DESC={Cmaj9:'Cmaj9 — C E G B D — resolução total, finais de música',G9sus4:'G9sus4 — G C D F A — tensão worship antes de resolver',Am9:'Am9 — A C E G B — acorde emocional, gospel moderno',Fmaj9:'Fmaj9 — F A C E G — estabilidade rica, IV grau'};
+const BLUES_SC={'blues-f':{F:{color:'teal'},'G#':{color:'teal'},'A#':{color:'teal'},B:{color:'red'},C:{color:'teal'},'D#':{color:'teal'}},'blues-c':{C:{color:'teal'},'D#':{color:'teal'},F:{color:'teal'},'F#':{color:'red'},G:{color:'teal'},'A#':{color:'teal'}},'blues-g':{G:{color:'teal'},'A#':{color:'teal'},C:{color:'teal'},'C#':{color:'red'},D:{color:'teal'},F:{color:'teal'}}};
 
-const JAZZ_CHORDS = {
-  Dm7:   { me:['D'],   md:['D','F','A','C'] },
-  G7:    { me:['G'],   md:['G','B','D','F'] },
-  Cmaj7: { me:['C'],   md:['C','E','G','B'] },
-};
+// ===== INTERACTIONS =====
+function showChord12(name){buildKb('kb-blues12',BLUES12[name]||{});}
+function showJazzChord(name,el){document.querySelectorAll('#block-3 .chord-card').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');buildKb('kb-jazz',JAZZ_CH[name]||{});}
+function showSoulChord(name,el){if(el&&el.classList){document.querySelectorAll('#block-4 .chord-card').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');}buildKb('kb-soul',SOUL_CH[name]||{});}
+function showGospelChord(name,el){document.querySelectorAll('#block-5 .chord-row:first-of-type .chord-card').forEach(c=>c.classList.remove('selected'));if(el)el.classList.add('selected');buildKb('kb-gospel',GOSPEL_CH[name]||{});}
+function showGWVoicing(name,el){document.querySelectorAll('#block-5 .chord-card').forEach(c=>c.classList.remove('selected'));if(el)el.classList.add('selected');buildKb('kb-gw',GW_CH[name]||{});const lbl=document.getElementById('gw-label');if(lbl)lbl.textContent=GW_DESC[name]||'';}
+function selectScale(key,el){document.querySelectorAll('#block-1 .chord-card').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');buildKb('kb-blues',BLUES_SC[key]||{});}
 
-const BLUES12_CHORDS = {
-  F7:  { me:['F'],  md:['F','A','C','Eb'] },
-  Bb7: { me:['Bb'], md:['Bb','D','F','Ab'] },
-  C7:  { me:['C'],  md:['C','E','G','Bb'] },
-};
+// ===== PENTATÔNICAS =====
+const PM={C:['C','D','E','G','A'],G:['G','A','B','D','E'],D:['D','E','F#','A','B'],A:['A','B','C#','E','F#'],E:['E','F#','G#','B','C#'],B:['B','C#','D#','F#','G#'],'F#':['F#','G#','A#','C#','D#'],Db:['C#','D#','F','G#','A#'],Ab:['G#','A#','C','D#','F'],Eb:['D#','F','G','A#','C'],Bb:['A#','C','D','F','G'],F:['F','G','A','C','D']};
+const Pm={Am:['A','C','D','E','G'],Em:['E','G','A','B','D'],Bm:['B','D','E','F#','A'],'F#m':['F#','A','B','C#','E'],'C#m':['C#','E','F#','G#','B'],'G#m':['G#','B','C#','D#','F#'],'D#m':['D#','F#','G#','A#','C#'],Bbm:['A#','C#','D#','F','G#'],Fm:['F','G#','A#','C','D#'],Cm:['C','D#','F','G','A#'],Gm:['G','A#','C','D','F'],Dm:['D','F','G','A','C']};
+function showPenta(key,type){const notes=type==='major'?PM[key]:Pm[key];const color=type==='major'?'yellow':'purple';const hl={};notes.forEach((n,i)=>{hl[n]={color:i===0?'red':color};});buildKb('kb-penta',hl);const lbl=document.getElementById('penta-label');if(lbl)lbl.textContent=`${key} ${type==='major'?'Maior':'Menor'}: ${notes.join(' — ')}`;document.querySelectorAll('#block-7 .chord-card').forEach(c=>c.classList.remove('selected'));document.getElementById('pb-'+key+type)?.classList.add('selected');}
+function buildPenta(){const mr=document.getElementById('penta-major-row');const nr=document.getElementById('penta-minor-row');if(!mr||!nr)return;Object.entries(PM).forEach(([k,n])=>{const c=document.createElement('div');c.className='chord-card';c.id='pb-'+k+'major';c.innerHTML=`<div class="chord-name" style="color:#4a9eff">${k}</div><div class="chord-notes">${n.join(' · ')}</div>`;c.onclick=()=>showPenta(k,'major');mr.appendChild(c);});Object.entries(Pm).forEach(([k,n])=>{const c=document.createElement('div');c.className='chord-card';c.id='pb-'+k+'minor';c.innerHTML=`<div class="chord-name" style="color:#a78bfa">${k}</div><div class="chord-notes">${n.join(' · ')}</div>`;c.onclick=()=>showPenta(k,'minor');nr.appendChild(c);});}
 
-const GOSPEL_CHORDS = {
-  Gsus4: { me:['G'], md:['G','C','D'] },
-  G7:    { me:['G'], md:['G','B','D','F'] },
-  Cmaj7: { me:['C'], md:['C','E','G','B'] },
-};
+// ===== TIMER =====
+let gSec=0,gRun=false,gInt=null;
+function toggleGlobalTimer(){if(gRun){clearInterval(gInt);gRun=false;document.getElementById('globalStartBtn').textContent='CONTINUAR';}else{gRun=true;document.getElementById('globalStartBtn').textContent='PAUSAR';gInt=setInterval(()=>{gSec++;const m=String(Math.floor(gSec/60)).padStart(2,'0'),s=String(gSec%60).padStart(2,'0');document.getElementById('globalTimer').textContent=m+':'+s;document.getElementById('timerLabel').textContent=Math.min(100,Math.round(gSec/3000*100))+'% do treino — '+m+':'+s+' em andamento';},1000);}}
+function resetGlobalTimer(){clearInterval(gInt);gRun=false;gSec=0;document.getElementById('globalTimer').textContent='00:00';document.getElementById('globalStartBtn').textContent='INICIAR';document.getElementById('timerLabel').textContent='Pronto para começar';}
 
-// =====================
-// INTERACTION
-// =====================
-function selectScale(scaleKey, el) {
-  document.querySelectorAll('#block-1 .chord-card').forEach(c => c.classList.remove('selected'));
-  el.classList.add('selected');
-  buildKeyboard('kb-blues', SCALES[scaleKey] || {});
-}
+// ===== METRO =====
+const metros={};
+function toggleMetro(id,bpm){if(metros[id]){clearInterval(metros[id]);delete metros[id];const c=document.getElementById(id);if(c)c.innerHTML='';return;}const c=document.getElementById(id);if(!c)return;c.innerHTML='';for(let i=0;i<4;i++){const d=document.createElement('div');d.className='beat-dot'+(i===0?' accent':'');c.appendChild(d);}let beat=0;metros[id]=setInterval(()=>{const dots=document.getElementById(id)?.querySelectorAll('.beat-dot');if(!dots)return;dots.forEach((d,i)=>{d.classList.remove('on');d.className='beat-dot'+(i===0?' accent':'');});dots[beat]?.classList.add('on');beat=(beat+1)%4;},Math.round(60000/bpm));}
 
-function showChord(name) {
-  buildKeyboard('kb-blues12', BLUES12_CHORDS[name] || {});
-  document.querySelectorAll('#block-2 .prog-chord').forEach(c => {
-    c.classList.toggle('playing', c.textContent.trim().startsWith(name));
-  });
-}
+// ===== BLOCKS =====
+const BLOCKS=[{label:'01 Aquecimento'},{label:'02 Blues Scale'},{label:'03 12 Compassos'},{label:'04 2-5-1 Jazz'},{label:'05 Soul Groove'},{label:'06 Gospel'},{label:'07 Melismas'},{label:'08 Pentatônicas'},{label:'🎷 Parker'}];
+const done=new Array(BLOCKS.length).fill(false);
+function buildProgress(){const row=document.getElementById('progressRow');row.innerHTML='';BLOCKS.forEach((b,i)=>{const p=document.createElement('div');p.className='pill'+(done[i]?' done':'');p.textContent=(done[i]?'✓ ':'')+b.label;p.onclick=()=>toggleBlock(i);row.appendChild(p);});}
+function toggleBlock(i){const body=document.getElementById('body-'+i);const isOpen=body?.classList.contains('open');document.querySelectorAll('.block-body').forEach(b=>b.classList.remove('open'));document.querySelectorAll('.exercise-block').forEach(b=>b.classList.remove('active-block'));if(!isOpen&&body){body.classList.add('open');document.getElementById('block-'+i)?.classList.add('active-block');}}
+function markDone(i){done[i]=true;const btn=document.getElementById('done-'+i);if(btn){btn.classList.add('done');btn.textContent='✓ CONCLUÍDO';}document.getElementById('block-'+i)?.classList.add('done-block');buildProgress();if(i<BLOCKS.length-1)setTimeout(()=>toggleBlock(i+1),300);}
 
-function showJazzChord(name, el) {
-  document.querySelectorAll('#block-3 .chord-card').forEach(c => c.classList.remove('selected'));
-  el.classList.add('selected');
-  buildKeyboard('kb-jazz', JAZZ_CHORDS[name] || {});
-}
-
-function showGospelChord(name, el) {
-  document.querySelectorAll('#block-5 .chord-card').forEach(c => c.classList.remove('selected'));
-  el.classList.add('selected');
-  buildKeyboard('kb-gospel', GOSPEL_CHORDS[name] || {});
-}
-
-// =====================
-// METRONOME
-// =====================
-const metros = {};
-
-function buildBeats(containerId, count = 4) {
-  const c = document.getElementById(containerId);
-  if (!c) return;
-  c.innerHTML = '';
-  for (let i = 0; i < count; i++) {
-    const d = document.createElement('div');
-    d.className = 'beat-dot' + (i === 0 ? ' accent' : '');
-    c.appendChild(d);
-  }
-}
-
-function toggleMetro(id, bpm) {
-  if (metros[id]) {
-    clearInterval(metros[id].interval);
-    delete metros[id];
-    const c = document.getElementById(id);
-    if (c) c.querySelectorAll('.beat-dot').forEach(d => d.classList.remove('on','accent'));
-    return;
-  }
-  buildBeats(id, 4);
-  let beat = 0;
-  const interval = Math.round(60000 / bpm);
-  metros[id] = {
-    interval: setInterval(() => {
-      const dots = document.getElementById(id)?.querySelectorAll('.beat-dot');
-      if (!dots) return;
-      dots.forEach((d, i) => {
-        d.classList.remove('on');
-        d.className = 'beat-dot' + (i === 0 ? ' accent' : '');
-      });
-      dots[beat]?.classList.add('on');
-      beat = (beat + 1) % 4;
-    }, interval)
-  };
-}
-
-// =====================
-// GLOBAL TIMER
-// =====================
-let globalSeconds = 0;
-let globalRunning = false;
-let globalInterval = null;
-
-function toggleGlobalTimer() {
-  if (globalRunning) {
-    clearInterval(globalInterval);
-    globalRunning = false;
-    document.getElementById('globalStartBtn').textContent = 'CONTINUAR';
-  } else {
-    globalRunning = true;
-    document.getElementById('globalStartBtn').textContent = 'PAUSAR';
-    globalInterval = setInterval(() => {
-      globalSeconds++;
-      const m = String(Math.floor(globalSeconds / 60)).padStart(2, '0');
-      const s = String(globalSeconds % 60).padStart(2, '0');
-      document.getElementById('globalTimer').textContent = m + ':' + s;
-
-      // Update label
-      const total = 50 * 60;
-      const pct = Math.min(100, Math.round(globalSeconds / total * 100));
-      document.getElementById('timerLabel').textContent = `${pct}% do treino — ${m}:${s} em andamento`;
-    }, 1000);
-  }
-}
-
-function resetGlobalTimer() {
-  clearInterval(globalInterval);
-  globalRunning = false;
-  globalSeconds = 0;
-  document.getElementById('globalTimer').textContent = '00:00';
-  document.getElementById('globalStartBtn').textContent = 'INICIAR';
-  document.getElementById('timerLabel').textContent = 'Pronto para começar';
-}
-
-// =====================
-// BLOCKS
-// =====================
-const BLOCKS = [
-  { label: '01 Aquecimento' },
-  { label: '02 Blues Scale' },
-  { label: '03 12 Compassos' },
-  { label: '04 ii-V-I' },
-  { label: '05 Charleston' },
-  { label: '06 Gospel Sus' },
-  { label: '07 Worship' },
-  { label: '08 GW Voicings' },
-  { label: '09 Pentatônicas' },
-  { label: '10 Improv' },
-  { label: '📄 Referência', id: 'ref' },
-];
-const done = new Array(BLOCKS.length).fill(false);
-
-function buildProgress() {
-  const row = document.getElementById('progressRow');
-  row.innerHTML = '';
-  BLOCKS.forEach((b, i) => {
-    const p = document.createElement('div');
-    p.className = 'pill' + (done[i] ? ' done' : '');
-    p.textContent = (done[i] ? '✓ ' : '') + b.label;
-    const blockId = b.id !== undefined ? b.id : i;
-    p.onclick = () => toggleBlock(blockId);
-    p.id = 'pill-' + i;
-    row.appendChild(p);
-  });
-}
-
-function toggleBlock(i) {
-  const body = document.getElementById('body-' + i);
-  const isOpen = body?.classList.contains('open');
-  document.querySelectorAll('.block-body').forEach(b => b.classList.remove('open'));
-  document.querySelectorAll('.exercise-block').forEach(b => b.classList.remove('active-block'));
-  if (!isOpen && body) {
-    body.classList.add('open');
-    document.getElementById('block-' + i)?.classList.add('active-block');
-  }
-}
-
-function markDone(i) {
-  done[i] = true;
-  const btn = document.getElementById('done-' + i);
-  btn.classList.add('done');
-  btn.textContent = '✓ CONCLUÍDO';
-  document.getElementById('block-' + i).classList.add('done-block');
-  buildProgress();
-
-  // Auto open next
-  if (i < BLOCKS.length - 1) {
-    setTimeout(() => toggleBlock(i + 1), 300);
-  }
-}
-
-// =====================
-// WORSHIP CHORDS
-// =====================
-const WORSHIP_CHORDS = {
-  Cmaj7w: { me:['C'], md:['C','E','G','B'] },
-  G_open: { me:['G'], md:['G','B','D'] },
-  Am7w:   { me:['A'], md:['A','C','E','G'] },
-  Fmaj9w: { me:['F'], md:['F','A','C','E','G'] },
-};
-function showWorshipChord(name) {
-  buildKeyboard('kb-worship', WORSHIP_CHORDS[name] || {});
-  document.querySelectorAll('#block-6 .prog-chord').forEach(c => {
-    c.classList.toggle('playing', c.getAttribute('onclick')?.includes(name));
-  });
-}
-
-// =====================
-// GOSPEL/WORSHIP VOICINGS
-// =====================
-const GW_VOICINGS = {
-  Cmaj9:  { me:['C'], md:['C','E','G','B','D'] },
-  G9sus4: { me:['G'], md:['G','C','D','F','A'] },
-  Am9:    { me:['A'], md:['A','C','E','G','B'] },
-  Fmaj9:  { me:['F'], md:['F','A','C','E','G'] },
-  Dm11:   { me:['D'], md:['D','F','A','C','G'] },
-  C2:     { me:['C'], md:['C','E','G','D'] },
-};
-const GW_LABELS = {
-  Cmaj9:  'Cmaj9 — C E G B D — som de resolução total, muito usado em finais de música',
-  G9sus4: 'G9sus4 — G C D F A — tensão worship, o C no lugar do B cria suspense',
-  Am9:    'Am9 — A C E G B — acorde emocional, muito gospel moderno',
-  Fmaj9:  'Fmaj9 — F A C E G — estabilidade com riqueza, IV grau cheio',
-  Dm11:   'Dm11 — D F A C G — ii grau gospel, transição suave para o V',
-  C2:     'Cadd9 — C E G D — worship simples e aberto, estilo Sounds of Home',
-};
-function showGWVoicing(name, el) {
-  document.querySelectorAll('#block-7b .chord-card').forEach(c => c.classList.remove('selected'));
-  el?.classList.add('selected');
-  buildKeyboard('kb-gw-voicing', GW_VOICINGS[name] || {});
-  document.getElementById('gw-label').textContent = GW_LABELS[name] || '';
-}
-
-// =====================
-// JUST THE TWO OF US
-// =====================
-const JTTOUS_CHORDS = {
-  Cmaj7:  { me:['C'],  md:['C','E','G','B'] },
-  Em7:    { me:['E'],  md:['E','G','B','D'] },
-  A7:     { me:['A'],  md:['A','C#','E','G'] },
-  Dm7:    { me:['D'],  md:['D','F','A','C'] },
-  G7:     { me:['G'],  md:['G','B','D','F'] },
-  Dbmaj7: { me:['Db'], md:['Db','F','Ab','C'] },
-  Fm7:    { me:['F'],  md:['F','Ab','C','Eb'] },
-  Bb7:    { me:['Bb'], md:['Bb','D','F','Ab'] },
-  Ebm7:   { me:['Eb'], md:['Eb','Gb','Bb','Db'] },
-  Ab7:    { me:['Ab'], md:['Ab','C','Eb','Gb'] },
-};
-const JTTOUS_LABELS = {
-  Cmaj7:  'Cmaj7 = ME: C | MD: E + B — I grau, resolução',
-  Em7:    'Em7 = ME: E | MD: G + D — iii grau, suave',
-  A7:     'A7 = ME: A | MD: C# + G — dominante do Dm',
-  Dm7:    'Dm7 = ME: D | MD: F + C — ii grau, tensão suave',
-  G7:     'G7 = ME: G | MD: B + F — V grau, resolve no I',
-  Dbmaj7: 'Dbmaj7 = ME: Db | MD: F + C — I grau original',
-  Fm7:    'Fm7 = ME: F | MD: Ab + Eb — iii grau em Db',
-  Bb7:    'Bb7 = ME: Bb | MD: D + Ab — dominante do Ebm',
-  Ebm7:   'Ebm7 = ME: Eb | MD: Gb + Db — ii grau em Db',
-  Ab7:    'Ab7 = ME: Ab | MD: C + Gb — V grau em Db',
-};
-function showJTTOUS(name) {
-  buildKeyboard('kb-jttous', JTTOUS_CHORDS[name] || {});
-  document.getElementById('jttous-label').textContent = JTTOUS_LABELS[name] || '';
-  document.querySelectorAll('#block-book .prog-chord').forEach(c => {
-    c.classList.toggle('playing', c.getAttribute('onclick')?.includes(`'${name}'`));
-  });
-}
-
-// =====================
-// ESCALAS & MODOS
-// =====================
-const SCALES_DATA = {
-  major: {
-    'C maior':  { notes:['C','D','E','F','G','A','B'], desc:'Tom base do jazz e worship. Cheerful, familiar.' },
-    'F maior':  { notes:['F','G','A','A#','C','D','E'], desc:'Muito usada no blues em Fá.' },
-    'G maior':  { notes:['G','A','B','C','D','E','F#'], desc:'Tom popular no gospel e worship.' },
-    'Bb maior': { notes:['A#','C','D','D#','F','G','A'], desc:'Comum no blues e jazz.' },
-    'Eb maior': { notes:['D#','F','G','G#','A#','C','D'], desc:'Favorita do jazz — som sofisticado.' },
-  },
-  minor: {
-    'A menor':  { notes:['A','B','C','D','E','F','G'], desc:'Relativa de Dó maior. Som melancólico clássico.' },
-    'D menor':  { notes:['D','E','F','G','A','A#','C'], desc:'Muito usada no jazz e soul.' },
-    'E menor':  { notes:['E','F#','G','A','B','C','D'], desc:'Comum no blues e rock.' },
-    'G menor':  { notes:['G','A','A#','C','D','D#','F'], desc:'Relativa de Bb maior.' },
-    'B menor':  { notes:['B','C#','D','E','F#','G','A'], desc:'Usada no gospel moderno.' },
-  },
-  modes: {
-    'Dórico (D)':    { notes:['D','E','F','G','A','B','C'], desc:'Menor com 6ª maior. Som do jazz modal — Miles Davis, Herbie Hancock.' },
-    'Mixolídio (G)': { notes:['G','A','B','C','D','E','F'], desc:'Maior com 7ª menor. Som do blues e gospel. Perfeito sobre dominante 7ª.' },
-    'Frígio (E)':    { notes:['E','F','G','A','B','C','D'], desc:'Menor com 2ª menor. Som espanhol/flamenco. Tenso e exótico.' },
-    'Lídio (F)':     { notes:['F','G','A','B','C','D','E'], desc:'Maior com 4ª aumentada. Som flutuante e mágico — muito usado no jazz moderno.' },
-    'Lócrio (B)':    { notes:['B','C','D','E','F','G','A'], desc:'O mais tenso. Raramente usado mas aparece no jazz avançado.' },
-  },
-  blues: {
-    'Blues C':  { notes:['C','D#','F','F#','G','A#'], desc:'Pentatônica menor + blue note. Som melancólico do blues.' },
-    'Blues F':  { notes:['F','G#','A#','B','C','D#'], desc:'Tom do bloco 03 — 12 compassos em Fá.' },
-    'Blues G':  { notes:['G','A#','C','C#','D','F'], desc:'Tom clássico do blues de Chicago.' },
-    'Blues A':  { notes:['A','C','D','D#','E','G'], desc:'Blues de BB King — tom mais popular da guitarra.' },
-    'Blues D':  { notes:['D','F','G','G#','A','C'], desc:'Blues lento e melancólico.' },
-  },
-};
-
-function showScale(key, category) {
-  const data = SCALES_DATA[category][key];
-  if (!data) return;
-  const hl = {};
-  data.notes.forEach((n, i) => {
-    hl[n] = { color: i === 0 ? 'red' : (category === 'blues' && i === 3 ? 'orange' : 'yellow') };
-  });
-  buildKeyboard('kb-scales', hl);
-  document.getElementById('scales-name').textContent = key;
-  document.getElementById('scales-notes').textContent = data.notes.join(' — ');
-  document.getElementById('scales-desc').textContent = data.desc;
-  document.querySelectorAll('#block-scales .chord-card').forEach(c => c.classList.remove('selected'));
-  document.getElementById('scale-btn-' + key.replace(/[^a-zA-Z0-9]/g,''))?.classList.add('selected');
-}
-
-function buildScaleButtons() {
-  const rows = {
-    major: document.getElementById('scales-major-row'),
-    minor: document.getElementById('scales-minor-row'),
-    modes: document.getElementById('scales-modes-row'),
-    blues: document.getElementById('scales-blues-row'),
-  };
-  const colors = { major:'#f5c842', minor:'#a78bfa', modes:'#4ecdc4', blues:'#4a9eff' };
-  Object.entries(SCALES_DATA).forEach(([cat, scales]) => {
-    Object.entries(scales).forEach(([key, data]) => {
-      const card = document.createElement('div');
-      card.className = 'chord-card';
-      card.id = 'scale-btn-' + key.replace(/[^a-zA-Z0-9]/g,'');
-      card.innerHTML = `<div class="chord-name" style="color:${colors[cat]};font-size:13px">${key}</div><div class="chord-notes">${data.notes.join(' · ')}</div>`;
-      card.onclick = () => showScale(key, cat);
-      rows[cat]?.appendChild(card);
-    });
-  });
-}
-
-// =====================
-// =====================
-// Notes: use sharps for black keys
-const PENTA_MAJOR = {
-  'C':  ['C','D','E','G','A'],
-  'G':  ['G','A','B','D','E'],
-  'D':  ['D','E','F#','A','B'],
-  'A':  ['A','B','C#','E','F#'],
-  'E':  ['E','F#','G#','B','C#'],
-  'B':  ['B','C#','D#','F#','G#'],
-  'F#': ['F#','G#','A#','C#','D#'],
-  'Db': ['C#','D#','F','G#','A#'],
-  'Ab': ['G#','A#','C','D#','F'],
-  'Eb': ['D#','F','G','A#','C'],
-  'Bb': ['A#','C','D','F','G'],
-  'F':  ['F','G','A','C','D'],
-};
-const PENTA_MINOR = {
-  'Am':  ['A','C','D','E','G'],
-  'Em':  ['E','G','A','B','D'],
-  'Bm':  ['B','D','E','F#','A'],
-  'F#m': ['F#','A','B','C#','E'],
-  'C#m': ['C#','E','F#','G#','B'],
-  'G#m': ['G#','B','C#','D#','F#'],
-  'D#m': ['D#','F#','G#','A#','C#'],
-  'Bbm': ['A#','C#','D#','F','G#'],
-  'Fm':  ['F','G#','A#','C','D#'],
-  'Cm':  ['C','D#','F','G','A#'],
-  'Gm':  ['G','A#','C','D','F'],
-  'Dm':  ['D','F','G','A','C'],
-};
-
-function buildPentaHighlights(notes, color, rootColor) {
-  const hl = {};
-  notes.forEach((n, i) => {
-    hl[n] = { color: i === 0 ? rootColor : color };
-  });
-  return hl;
-}
-
-function showPenta(key, type) {
-  const notes = type === 'major' ? PENTA_MAJOR[key] : PENTA_MINOR[key];
-  const color = type === 'major' ? 'yellow' : 'purple';
-  buildKeyboard('kb-penta', buildPentaHighlights(notes, color, 'red'));
-  document.getElementById('penta-label').textContent =
-    `${key} ${type === 'major' ? 'Maior' : 'Menor'}: ${notes.join(' — ')}`;
-  // update selection
-  document.querySelectorAll('#block-7 .chord-card').forEach(c => c.classList.remove('selected'));
-  document.getElementById('penta-btn-' + key + type)?.classList.add('selected');
-}
-
-function buildPentaButtons() {
-  const majorRow = document.getElementById('penta-major-row');
-  const minorRow = document.getElementById('penta-minor-row');
-  if (!majorRow || !minorRow) return;
-  Object.entries(PENTA_MAJOR).forEach(([key, notes]) => {
-    const card = document.createElement('div');
-    card.className = 'chord-card';
-    card.id = 'penta-btn-' + key + 'major';
-    card.innerHTML = `<div class="chord-name" style="color:#4a9eff">${key}</div><div class="chord-notes">${notes.join(' · ')}</div>`;
-    card.onclick = () => showPenta(key, 'major');
-    majorRow.appendChild(card);
-  });
-  Object.entries(PENTA_MINOR).forEach(([key, notes]) => {
-    const card = document.createElement('div');
-    card.className = 'chord-card';
-    card.id = 'penta-btn-' + key + 'minor';
-    card.innerHTML = `<div class="chord-name" style="color:#a78bfa">${key}</div><div class="chord-notes">${notes.join(' · ')}</div>`;
-    card.onclick = () => showPenta(key, 'minor');
-    minorRow.appendChild(card);
-  });
-}
-
-// =====================
-// INIT
-// =====================
-buildProgress();
-
-// Build all keyboards
-buildKeyboard('kb-chromatic', {
-  C: { color:'yellow', finger:'1' },
-  'C#': { color:'yellow', finger:'1' },
-  D: { color:'yellow', finger:'2' },
-  'D#': { color:'yellow', finger:'2' },
-  E: { color:'yellow', finger:'3' },
-  F: { color:'yellow', finger:'1' },
-  'F#': { color:'yellow', finger:'1' },
-  G: { color:'yellow', finger:'2' },
-  'G#': { color:'yellow', finger:'2' },
-  A: { color:'yellow', finger:'3' },
-  'A#': { color:'yellow', finger:'3' },
-  B: { color:'yellow', finger:'4' },
-});
-buildKeyboard('kb-blues', SCALES['blues-c']);
-buildKeyboard('kb-blues12', BLUES12_CHORDS['F7']);
-buildKeyboard('kb-jazz', JAZZ_CHORDS['Dm7']);
-buildKeyboard('kb-comp', JAZZ_CHORDS['Dm7']);
-buildKeyboard('kb-gospel', GOSPEL_CHORDS['Gsus4']);
-buildKeyboard('kb-worship', WORSHIP_CHORDS['Cmaj7w']);
-buildKeyboard('kb-gw-voicing', GW_VOICINGS['Cmaj9']);
-document.getElementById('gw-label').textContent = GW_LABELS['Cmaj9'];
-buildKeyboard('kb-jttous', JTTOUS_CHORDS['Cmaj7']);
-document.getElementById('jttous-label').textContent = JTTOUS_LABELS['Cmaj7'];
-buildScaleButtons();
-showScale('C maior', 'major');
-buildPentaButtons();
-buildKeyboard('kb-penta', buildPentaHighlights(PENTA_MAJOR['C'], 'yellow', 'red'));
-document.getElementById('penta-label').textContent = 'C Maior: C — D — E — G — A';
-buildKeyboard('kb-improv', {
-  C: { color:'orange' }, 'D#': { color:'orange' },
-  F: { color:'orange' }, 'F#': { color:'red' },
-  G: { color:'orange' }, 'A#': { color:'orange' },
-});
-
-// Open first block
+// ===== INIT =====
+buildProgress();buildPenta();
+buildKb('kb-chromatic',{C:{color:'yellow',finger:'1'},'C#':{color:'yellow',finger:'1'},D:{color:'yellow',finger:'2'},'D#':{color:'yellow',finger:'2'},E:{color:'yellow',finger:'3'},F:{color:'yellow',finger:'1'},'F#':{color:'yellow',finger:'1'},G:{color:'yellow',finger:'2'},'G#':{color:'yellow',finger:'2'},A:{color:'yellow',finger:'3'},'A#':{color:'yellow',finger:'3'},B:{color:'yellow',finger:'4'}});
+buildKb('kb-blues',BLUES_SC['blues-f']);
+buildKb('kb-blues12',BLUES12['F7']);
+buildKb('kb-jazz',JAZZ_CH['Dm7']);
+buildKb('kb-soul',SOUL_CH['Em7']);
+buildKb('kb-gospel',GOSPEL_CH['Gsus4']);
+buildKb('kb-gw',GW_CH['Cmaj9']);
+document.getElementById('gw-label').textContent=GW_DESC['Cmaj9'];
+buildKb('kb-mel1',{me:['C'],md:['C','E','G','A']});
+buildKb('kb-mel2',{B:{color:'blue'},'A#':{color:'blue'},C:{color:'yellow'},'G#':{color:'red'},G:{color:'teal'}});
+buildKb('kb-mel3',{me:['C'],md:['C','E','G','B','D']});
+buildKb('kb-parker',{me:['F'],md:['F','A','C','Eb']});
+showPenta('C','major');
 toggleBlock(0);
-
-// Charlie Parker keyboards — init com primeiro acorde
-buildKeyboard('kb-ntt-1', {me:['F'], md:['F','A','C','Eb']});
-buildKeyboard('kb-bb-1',  {me:['F'], md:['F','A','C','Eb']});
-
-// Folha de Referência
-buildKeyboard('kb-ref-dm7',    {me:['D'],  md:['D','F','A','C']});
-buildKeyboard('kb-ref-g7',     {me:['G'],  md:['G','B','D','F']});
-buildKeyboard('kb-ref-cmaj7',  {me:['C'],  md:['C','E','G','B']});
-buildKeyboard('kb-ref-f7',     {me:['F'],  md:['F','A','C','Eb']});
-buildKeyboard('kb-ref-bb7',    {me:['Bb'], md:['Bb','D','F','Ab']});
-buildKeyboard('kb-ref-c7',     {me:['C'],  md:['C','E','G','Bb']});
-buildKeyboard('kb-ref-cmaj9',  {me:['C'],  md:['C','E','G','B','D']});
-buildKeyboard('kb-ref-g9sus4', {me:['G'],  md:['G','C','D','F','A']});
-buildKeyboard('kb-ref-am9',    {me:['A'],  md:['A','C','E','G','B']});
-buildKeyboard('kb-ref-fmaj9',  {me:['F'],  md:['F','A','C','E','G']});
-buildKeyboard('kb-ref-dbmaj7', {me:['Db'], md:['Db','F','Ab','C']});
-buildKeyboard('kb-ref-fm7',    {me:['F'],  md:['F','Ab','C','Eb']});
-buildKeyboard('kb-ref-ebm7',   {me:['Eb'], md:['Eb','Gb','Bb','Db']});
-buildKeyboard('kb-ref-ab7',    {me:['Ab'], md:['Ab','C','Eb','Gb']});
-buildKeyboard('kb-ref-blues-f', {F:{color:'teal'}, 'G#':{color:'teal'}, 'A#':{color:'teal'}, B:{color:'red'}, C:{color:'teal'}, 'D#':{color:'teal'}});
 </script>
 </body>
 </html>
