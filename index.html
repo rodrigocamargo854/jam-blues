@@ -625,49 +625,122 @@
 // ===== KEYBOARD ENGINE =====
 const _AL={Db:'C#',Eb:'D#',Gb:'F#',Ab:'G#',Bb:'A#'};
 function _n(n){return _AL[n]||n;}
-function buildKb(id,cfg){
-  const el=document.getElementById(id);if(!el)return;el.innerHTML='';
-  let hlMap={};
-  if(cfg.me!==undefined||cfg.md!==undefined){
-    (cfg.me||[]).forEach(n=>{hlMap[_n(n)+'3']={color:'yellow'};});
-    (cfg.md||[]).forEach(n=>{hlMap[_n(n)+'4']={color:'blue'};});
-  }else{
-    Object.entries(cfg).forEach(([note,val])=>{hlMap[_n(note)+'3']=val;hlMap[_n(note)+'4']=val;});
+
+function buildKb(id, highlights={}) {
+  const container=document.getElementById(id);
+  if(!container)return;
+  container.innerHTML='';
+
+  // Formato me/md: {me:[], md:[]}
+  // Formato legado: {note:{color,finger}}
+  let meNotes=new Set(), mdNotes=new Set(), legacyMode=false, legacyHl={};
+
+  if(highlights.me!==undefined||highlights.md!==undefined){
+    (highlights.me||[]).forEach(n=>meNotes.add(_n(n)));
+    (highlights.md||[]).forEach(n=>mdNotes.add(_n(n)));
+  } else {
+    // legado — pinta igual nas duas oitavas (escalas, etc)
+    legacyMode=true;
+    Object.entries(highlights).forEach(([k,v])=>{legacyHl[_n(k)]=v;});
   }
-  const ww=36,bw=22,kh=110,bh=68;
-  const whites=['C','D','E','F','G','A','B'];
-  const blacks=[{n:'C#',i:0.6},{n:'D#',i:1.6},{n:'F#',i:3.6},{n:'G#',i:4.6},{n:'A#',i:5.6}];
-  const ws=[];for(let o=3;o<=4;o++)whites.forEach(n=>ws.push({n,o}));ws.push({n:'C',o:5});
-  el.style.width=(ws.length*ww)+'px';el.style.height=kh+'px';el.style.position='relative';
-  ws.forEach(w=>{
-    const k=document.createElement('div');k.className='key-white';k.style.width=ww+'px';k.style.height=kh+'px';
-    const hl=hlMap[w.n+w.o];if(hl)k.classList.add('hl-'+hl.color);
-    const lb=document.createElement('div');lb.className='key-label';lb.textContent=w.n==='C'?w.n+w.o:w.n;k.appendChild(lb);
-    if(hl?.finger){const fn=document.createElement('div');fn.className='finger-num';fn.textContent=hl.finger;k.appendChild(fn);}
-    el.appendChild(k);
+
+  const whiteKeys=['C','D','E','F','G','A','B'];
+  const whites=[];
+  for(let o=3;o<=4;o++) whiteKeys.forEach(note=>whites.push({note,oct:o}));
+  whites.push({note:'C',oct:5});
+
+  container.style.width=(whites.length*36)+'px';
+  container.style.position='relative';
+
+  whites.forEach(w=>{
+    const key=document.createElement('div');
+    key.className='key-white';
+    let hl=null;
+    if(legacyMode){
+      hl=legacyHl[w.note];
+    } else {
+      if(w.oct===3 && meNotes.has(w.note)) hl={color:'yellow'};
+      else if(w.oct===4 && mdNotes.has(w.note)) hl={color:'blue'};
+    }
+    if(hl) key.classList.add('hl-'+hl.color);
+    const lb=document.createElement('div');lb.className='key-label';
+    lb.textContent=w.note==='C'?w.note+w.oct:w.note;
+    key.appendChild(lb);
+    if(hl?.finger){const fn=document.createElement('div');fn.className='finger-num';fn.textContent=hl.finger;if(hl.color!=='yellow')fn.style.color='#fff';key.appendChild(fn);}
+    container.appendChild(key);
   });
-  for(let o=3;o<=4;o++){const off=(o-3)*7*ww;blacks.forEach(b=>{
-    const k=document.createElement('div');k.className='key-black';k.style.width=bw+'px';k.style.height=bh+'px';k.style.left=(off+b.i*ww)+'px';
-    const hl=hlMap[b.n+o];if(hl)k.classList.add('hl-'+hl.color);
-    const lb=document.createElement('div');lb.className='key-label';lb.textContent=b.n;k.appendChild(lb);el.appendChild(k);
-  });}
+
+  for(let o=3;o<=4;o++){
+    const off=(o-3)*7*36;
+    [{note:'C#',pos:22},{note:'D#',pos:58},{note:'F#',pos:130},{note:'G#',pos:166},{note:'A#',pos:202}].forEach(b=>{
+      const key=document.createElement('div');
+      key.className='key-black';
+      key.style.left=(off+b.pos)+'px';
+      let hl=null;
+      if(legacyMode){
+        hl=legacyHl[b.note];
+      } else {
+        if(o===3 && meNotes.has(b.note)) hl={color:'yellow'};
+        else if(o===4 && mdNotes.has(b.note)) hl={color:'blue'};
+      }
+      if(hl) key.classList.add('hl-'+hl.color);
+      const lb=document.createElement('div');lb.className='key-label';lb.textContent=b.note;key.appendChild(lb);
+      container.appendChild(key);
+    });
+  }
 }
 function buildKeyboard(id,cfg){buildKb(id,cfg);}
 
-// ===== CHORD DATA =====
-const BLUES12={F7:{me:['F'],md:['F','A','C','Eb']},Bb7:{me:['Bb'],md:['Bb','D','F','Ab']},C7:{me:['C'],md:['C','E','G','Bb']}};
-const JAZZ_CH={Dm7:{me:['D'],md:['D','F','A','C']},G7:{me:['G'],md:['G','B','D','F']},Cmaj7:{me:['C'],md:['C','E','G','B']}};
-const SOUL_CH={Em7:{me:['E'],md:['E','G','B','D']},A7:{me:['A'],md:['A','C#','E','G']},Dmaj7:{me:['D'],md:['D','F#','A','C#']},Bm7:{me:['B'],md:['B','D','F#','A']},Dbmaj7:{me:['Db'],md:['Db','F','Ab','C']},Fm7:{me:['F'],md:['F','Ab','C','Eb']},Bb7:{me:['Bb'],md:['Bb','D','F','Ab']},Ebm7:{me:['Eb'],md:['Eb','Gb','Bb','Db']},Ab7:{me:['Ab'],md:['Ab','C','Eb','Gb']}};
-const GOSPEL_CH={Gsus4:{me:['G'],md:['G','C','D']},G7:{me:['G'],md:['G','B','D','F']},Cmaj7:{me:['C'],md:['C','E','G','B']}};
-const GW_CH={Cmaj9:{me:['C'],md:['C','E','G','B','D']},G9sus4:{me:['G'],md:['G','C','D','F','A']},Am9:{me:['A'],md:['A','C','E','G','B']},Fmaj9:{me:['F'],md:['F','A','C','E','G']}};
-const GW_DESC={Cmaj9:'Cmaj9 — C E G B D — resolução total, finais de música',G9sus4:'G9sus4 — G C D F A — tensão worship antes de resolver',Am9:'Am9 — A C E G B — acorde emocional, gospel moderno',Fmaj9:'Fmaj9 — F A C E G — estabilidade rica, IV grau'};
-const BLUES_SC={'blues-f':{F:{color:'teal'},'G#':{color:'teal'},'A#':{color:'teal'},B:{color:'red'},C:{color:'teal'},'D#':{color:'teal'}},'blues-c':{C:{color:'teal'},'D#':{color:'teal'},F:{color:'teal'},'F#':{color:'red'},G:{color:'teal'},'A#':{color:'teal'}},'blues-g':{G:{color:'teal'},'A#':{color:'teal'},C:{color:'teal'},'C#':{color:'red'},D:{color:'teal'},F:{color:'teal'}}};
+// ===== CHORD DATA (me=oitava3 amarelo, md=oitava4 azul) =====
+const BLUES12={
+  F7:  {me:['F'],  md:['F','A','C','Eb']},
+  Bb7: {me:['Bb'], md:['Bb','D','F','Ab']},
+  C7:  {me:['C'],  md:['C','E','G','Bb']},
+};
+const JAZZ_CH={
+  Dm7:   {me:['D'],  md:['D','F','A','C']},
+  G7:    {me:['G'],  md:['G','B','D','F']},
+  Cmaj7: {me:['C'],  md:['C','E','G','B']},
+};
+const SOUL_CH={
+  Em7:    {me:['E'],  md:['E','G','B','D']},
+  A7:     {me:['A'],  md:['A','C#','E','G']},
+  Dmaj7:  {me:['D'],  md:['D','F#','A','C#']},
+  Bm7:    {me:['B'],  md:['B','D','F#','A']},
+  Dbmaj7: {me:['Db'], md:['Db','F','Ab','C']},
+  Fm7:    {me:['F'],  md:['F','Ab','C','Eb']},
+  Bb7:    {me:['Bb'], md:['Bb','D','F','Ab']},
+  Ebm7:   {me:['Eb'], md:['Eb','Gb','Bb','Db']},
+  Ab7:    {me:['Ab'], md:['Ab','C','Eb','Gb']},
+};
+const GOSPEL_CH={
+  Gsus4: {me:['G'], md:['G','C','D']},
+  G7:    {me:['G'], md:['G','B','D','F']},
+  Cmaj7: {me:['C'], md:['C','E','G','B']},
+};
+const GW_CH={
+  Cmaj9:  {me:['C'], md:['C','E','G','B','D']},
+  G9sus4: {me:['G'], md:['G','C','D','F','A']},
+  Am9:    {me:['A'], md:['A','C','E','G','B']},
+  Fmaj9:  {me:['F'], md:['F','A','C','E','G']},
+};
+const GW_DESC={
+  Cmaj9:'Cmaj9 — C E G B D — resolução total',
+  G9sus4:'G9sus4 — G C D F A — tensão worship',
+  Am9:'Am9 — A C E G B — emoção gospel',
+  Fmaj9:'Fmaj9 — F A C E G — estabilidade IV grau',
+};
+const BLUES_SC={
+  'blues-f':{F:{color:'teal'},'G#':{color:'teal'},'A#':{color:'teal'},B:{color:'red'},C:{color:'teal'},'D#':{color:'teal'}},
+  'blues-c':{C:{color:'teal'},'D#':{color:'teal'},F:{color:'teal'},'F#':{color:'red'},G:{color:'teal'},'A#':{color:'teal'}},
+  'blues-g':{G:{color:'teal'},'A#':{color:'teal'},C:{color:'teal'},'C#':{color:'red'},D:{color:'teal'},F:{color:'teal'}},
+};
 
 // ===== INTERACTIONS =====
 function showChord12(name){buildKb('kb-blues12',BLUES12[name]||{});}
 function showJazzChord(name,el){document.querySelectorAll('#block-3 .chord-card').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');buildKb('kb-jazz',JAZZ_CH[name]||{});}
 function showSoulChord(name,el){if(el&&el.classList){document.querySelectorAll('#block-4 .chord-card').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');}buildKb('kb-soul',SOUL_CH[name]||{});}
-function showGospelChord(name,el){document.querySelectorAll('#block-5 .chord-row:first-of-type .chord-card').forEach(c=>c.classList.remove('selected'));if(el)el.classList.add('selected');buildKb('kb-gospel',GOSPEL_CH[name]||{});}
+function showGospelChord(name,el){document.querySelectorAll('#block-5 .chord-card').forEach(c=>c.classList.remove('selected'));if(el)el.classList.add('selected');buildKb('kb-gospel',GOSPEL_CH[name]||{});}
 function showGWVoicing(name,el){document.querySelectorAll('#block-5 .chord-card').forEach(c=>c.classList.remove('selected'));if(el)el.classList.add('selected');buildKb('kb-gw',GW_CH[name]||{});const lbl=document.getElementById('gw-label');if(lbl)lbl.textContent=GW_DESC[name]||'';}
 function selectScale(key,el){document.querySelectorAll('#block-1 .chord-card').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');buildKb('kb-blues',BLUES_SC[key]||{});}
 
@@ -704,9 +777,9 @@ buildKb('kb-gospel',GOSPEL_CH['Gsus4']);
 buildKb('kb-gw',GW_CH['Cmaj9']);
 document.getElementById('gw-label').textContent=GW_DESC['Cmaj9'];
 buildKb('kb-mel1',{me:['C'],md:['C','E','G','A']});
-buildKb('kb-mel2',{B:{color:'blue'},'A#':{color:'blue'},C:{color:'yellow'},'G#':{color:'red'},G:{color:'teal'}});
+buildKb('kb-mel2',{me:['B'],md:['C','D','Ab','G']});
 buildKb('kb-mel3',{me:['C'],md:['C','E','G','B','D']});
-buildKb('kb-parker',{me:['F'],md:['F','A','C','Eb']});
+buildKb('kb-parker',BLUES12['F7']);
 showPenta('C','major');
 toggleBlock(0);
 </script>
