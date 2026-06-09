@@ -50,7 +50,7 @@
   .instruction{font-size:13px;line-height:1.7;color:#ccc;margin:14px 0 10px;}
   .instruction strong{color:var(--accent);}
   .keyboard-wrap{margin:16px 0;overflow-x:auto;padding-bottom:8px;}
-  .keyboard{display:flex;position:relative;height:110px;min-width:420px;width:fit-content;user-select:none;}
+  .keyboard{display:flex;position:relative;height:110px;width:fit-content;user-select:none;}
   .key-white{width:36px;height:110px;background:var(--white-key);border:1px solid #bbb;border-top:none;border-radius:0 0 4px 4px;position:relative;cursor:pointer;transition:background 0.1s;flex-shrink:0;}
   .key-white:hover{background:#ddd;}
   .key-black{width:22px;height:68px;background:var(--black-key);position:absolute;top:0;z-index:2;border-radius:0 0 3px 3px;cursor:pointer;}
@@ -107,8 +107,7 @@
   .note-pill.red{color:#ff6b6b;border-color:#ff6b6b44;}
   .note-pill.teal{color:#4ecdc4;border-color:#4ecdc444;}
   .sep{font-family:'DM Mono',monospace;font-size:11px;color:#444;align-self:center;}
-  @media(max-width:600px){.content{padding:12px;}.header{padding:20px 16px 12px;}.keyboard{height:72px;min-width:unset;}.key-white{width:22px!important;height:72px!important;}.key-black{width:14px!important;height:44px!important;}.key-label{font-size:7px!important;}}
-</style>
+  @media(max-width:600px){.content{padding:12px;}.header{padding:20px 16px 12px;}}</style>
 </head>
 <body>
 
@@ -631,15 +630,16 @@ function buildKb(id, highlights={}) {
   if(!container)return;
   container.innerHTML='';
 
-  // Formato me/md: {me:[], md:[]}
-  // Formato legado: {note:{color,finger}}
-  let meNotes=new Set(), mdNotes=new Set(), legacyMode=false, legacyHl={};
+  const mob=window.innerWidth<=600;
+  const WW=mob?24:36, BW=mob?15:22, KH=mob?76:110, BH=mob?46:68;
+  const BP=mob?[{note:'C#',pos:15},{note:'D#',pos:39},{note:'F#',pos:87},{note:'G#',pos:111},{note:'A#',pos:135}]
+              :[{note:'C#',pos:22},{note:'D#',pos:58},{note:'F#',pos:130},{note:'G#',pos:166},{note:'A#',pos:202}];
 
+  let meNotes=new Set(), mdNotes=new Set(), legacyMode=false, legacyHl={};
   if(highlights.me!==undefined||highlights.md!==undefined){
     (highlights.me||[]).forEach(n=>meNotes.add(_n(n)));
     (highlights.md||[]).forEach(n=>mdNotes.add(_n(n)));
   } else {
-    // legado — pinta igual nas duas oitavas (escalas, etc)
     legacyMode=true;
     Object.entries(highlights).forEach(([k,v])=>{legacyHl[_n(k)]=v;});
   }
@@ -649,16 +649,18 @@ function buildKb(id, highlights={}) {
   for(let o=3;o<=4;o++) whiteKeys.forEach(note=>whites.push({note,oct:o}));
   whites.push({note:'C',oct:5});
 
-  container.style.width=(whites.length*36)+'px';
+  container.style.width=(whites.length*WW)+'px';
+  container.style.height=KH+'px';
   container.style.position='relative';
 
   whites.forEach(w=>{
     const key=document.createElement('div');
     key.className='key-white';
+    key.style.width=WW+'px';
+    key.style.height=KH+'px';
     let hl=null;
-    if(legacyMode){
-      hl=legacyHl[w.note];
-    } else {
+    if(legacyMode){ hl=legacyHl[w.note]; }
+    else {
       if(w.oct===3 && meNotes.has(w.note)) hl={color:'yellow'};
       else if(w.oct===4 && mdNotes.has(w.note)) hl={color:'blue'};
     }
@@ -671,15 +673,16 @@ function buildKb(id, highlights={}) {
   });
 
   for(let o=3;o<=4;o++){
-    const off=(o-3)*7*36;
-    [{note:'C#',pos:22},{note:'D#',pos:58},{note:'F#',pos:130},{note:'G#',pos:166},{note:'A#',pos:202}].forEach(b=>{
+    const off=(o-3)*7*WW;
+    BP.forEach(b=>{
       const key=document.createElement('div');
       key.className='key-black';
+      key.style.width=BW+'px';
+      key.style.height=BH+'px';
       key.style.left=(off+b.pos)+'px';
       let hl=null;
-      if(legacyMode){
-        hl=legacyHl[b.note];
-      } else {
+      if(legacyMode){ hl=legacyHl[b.note]; }
+      else {
         if(o===3 && meNotes.has(b.note)) hl={color:'yellow'};
         else if(o===4 && mdNotes.has(b.note)) hl={color:'blue'};
       }
