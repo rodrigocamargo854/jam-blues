@@ -59,6 +59,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 .hl-r{background:#ff6b6b!important;}
 .hl-g{background:#34d399!important;}
 .hl-p{background:#a78bfa!important;}
+.hl-o{background:#f472b6!important;}
 .legend{display:flex;gap:10px;flex-wrap:wrap;margin:4px 0 8px;}
 .leg{display:flex;align-items:center;gap:5px;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);}
 .leg-dot{width:10px;height:10px;border-radius:2px;}
@@ -169,6 +170,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
     <div class="nav-tab" onclick="showSection('blues')">Blues</div>
     <div class="nav-tab" onclick="showSection('jazz')">Jazz</div>
     <div class="nav-tab" onclick="showSection('soul')">Soul</div>
+    <div class="nav-tab" onclick="showSection('groove')">Groove</div>
   </div>
 </nav>
 
@@ -325,6 +327,12 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
   <div id="soul-blocks"></div>
 </div>
 
+<!-- ===================== GROOVE ===================== -->
+<div class="section" id="sec-groove">
+  <div class="hero"><h1 style="color:var(--pink)">Groove</h1><p>Neo Soul · Funk · Licks · Human Nature · Just The Two Of Us</p></div>
+  <div id="groove-blocks"></div>
+</div>
+
 <script>
 // ===========================
 // KEYBOARD ENGINE
@@ -342,15 +350,16 @@ function buildKb(id,highlights={}){
     [{n:'C#',p:20},{n:'D#',p:52},{n:'F#',p:116},{n:'G#',p:148},{n:'A#',p:180}];
   const hl={};
   Object.entries(highlights).forEach(([k,v])=>{hl[_n(k)]=v;});
-  const meMd=Object.values(hl).some(v=>v.color==='yellow')&&Object.values(hl).some(v=>v.color==='blue');
+  const colorMap={yellow:'y',blue:'b',teal:'t',red:'r',green:'g',purple:'p',pink:'o',orange:'o'};
+  const meMd=Object.values(hl).some(v=>v.color==='yellow')&&Object.values(hl).some(v=>v.color==='blue'||v.color==='pink');
   const W=['C','D','E','F','G','A','B'];
   const ws=[];for(let o=3;o<=4;o++)W.forEach(n=>ws.push({n,o}));ws.push({n:'C',o:5});
   el.style.width=(ws.length*WW)+'px';el.style.position='relative';el.style.height=KH+'px';
   ws.forEach(w=>{
     const k=document.createElement('div');k.className='wk';
     k.style.width=WW+'px';k.style.height=KH+'px';
-    let h=meMd?(w.o===3&&hl[w.n]?.color==='yellow'?hl[w.n]:w.o===4&&hl[w.n]?.color==='blue'?hl[w.n]:null):hl[w.n]||null;
-    if(h)k.classList.add('hl-'+h.color[0]);
+    let h=meMd?(w.o===3&&hl[w.n]?.color==='yellow'?hl[w.n]:w.o===4&&hl[w.n]?.color!=='yellow'?hl[w.n]:null):hl[w.n]||null;
+    if(h)k.classList.add('hl-'+(colorMap[h.color]||h.color[0]));
     const lb=document.createElement('div');lb.className='kl';
     lb.style.fontSize=mob?'7px':'8px';
     lb.textContent=w.n==='C'?w.n+w.o:w.n;k.appendChild(lb);el.appendChild(k);
@@ -360,8 +369,8 @@ function buildKb(id,highlights={}){
     BP.forEach(b=>{
       const k=document.createElement('div');k.className='bk';
       k.style.left=(off+b.p)+'px';k.style.width=BW+'px';k.style.height=BH+'px';
-      let h=meMd?(o===3&&hl[b.n]?.color==='yellow'?hl[b.n]:o===4&&hl[b.n]?.color==='blue'?hl[b.n]:null):hl[b.n]||null;
-      if(h)k.classList.add('hl-'+h.color[0]);
+      let h=meMd?(o===3&&hl[b.n]?.color==='yellow'?hl[b.n]:o===4&&hl[b.n]?.color!=='yellow'?hl[b.n]:null):hl[b.n]||null;
+      if(h)k.classList.add('hl-'+(colorMap[h.color]||h.color[0]));
       const lb=document.createElement('div');lb.className='kl';
       lb.style.fontSize=mob?'6px':'7px';
       lb.textContent=b.n;k.appendChild(lb);el.appendChild(k);
@@ -946,11 +955,316 @@ function toggleBlock(head){
 }
 
 // ===========================
+// GROOVE SECTION
+// ===========================
+function buildGrooveSection(){
+  const cont=document.getElementById('groove-blocks');
+  cont.innerHTML=`
+
+  <!-- BLOCO 1 — O QUE É GROOVE -->
+  <div class="block active">
+    <div class="block-head" onclick="toggleBlock(this)">
+      <div class="block-num" style="color:var(--pink)">01</div>
+      <div class="block-info"><h3>Neo Soul Groove — Acorde + Lick</h3><span>10 MIN — ME segura · MD faz o lick</span></div>
+      <span class="tag" style="background:#f472b622;color:#f472b6">GROOVE</span>
+    </div>
+    <div class="block-body open">
+      <div class="desc">
+        O estilo que você vê no Instagram — <strong>progressão em loop + frasezinha (lick) em cima</strong>.<br><br>
+        🟡 <strong>ME</strong> segura o acorde parado (baixo + acorde)<br>
+        🔵 <strong>MD</strong> improvisa um lick curto entre os acordes<br><br>
+        Progressão base: <strong>Em7 → A7sus2 → Dmaj7</strong> em loop
+      </div>
+
+      <div class="chord-row" id="groove-chords"></div>
+      <div class="kb-wrap"><div class="kb" id="kb-groove"></div></div>
+      <div class="legend">
+        <div class="leg"><div class="leg-dot" style="background:var(--yellow)"></div> ME — acorde base</div>
+        <div class="leg"><div class="leg-dot" style="background:var(--blue)"></div> MD — lick (notas do lick)</div>
+        <div class="leg"><div class="leg-dot" style="background:var(--pink)"></div> MD — nota de chegada</div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Animação — acorde + lick</div>
+        <div class="desc" style="font-size:12px;margin:0 0 8px;">
+          Veja a ME segurando e a MD fazendo o lick em cima
+        </div>
+        <div class="kb-wrap"><div class="kb" id="kb-groove-anim"></div></div>
+        <div class="status" id="groove-status">Clique em animar</div>
+        <div class="btn-row" style="margin-top:8px;">
+          <button class="btn btn-play" id="play-groove" onclick="toggleGroove()">▶ Animar</button>
+          <div class="bpm-row"><span class="bpm-lbl">BPM</span><span class="bpm-val" style="color:var(--pink)" id="bpm-groove">80</span><input type="range" min="50" max="130" value="80" oninput="document.getElementById('bpm-groove').textContent=this.value;bpmGroove=+this.value;"></div>
+        </div>
+      </div>
+
+      <div class="tip" style="border-color:var(--pink);background:#f472b610;">
+        💡 <strong>Como praticar:</strong><br>
+        1. ME só — segura Em7 repetindo (baixo E grave + acorde)<br>
+        2. MD só — toca o lick devagar, nota por nota<br>
+        3. Junta: ME segura, MD faz o lick no final de cada compasso<br>
+        💡 Referência: Robert Glasper, Cory Henry no YouTube
+      </div>
+      <button class="done-btn" onclick="this.classList.add('done');this.textContent='✓ CONCLUÍDO'">✓ FEITO</button>
+    </div>
+  </div>
+
+  <!-- BLOCO 2 — HUMAN NATURE -->
+  <div class="block">
+    <div class="block-head" onclick="toggleBlock(this)">
+      <div class="block-num" style="color:var(--pink)">02</div>
+      <div class="block-info"><h3>Human Nature — Michael Jackson</h3><span>Tom de G maior · Groove suave</span></div>
+      <span class="tag" style="background:#f472b622;color:#f472b6">MÚSICA</span>
+    </div>
+    <div class="block-body">
+      <div class="desc">
+        Tom: <strong>G maior</strong><br>
+        Progressão: <strong>Gmaj7 → Am7 → Fmaj7 → Em7</strong><br><br>
+        É um groove suave e melódico. ME segura o acorde, MD toca a melodia em cima.
+      </div>
+
+      <div class="chord-row" id="hn-chords"></div>
+      <div class="kb-wrap"><div class="kb" id="kb-hn"></div></div>
+      <div class="legend">
+        <div class="leg"><div class="leg-dot" style="background:var(--yellow)"></div> ME — raiz</div>
+        <div class="leg"><div class="leg-dot" style="background:var(--blue)"></div> MD — acorde</div>
+      </div>
+      <div class="status" id="hn-label" style="margin-top:6px;"></div>
+
+      <div class="panel">
+        <div class="panel-title">Animação — percorre a progressão</div>
+        <div class="kb-wrap"><div class="kb" id="kb-hn-anim"></div></div>
+        <div class="status" id="hn-anim-status">Clique em animar</div>
+        <div class="btn-row" style="margin-top:8px;">
+          <button class="btn btn-play" id="play-hn" onclick="toggleHN()">▶ Animar</button>
+          <div class="bpm-row"><span class="bpm-lbl">BPM</span><span class="bpm-val" style="color:var(--pink)" id="bpm-hn">72</span><input type="range" min="50" max="120" value="72" oninput="document.getElementById('bpm-hn').textContent=this.value;bpmHN=+this.value;"></div>
+        </div>
+      </div>
+
+      <div class="tip" style="border-color:var(--pink);background:#f472b610;">
+        💡 A melodia principal usa a escala de G maior: G A B C D E F#<br>
+        💡 ME segura cada acorde 2 tempos, MD toca a melodia em cima<br>
+        💡 Busca no YouTube: "Human Nature Michael Jackson piano tutorial"
+      </div>
+      <button class="done-btn" onclick="this.classList.add('done');this.textContent='✓ CONCLUÍDO'">✓ FEITO</button>
+    </div>
+  </div>
+
+  <!-- BLOCO 3 — JUST THE TWO OF US -->
+  <div class="block">
+    <div class="block-head" onclick="toggleBlock(this)">
+      <div class="block-num" style="color:var(--pink)">03</div>
+      <div class="block-info"><h3>Just The Two Of Us — Bill Withers</h3><span>Tom de Db maior · Jazz Soul</span></div>
+      <span class="tag" style="background:#f472b622;color:#f472b6">MÚSICA</span>
+    </div>
+    <div class="block-body">
+      <div class="desc">
+        Tom: <strong>Db maior</strong><br>
+        Progressão: <strong>Dbmaj7 → Fm7 → Bb7 → Ebm7 → Ab7</strong><br><br>
+        É um 2-5-1 expandido em Db. ME raiz grave, MD acorde completo.<br>
+        Nota: tem bastante tecla preta — domina o tom de Db na seção Harmonia primeiro!
+      </div>
+
+      <div class="chord-row" id="jttou-chords"></div>
+      <div class="kb-wrap"><div class="kb" id="kb-jttou"></div></div>
+      <div class="legend">
+        <div class="leg"><div class="leg-dot" style="background:var(--yellow)"></div> ME — raiz</div>
+        <div class="leg"><div class="leg-dot" style="background:var(--blue)"></div> MD — acorde</div>
+      </div>
+      <div class="status" id="jttou-label" style="margin-top:6px;"></div>
+
+      <div class="panel">
+        <div class="panel-title">Animação — percorre a progressão completa</div>
+        <div class="kb-wrap"><div class="kb" id="kb-jttou-anim"></div></div>
+        <div class="status" id="jttou-anim-status">Clique em animar</div>
+        <div class="btn-row" style="margin-top:8px;">
+          <button class="btn btn-play" id="play-jttou" onclick="toggleJTTOU()">▶ Animar</button>
+          <div class="bpm-row"><span class="bpm-lbl">BPM</span><span class="bpm-val" style="color:var(--pink)" id="bpm-jttou">75</span><input type="range" min="50" max="120" value="75" oninput="document.getElementById('bpm-jttou').textContent=this.value;bpmJTTOU=+this.value;"></div>
+        </div>
+      </div>
+
+      <div class="panel" style="border-color:#34d39933;">
+        <div class="panel-title" style="color:var(--green);">Notas de cada acorde — alinhadas</div>
+        <div style="font-family:'DM Mono',monospace;font-size:12px;color:#ccc;line-height:2.2;overflow-x:auto;">
+          <span style="color:var(--yellow)">Dbmaj7</span> → Db &nbsp; F &nbsp; Ab &nbsp; C<br>
+          <span style="color:var(--yellow)">Fm7 &nbsp;&nbsp;</span> →  F &nbsp; Ab &nbsp; C &nbsp; Eb<br>
+          <span style="color:var(--yellow)">Bb7 &nbsp;&nbsp;</span> → Bb &nbsp; D &nbsp;&nbsp; F &nbsp; Ab<br>
+          <span style="color:var(--yellow)">Ebm7 &nbsp;</span> → Eb &nbsp; Gb &nbsp; Bb &nbsp; Db<br>
+          <span style="color:var(--yellow)">Ab7 &nbsp;&nbsp;</span> → Ab &nbsp; C &nbsp;&nbsp; Eb &nbsp; Gb
+        </div>
+      </div>
+
+      <div class="tip" style="border-color:var(--pink);background:#f472b610;">
+        💡 Ab aparece em Dbmaj7, Fm7 e Bb7 — esse dedo quase não sai do lugar!<br>
+        💡 Começa em Dó (versão simplificada): Cmaj7 → Em7 → A7 → Dm7 → G7<br>
+        💡 Busca no YouTube: "Just The Two Of Us piano tutorial"
+      </div>
+      <button class="done-btn" onclick="this.classList.add('done');this.textContent='✓ CONCLUÍDO'">✓ FEITO</button>
+    </div>
+  </div>
+  `;
+
+  // Init keyboards
+  setTimeout(()=>{
+    // Groove chords
+    const GROOVE_CH={
+      Em7:  {me:['E'],  md:['E','G','B','D']},
+      A7sus2:{me:['A'], md:['A','E','G','B']},
+      Dmaj7:{me:['D'],  md:['D','F#','A','C#']},
+    };
+    const gcRow=document.getElementById('groove-chords');
+    Object.entries(GROOVE_CH).forEach(([name,c],i)=>{
+      const btn=document.createElement('div');
+      btn.className='cb'+(i===0?' on':'');
+      btn.innerHTML=`<div class="cn" style="color:var(--pink)">${name}</div><div class="cv">${c.md.join(' ')}</div>`;
+      btn.onclick=()=>{
+        document.querySelectorAll('#groove-chords .cb').forEach(b=>b.classList.remove('on'));
+        btn.classList.add('on');
+        buildKb('kb-groove',mkHl(c.me,c.md));
+      };
+      gcRow.appendChild(btn);
+    });
+    buildKb('kb-groove',mkHl(['E'],['E','G','B','D']));
+    buildKb('kb-groove-anim',mkHl(['E'],['E','G','B','D']));
+
+    // Human Nature
+    const HN_CH=[
+      {name:'Gmaj7',me:['G'],  md:['G','B','D','F#'], label:'I grau — resolução'},
+      {name:'Am7',  me:['A'],  md:['A','C','E','G'],  label:'ii grau — tensão'},
+      {name:'Fmaj7',me:['F'],  md:['F','A','C','E'],  label:'VII grau — cor'},
+      {name:'Em7',  me:['E'],  md:['E','G','B','D'],  label:'vi grau — emoção'},
+    ];
+    const hnRow=document.getElementById('hn-chords');
+    HN_CH.forEach((c,i)=>{
+      const btn=document.createElement('div');
+      btn.className='cb'+(i===0?' on':'');
+      btn.innerHTML=`<div class="cn" style="color:var(--pink)">${c.name}</div><div class="cv">${c.md.join(' ')}</div><div class="cg">${c.label}</div>`;
+      btn.onclick=()=>{
+        document.querySelectorAll('#hn-chords .cb').forEach(b=>b.classList.remove('on'));
+        btn.classList.add('on');
+        buildKb('kb-hn',mkHl(c.me,c.md));
+        document.getElementById('hn-label').textContent=c.name+' — '+c.label;
+      };
+      hnRow.appendChild(btn);
+    });
+    buildKb('kb-hn',mkHl(HN_CH[0].me,HN_CH[0].md));
+    buildKb('kb-hn-anim',mkHl(HN_CH[0].me,HN_CH[0].md));
+    document.getElementById('hn-label').textContent='Gmaj7 — I grau — resolução';
+    window._HN_CH=HN_CH;
+
+    // Just The Two Of Us
+    const JTTOU_CH=[
+      {name:'Dbmaj7',me:['Db'],md:['Db','F','Ab','C'],  label:'I grau'},
+      {name:'Fm7',   me:['F'], md:['F','Ab','C','Eb'],  label:'iii grau'},
+      {name:'Bb7',   me:['Bb'],md:['Bb','D','F','Ab'],  label:'V/ii grau'},
+      {name:'Ebm7',  me:['Eb'],md:['Eb','Gb','Bb','Db'],label:'ii grau'},
+      {name:'Ab7',   me:['Ab'],md:['Ab','C','Eb','Gb'],  label:'V grau'},
+    ];
+    const jRow=document.getElementById('jttou-chords');
+    JTTOU_CH.forEach((c,i)=>{
+      const btn=document.createElement('div');
+      btn.className='cb'+(i===0?' on':'');
+      btn.innerHTML=`<div class="cn" style="color:var(--pink)">${c.name}</div><div class="cv">${c.md.join(' ')}</div><div class="cg">${c.label}</div>`;
+      btn.onclick=()=>{
+        document.querySelectorAll('#jttou-chords .cb').forEach(b=>b.classList.remove('on'));
+        btn.classList.add('on');
+        buildKb('kb-jttou',mkHl(c.me,c.md));
+        document.getElementById('jttou-label').textContent=c.name+' — '+c.label;
+      };
+      jRow.appendChild(btn);
+    });
+    buildKb('kb-jttou',mkHl(JTTOU_CH[0].me,JTTOU_CH[0].md));
+    buildKb('kb-jttou-anim',mkHl(JTTOU_CH[0].me,JTTOU_CH[0].md));
+    document.getElementById('jttou-label').textContent='Dbmaj7 — I grau';
+    window._JTTOU_CH=JTTOU_CH;
+  },100);
+}
+
+// Groove anim — ME segura + MD faz lick
+const GROOVE_FRAMES=[
+  {me:['E'],  md:['E','G','B','D'], label:'ME segura Em7 — MD: acorde'},
+  {me:['E'],  md:['D','E'],         label:'MD lick — nota D → E'},
+  {me:['E'],  md:['E','F#'],        label:'MD lick — E → F#'},
+  {me:['E'],  md:['G','A'],         label:'MD lick — G → A (chegada)'},
+  {me:['A'],  md:['A','E','G','B'], label:'ME muda para A7sus2'},
+  {me:['A'],  md:['B','A'],         label:'MD lick — B → A'},
+  {me:['A'],  md:['G','F#'],        label:'MD lick — G → F#'},
+  {me:['D'],  md:['D','F#','A','C#'],label:'ME resolve — Dmaj7'},
+  {me:['D'],  md:['C#','D'],        label:'MD ornamento — C# → D'},
+];
+let pGroove=false,iGroove=null,bpmGroove=80,idxGroove=0;
+function toggleGroove(){
+  pGroove=!pGroove;
+  const btn=document.getElementById('play-groove');
+  if(!btn)return;
+  if(pGroove){
+    btn.textContent='⏹ Parar';btn.classList.add('btn-stop');btn.classList.remove('btn-play');
+    idxGroove=0;tickGroove();iGroove=setInterval(tickGroove,Math.round(60000/bpmGroove/2));
+  }else{
+    btn.textContent='▶ Animar';btn.classList.remove('btn-stop');btn.classList.add('btn-play');
+    clearInterval(iGroove);
+  }
+}
+function tickGroove(){
+  const f=GROOVE_FRAMES[idxGroove];
+  const hl={};
+  f.me.forEach(n=>{hl[n]={color:'yellow'};});
+  f.md.forEach(n=>{if(!hl[n])hl[n]={color: idxGroove===GROOVE_FRAMES.length-1||idxGroove===3?'pink':'blue'};});
+  buildKb('kb-groove-anim',hl);
+  const st=document.getElementById('groove-status');if(st)st.textContent=f.label;
+  idxGroove=(idxGroove+1)%GROOVE_FRAMES.length;
+}
+
+// Human Nature anim
+let pHN=false,iHN=null,bpmHN=72,idxHN=0;
+function toggleHN(){
+  pHN=!pHN;
+  const btn=document.getElementById('play-hn');if(!btn)return;
+  if(pHN){
+    btn.textContent='⏹ Parar';btn.classList.add('btn-stop');btn.classList.remove('btn-play');
+    idxHN=0;tickHN();iHN=setInterval(tickHN,Math.round(60000/bpmHN)*2);
+  }else{
+    btn.textContent='▶ Animar';btn.classList.remove('btn-stop');btn.classList.add('btn-play');
+    clearInterval(iHN);
+  }
+}
+function tickHN(){
+  if(!window._HN_CH)return;
+  const c=window._HN_CH[idxHN%4];
+  buildKb('kb-hn-anim',mkHl(c.me,c.md));
+  const st=document.getElementById('hn-anim-status');if(st)st.textContent=c.name+' — '+c.label;
+  document.querySelectorAll('#hn-chords .cb').forEach((b,i)=>b.classList.toggle('on',i===idxHN%4));
+  idxHN++;
+}
+
+// Just The Two Of Us anim
+let pJTTOU=false,iJTTOU=null,bpmJTTOU=75,idxJTTOU=0;
+function toggleJTTOU(){
+  pJTTOU=!pJTTOU;
+  const btn=document.getElementById('play-jttou');if(!btn)return;
+  if(pJTTOU){
+    btn.textContent='⏹ Parar';btn.classList.add('btn-stop');btn.classList.remove('btn-play');
+    idxJTTOU=0;tickJTTOU();iJTTOU=setInterval(tickJTTOU,Math.round(60000/bpmJTTOU)*2);
+  }else{
+    btn.textContent='▶ Animar';btn.classList.remove('btn-stop');btn.classList.add('btn-play');
+    clearInterval(iJTTOU);
+  }
+}
+function tickJTTOU(){
+  if(!window._JTTOU_CH)return;
+  const c=window._JTTOU_CH[idxJTTOU%5];
+  buildKb('kb-jttou-anim',mkHl(c.me,c.md));
+  const st=document.getElementById('jttou-anim-status');if(st)st.textContent=c.name+' — '+c.label;
+  document.querySelectorAll('#jttou-chords .cb').forEach((b,i)=>b.classList.toggle('on',i===idxJTTOU%5));
+  idxJTTOU++;
+}
+
+// ===========================
 // INIT
 // ===========================
 buildKeyGrid();
 updateAll();
 buildBluesSection();
+buildGrooveSection();
 </script>
 </body>
 </html>
