@@ -3,788 +3,954 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Treino Matinal — Piano</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<title>Treino Piano</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg:#0d0d0d;--surface:#141414;--card:#1a1a1a;--border:#2a2a2a;
-    --accent:#f5c842;--accent2:#4ecdc4;--accent3:#ff6b6b;--accent4:#a78bfa;
-    --text:#e8e8e8;--muted:#666;--white-key:#f0ede6;--black-key:#1a1a1a;
-  }
-  *{box-sizing:border-box;margin:0;padding:0;}
-  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;}
-  .header{padding:32px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:baseline;gap:16px;}
-  .header h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,8vw,64px);letter-spacing:2px;color:var(--accent);line-height:1;}
-  .header .sub{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;}
-  .timer-bar{background:var(--surface);padding:12px 24px;display:flex;align-items:center;gap:16px;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;}
-  .timer-display{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--accent);letter-spacing:2px;min-width:80px;}
-  .timer-label{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:2px;flex:1;}
-  .btn{padding:8px 18px;border:none;border-radius:4px;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;cursor:pointer;letter-spacing:1px;transition:all 0.15s;}
-  .btn-primary{background:var(--accent);color:#000;}
-  .btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border);}
-  .btn-ghost:hover{color:var(--text);border-color:var(--text);}
-  .btn-sm{padding:5px 12px;font-size:11px;}
-  .progress-row{padding:16px 24px;display:flex;gap:8px;flex-wrap:wrap;border-bottom:1px solid var(--border);}
-  .pill{padding:4px 12px;border-radius:999px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;border:1px solid var(--border);color:var(--muted);cursor:pointer;transition:all 0.2s;}
-  .pill.done{background:var(--accent);color:#000;border-color:var(--accent);}
-  .content{max-width:900px;margin:0 auto;padding:24px;}
-  .exercise-block{background:var(--card);border:1px solid var(--border);border-radius:8px;margin-bottom:20px;overflow:hidden;transition:border-color 0.2s;}
-  .exercise-block.active-block{border-color:var(--accent);}
-  .exercise-block.done-block{opacity:0.6;}
-  .block-header{padding:16px 20px;display:flex;align-items:center;gap:12px;cursor:pointer;user-select:none;}
-  .block-num{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--accent);min-width:32px;}
-  .block-title{flex:1;}
-  .block-title h3{font-size:15px;font-weight:500;margin-bottom:2px;}
-  .block-title .meta{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:1px;}
-  .block-tag{padding:3px 10px;border-radius:3px;font-family:'DM Mono',monospace;font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;}
-  .tag-warm{background:#ff6b6b22;color:#ff6b6b;}
-  .tag-blues{background:#4ecdc422;color:#4ecdc4;}
-  .tag-jazz{background:#a78bfa22;color:#a78bfa;}
-  .tag-gospel{background:#f5c84222;color:#f5c842;}
-  .tag-soul{background:#fb923c22;color:#fb923c;}
-  .tag-worship{background:#34d39922;color:#34d399;}
-  .tag-penta{background:#f472b622;color:#f472b6;}
-  .tag-voz{background:#38bdf822;color:#38bdf8;}
-  .block-body{display:none;padding:0 20px 20px;border-top:1px solid var(--border);}
-  .block-body.open{display:block;}
-  .instruction{font-size:13px;line-height:1.7;color:#ccc;margin:14px 0 10px;}
-  .instruction strong{color:var(--accent);}
-  .keyboard-wrap{margin:16px 0;overflow-x:auto;padding-bottom:8px;}
-  .keyboard{display:flex;position:relative;height:110px;width:fit-content;user-select:none;}
-  .key-white{width:36px;height:110px;background:var(--white-key);border:1px solid #bbb;border-top:none;border-radius:0 0 4px 4px;position:relative;cursor:pointer;transition:background 0.1s;flex-shrink:0;}
-  .key-white:hover{background:#ddd;}
-  .key-black{width:22px;height:68px;background:var(--black-key);position:absolute;top:0;z-index:2;border-radius:0 0 3px 3px;cursor:pointer;}
-  .hl-yellow{background:#f5c842!important;}
-  .hl-blue{background:#4a9eff!important;}
-  .hl-teal{background:#4ecdc4!important;}
-  .hl-red{background:#ff6b6b!important;}
-  .hl-purple{background:#a78bfa!important;}
-  .hl-orange{background:#fb923c!important;}
-  .hl-green{background:#34d399!important;}
-  .key-label{position:absolute;bottom:5px;left:0;right:0;text-align:center;font-family:'DM Mono',monospace;font-size:9px;color:#555;pointer-events:none;}
-  .key-black .key-label{bottom:3px;color:#aaa;font-size:8px;}
-  .finger-num{position:absolute;bottom:18px;left:0;right:0;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:14px;color:#000;pointer-events:none;opacity:0.7;}
-  .legend{display:flex;gap:12px;flex-wrap:wrap;margin:8px 0;}
-  .legend-item{display:flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);}
-  .legend-dot{width:12px;height:12px;border-radius:2px;}
-  .chord-row{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0;}
-  .chord-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:10px 14px;cursor:pointer;transition:all 0.15s;font-family:'DM Mono',monospace;}
-  .chord-card:hover{border-color:var(--accent);}
-  .chord-card.selected{border-color:var(--accent);background:#f5c84211;}
-  .chord-name{font-size:16px;color:var(--accent);font-weight:500;}
-  .chord-notes{font-size:11px;color:var(--muted);margin-top:3px;}
-  .chord-hand{font-size:10px;color:#555;margin-top:2px;letter-spacing:1px;}
-  .prog-display{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:14px;margin:12px 0;font-family:'DM Mono',monospace;}
-  .prog-title{font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:8px;text-transform:uppercase;}
-  .prog-chords{display:flex;gap:8px;flex-wrap:wrap;}
-  .prog-chord{padding:6px 14px;border-radius:4px;font-size:14px;font-weight:500;border:1px solid var(--border);cursor:pointer;transition:all 0.15s;position:relative;font-family:'DM Mono',monospace;}
-  .prog-chord:hover{border-color:var(--accent2);}
-  .prog-chord.playing{border-color:var(--accent2);background:#4ecdc422;}
-  .prog-chord .bars{font-size:9px;color:var(--muted);display:block;text-align:center;}
-  .tip-box{background:#f5c84211;border-left:3px solid var(--accent);border-radius:0 6px 6px 0;padding:10px 14px;margin:10px 0;font-size:12px;color:#ccc;font-family:'DM Mono',monospace;line-height:1.6;}
-  .voz-box{background:#38bdf811;border-left:3px solid #38bdf8;border-radius:0 6px 6px 0;padding:12px 14px;margin:10px 0;font-size:13px;color:#ccc;font-family:'DM Mono',monospace;line-height:1.9;}
-  .voz-box strong{color:#38bdf8;}
-  .done-btn{margin-top:16px;width:100%;padding:12px;background:transparent;border:1px dashed var(--border);border-radius:6px;color:var(--muted);font-family:'DM Mono',monospace;font-size:12px;letter-spacing:2px;cursor:pointer;transition:all 0.2s;text-transform:uppercase;}
-  .done-btn:hover{border-color:var(--accent);color:var(--accent);}
-  .done-btn.done{background:#f5c84222;border-color:var(--accent);color:var(--accent);}
-  .bpm-control{display:flex;align-items:center;gap:10px;margin:10px 0;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:10px 14px;}
-  .bpm-label{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);}
-  .bpm-num{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--accent);min-width:48px;text-align:center;}
-  input[type=range]{flex:1;-webkit-appearance:none;height:3px;background:var(--border);border-radius:2px;outline:none;}
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;background:var(--accent);border-radius:50%;cursor:pointer;}
-  .metro-beat{display:flex;gap:6px;margin:8px 0;}
-  .beat-dot{width:12px;height:12px;border-radius:50%;background:var(--border);transition:background 0.05s;}
-  .beat-dot.on{background:var(--accent);box-shadow:0 0 8px var(--accent);}
-  .beat-dot.accent{background:var(--accent3);box-shadow:0 0 8px var(--accent3);}
-  .video-links{margin-top:12px;display:flex;flex-direction:column;gap:6px;}
-  .video-link{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--surface);border:1px solid var(--border);border-radius:6px;text-decoration:none;font-family:'DM Mono',monospace;font-size:11px;color:var(--text);transition:all 0.15s;}
-  .video-link:hover{border-color:#ff6b6b;color:#ff6b6b;}
-  .video-icon{font-size:16px;}
-  .sec-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin:16px 0 8px;}
-  .note-seq{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0;align-items:center;}
-  .note-pill{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:4px 10px;font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--accent);letter-spacing:1px;}
-  .note-pill.blue{color:#4a9eff;border-color:#4a9eff44;}
-  .note-pill.red{color:#ff6b6b;border-color:#ff6b6b44;}
-  .note-pill.teal{color:#4ecdc4;border-color:#4ecdc444;}
-  .sep{font-family:'DM Mono',monospace;font-size:11px;color:#444;align-self:center;}
-  @media(max-width:600px){.content{padding:12px;}.header{padding:20px 16px 12px;}}</style>
+:root{
+  --bg:#0a0a0a;--surface:#141414;--card:#1c1c1c;--border:#2a2a2a;
+  --yellow:#f5c842;--blue:#4a9eff;--teal:#4ecdc4;--red:#ff6b6b;
+  --purple:#a78bfa;--orange:#fb923c;--green:#34d399;--pink:#f472b6;
+  --text:#e8e8e8;--muted:#666;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;}
+
+/* NAV */
+.nav{background:var(--surface);border-bottom:1px solid var(--border);padding:0 20px;display:flex;align-items:center;gap:0;position:sticky;top:0;z-index:200;}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--yellow);letter-spacing:2px;padding:12px 16px 12px 0;border-right:1px solid var(--border);margin-right:4px;}
+.nav-tabs{display:flex;overflow-x:auto;gap:0;flex:1;}
+.nav-tab{padding:14px 16px;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all 0.2s;letter-spacing:1px;}
+.nav-tab:hover{color:var(--text);}
+.nav-tab.active{color:var(--yellow);border-bottom-color:var(--yellow);}
+
+/* SECTIONS */
+.section{display:none;max-width:740px;margin:0 auto;padding:0 20px 60px;}
+.section.active{display:block;}
+
+/* HERO */
+.hero{padding:36px 0 20px;}
+.hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(44px,9vw,72px);letter-spacing:3px;line-height:1;}
+.hero p{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-top:6px;}
+
+/* BLOCKS */
+.block{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:14px;overflow:hidden;}
+.block.active{border-color:var(--yellow);}
+.block-head{padding:14px 18px;display:flex;align-items:center;gap:12px;cursor:pointer;}
+.block-num{font-family:'Bebas Neue',sans-serif;font-size:20px;min-width:28px;}
+.block-info{flex:1;}
+.block-info h3{font-size:14px;font-weight:500;margin-bottom:2px;}
+.block-info span{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;}
+.tag{padding:3px 8px;border-radius:3px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;}
+.block-body{display:none;padding:0 18px 18px;border-top:1px solid var(--border);}
+.block-body.open{display:block;}
+.desc{font-size:13px;line-height:1.8;color:#bbb;margin:14px 0 10px;}
+.desc strong{color:var(--yellow);}
+
+/* KEYBOARD */
+.kb-wrap{overflow-x:auto;margin:12px 0 4px;padding-bottom:4px;}
+.kb{display:flex;position:relative;width:fit-content;}
+.wk{background:#ece9e2;border:1px solid #bbb;border-top:none;border-radius:0 0 4px 4px;position:relative;flex-shrink:0;transition:background 0.07s;}
+.bk{background:#111;position:absolute;top:0;z-index:2;border-radius:0 0 3px 3px;transition:background 0.07s;}
+.kl{position:absolute;bottom:4px;left:0;right:0;text-align:center;font-family:'DM Mono',monospace;color:#777;pointer-events:none;}
+.bk .kl{color:#888;bottom:3px;}
+.hl-y{background:#f5c842!important;}
+.hl-b{background:#4a9eff!important;}
+.hl-t{background:#4ecdc4!important;}
+.hl-r{background:#ff6b6b!important;}
+.hl-g{background:#34d399!important;}
+.hl-p{background:#a78bfa!important;}
+.legend{display:flex;gap:10px;flex-wrap:wrap;margin:4px 0 8px;}
+.leg{display:flex;align-items:center;gap:5px;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);}
+.leg-dot{width:10px;height:10px;border-radius:2px;}
+
+/* PANELS */
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px;margin:10px 0;}
+.panel-title{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;}
+.status{font-family:'DM Mono',monospace;font-size:11px;color:#ccc;margin-top:8px;min-height:16px;}
+.tip{border-left:3px solid var(--yellow);border-radius:0 6px 6px 0;padding:10px 14px;margin:10px 0;font-size:12px;font-family:'DM Mono',monospace;color:#ccc;line-height:1.6;background:#f5c84210;}
+
+/* BUTTONS */
+.btn{padding:7px 14px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);font-family:'DM Mono',monospace;font-size:11px;cursor:pointer;transition:all 0.15s;}
+.btn:hover{border-color:var(--yellow);color:var(--yellow);}
+.btn.on{background:var(--yellow);color:#000;border-color:var(--yellow);}
+.btn-play{background:var(--yellow);color:#000;border-color:var(--yellow);}
+.btn-play:hover{filter:brightness(1.1);}
+.btn-stop{background:transparent!important;color:var(--red)!important;border-color:var(--red)!important;}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;align-items:center;}
+.bpm-row{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--surface);border:1px solid var(--border);border-radius:6px;flex:1;}
+.bpm-lbl{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);}
+.bpm-val{font-family:'Bebas Neue',sans-serif;font-size:20px;min-width:40px;}
+input[type=range]{flex:1;-webkit-appearance:none;height:3px;background:var(--border);border-radius:2px;outline:none;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;background:var(--yellow);border-radius:50%;cursor:pointer;}
+.done-btn{margin-top:12px;width:100%;padding:10px;background:transparent;border:1px dashed var(--border);border-radius:6px;color:var(--muted);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:2px;cursor:pointer;transition:all 0.2s;text-transform:uppercase;}
+.done-btn:hover{border-color:var(--yellow);color:var(--yellow);}
+.done-btn.done{background:#f5c84215;border-color:var(--yellow);color:var(--yellow);border-style:solid;}
+
+/* CHORD BUTTONS */
+.chord-row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;}
+.cb{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:8px 12px;cursor:pointer;transition:all 0.15s;font-family:'DM Mono',monospace;}
+.cb:hover{border-color:var(--yellow);}
+.cb.on{border-color:var(--yellow);background:#f5c84210;}
+.cb .cn{font-size:14px;font-weight:500;}
+.cb .cv{font-size:10px;color:var(--muted);margin-top:2px;}
+.cb .cg{font-size:10px;color:#444;margin-top:1px;}
+
+/* BEAT GRID */
+.beat-row{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0;}
+.beat{min-width:52px;height:48px;border-radius:7px;border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:all 0.1s;}
+.beat .bn{font-family:'Bebas Neue',sans-serif;font-size:15px;}
+.beat .bs{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);}
+.beat.tum{background:#f5c84218;border-color:#f5c84244;}
+.beat.ca{background:#4ecdc418;border-color:#4ecdc444;}
+.beat.tum.active{background:var(--yellow);border-color:var(--yellow);transform:scale(1.08);}
+.beat.tum.active .bn{color:#000;}
+.beat.tum.active .bs{color:#333;}
+.beat.ca.active{background:var(--teal);border-color:var(--teal);transform:scale(1.05);}
+.beat.ca.active .bn{color:#000;}
+.beat.ca.active .bs{color:#333;}
+
+/* PROG */
+.prog{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:12px 14px;margin:10px 0;}
+.prog-title{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:8px;}
+.prog-chords{display:flex;gap:6px;flex-wrap:wrap;}
+.pc{padding:6px 12px;border-radius:4px;border:1px solid var(--border);font-family:'DM Mono',monospace;font-size:13px;cursor:pointer;transition:all 0.15s;}
+.pc:hover{border-color:var(--yellow);}
+.pc.playing{border-color:var(--yellow);background:#f5c84215;}
+.pc .pb{font-size:9px;color:var(--muted);display:block;text-align:center;}
+
+/* ===== HARMONIA DO DIA ===== */
+.harm-intro{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:16px;}
+.harm-title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;margin-bottom:6px;}
+.harm-sub{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:16px;}
+.key-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:10px 0;}
+.key-btn{padding:10px 4px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);font-family:'Bebas Neue',sans-serif;font-size:18px;cursor:pointer;transition:all 0.15s;text-align:center;letter-spacing:1px;}
+.key-btn:hover{border-color:var(--yellow);color:var(--yellow);}
+.key-btn.on{background:var(--yellow);color:#000;border-color:var(--yellow);}
+.key-btn .kd{font-family:'DM Mono',monospace;font-size:8px;color:inherit;opacity:0.7;display:block;margin-top:2px;}
+.harm-steps{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0;}
+.step-btn{padding:5px 12px;border:1px solid var(--border);border-radius:20px;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);cursor:pointer;transition:all 0.2s;letter-spacing:1px;}
+.step-btn:hover{border-color:var(--yellow);color:var(--yellow);}
+.step-btn.on{background:var(--yellow);color:#000;border-color:var(--yellow);}
+.harm-content{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px;margin-bottom:14px;}
+.harm-content-title{font-family:'Bebas Neue',sans-serif;font-size:22px;margin-bottom:4px;letter-spacing:1px;}
+.harm-content-sub{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:14px;}
+.campo-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:10px 0;}
+.campo-cell{background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:6px 4px;text-align:center;cursor:pointer;transition:all 0.15s;font-family:'DM Mono',monospace;}
+.campo-cell:hover{border-color:var(--yellow);}
+.campo-cell.on{border-color:var(--yellow);background:#f5c84210;}
+.campo-cell .cc-grau{font-size:9px;color:var(--muted);}
+.campo-cell .cc-name{font-size:12px;font-weight:500;margin:2px 0;}
+.campo-cell .cc-notas{font-size:9px;color:var(--muted);}
+.musica-card{background:var(--surface);border:1px solid #34d39933;border-radius:8px;padding:12px 14px;margin:10px 0;}
+.musica-card-title{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--green);letter-spacing:1px;margin-bottom:4px;}
+.musica-card-sub{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:10px;}
+.prog-inline{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0;}
+.pi{padding:5px 10px;border-radius:4px;border:1px solid #34d39933;font-family:'DM Mono',monospace;font-size:12px;cursor:pointer;transition:all 0.15s;}
+.pi:hover{border-color:var(--green);}
+.pi.playing{border-color:var(--green);background:#34d39915;}
+.pi .pg{font-size:9px;color:var(--muted);display:block;text-align:center;}
+.progress-row{display:flex;gap:4px;flex-wrap:wrap;padding:10px 20px;border-bottom:1px solid var(--border);max-width:740px;margin:0 auto;}
+.pill{padding:3px 10px;border-radius:20px;font-family:'DM Mono',monospace;font-size:10px;border:1px solid var(--border);color:var(--muted);cursor:pointer;transition:all 0.2s;}
+.pill.done{background:var(--yellow);color:#000;border-color:var(--yellow);}
+
+@media(max-width:500px){
+  .key-grid{grid-template-columns:repeat(4,1fr);}
+  .campo-grid{grid-template-columns:repeat(4,1fr);}
+  .nav-tab{padding:12px 10px;font-size:10px;}
+}
+</style>
 </head>
 <body>
 
-<div class="header">
-  <h1>Treino Matinal</h1>
-  <span class="sub">Jazz · Soul · Gospel · Voz</span>
-</div>
-
-<div class="timer-bar">
-  <div>
-    <div class="timer-display" id="globalTimer">00:00</div>
-    <div class="timer-label" id="timerLabel">Pronto para começar</div>
+<nav class="nav">
+  <div class="nav-logo">Piano</div>
+  <div class="nav-tabs">
+    <div class="nav-tab active" onclick="showSection('harm')">🎯 Harmonia</div>
+    <div class="nav-tab" onclick="showSection('blues')">Blues</div>
+    <div class="nav-tab" onclick="showSection('jazz')">Jazz</div>
+    <div class="nav-tab" onclick="showSection('soul')">Soul</div>
   </div>
-  <button class="btn btn-primary" id="globalStartBtn" onclick="toggleGlobalTimer()">INICIAR</button>
-  <button class="btn btn-ghost btn-sm" onclick="resetGlobalTimer()">RESET</button>
-</div>
+</nav>
 
-<div class="progress-row" id="progressRow"></div>
-<div class="content">
-
-<!-- 01 AQUECIMENTO -->
-<div class="exercise-block" id="block-0">
-  <div class="block-header" onclick="toggleBlock(0)">
-    <div class="block-num">01</div>
-    <div class="block-title"><h3>Aquecimento</h3><div class="meta">5 MIN — Postura + dedos + cromática</div></div>
-    <span class="block-tag tag-warm">WARM UP</span>
+<!-- ===================== HARMONIA DO DIA ===================== -->
+<div class="section active" id="sec-harm">
+  <div class="hero">
+    <h1 style="color:var(--yellow)">Harmonia do Dia</h1>
+    <p>Escala · Campo · 2-5-1 · Música</p>
   </div>
-  <div class="block-body" id="body-0">
-    <div class="instruction">
-      <strong>Antes de tocar</strong> — esses 5 minutos evitam lesão e deixam os dedos responsivos.<br><br>
-      1. Sacuda os braços soltos 10x<br>
-      2. Massageie cada dedo 5 segundos<br>
-      3. Abra e feche as mãos 10x<br>
-      4. Sente bem: pés no chão, cotovelos na altura do teclado<br>
-      5. Toque a escala cromática de Dó a Dó devagar
+
+  <div class="harm-intro">
+    <div class="harm-title" style="color:var(--yellow)">Selecione o Tom</div>
+    <div class="harm-sub">Do mais fácil (C) ao mais difícil (F#) — siga essa ordem</div>
+    <div class="key-grid" id="key-grid"></div>
+    <div class="harm-steps" id="harm-steps">
+      <div class="step-btn on" onclick="showStep('escala',this)">1 — Escala</div>
+      <div class="step-btn" onclick="showStep('campo',this)">2 — Campo</div>
+      <div class="step-btn" onclick="showStep('251',this)">3 — 2-5-1</div>
+      <div class="step-btn" onclick="showStep('musica',this)">4 — Música</div>
     </div>
-    <div class="sec-label">Escala Cromática — todas as 12 notas em ordem</div>
-    <div class="keyboard-wrap"><div class="keyboard" id="kb-chromatic"></div></div>
+  </div>
+
+  <!-- ESCALA -->
+  <div class="harm-content" id="step-escala">
+    <div class="harm-content-title" id="escala-title" style="color:var(--teal)">Escala de C</div>
+    <div class="harm-content-sub" id="escala-sub">8 notas — sobe e desce</div>
+    <div class="desc">
+      A <strong>escala</strong> é a base de tudo — os acordes, o 2-5-1 e o improviso nascem dela.<br>
+      Toque uma nota por vez, subindo e descendo, com ME e MD separadas.
+    </div>
+    <div class="kb-wrap"><div class="kb" id="kb-escala"></div></div>
     <div class="legend">
-      <div class="legend-item"><div class="legend-dot" style="background:#f5c842"></div> Toque em ordem: C C# D D# E F F# G G# A A# B C</div>
+      <div class="leg"><div class="leg-dot" style="background:var(--teal)"></div> Notas da escala</div>
+      <div class="leg"><div class="leg-dot" style="background:var(--yellow)"></div> Tônica (raiz)</div>
     </div>
-    <div class="bpm-control">
-      <span class="bpm-label">BPM</span>
-      <span class="bpm-num" id="bpm-0">60</span>
-      <input type="range" min="40" max="120" value="60" oninput="document.getElementById('bpm-0').textContent=this.value">
-      <button class="btn btn-ghost btn-sm" onclick="toggleMetro('metro-0',document.getElementById('bpm-0').textContent)">METRO</button>
+    <div class="panel">
+      <div class="panel-title">Animação — sobe e desce</div>
+      <div class="kb-wrap"><div class="kb" id="kb-escala-anim"></div></div>
+      <div class="status" id="escala-status">Clique em animar</div>
+      <div class="btn-row" style="margin-top:8px;">
+        <button class="btn btn-play" id="play-escala" onclick="toggleEscala()">▶ Animar</button>
+        <div class="bpm-row">
+          <span class="bpm-lbl">BPM</span>
+          <span class="bpm-val" id="bpm-escala" style="color:var(--teal)">70</span>
+          <input type="range" min="40" max="120" value="70" oninput="document.getElementById('bpm-escala').textContent=this.value;bpmEscala=+this.value;">
+        </div>
+      </div>
     </div>
-    <div class="metro-beat" id="metro-0"></div>
-    <div class="tip-box">💡 Dedilhado: C(1) C#(1) D(2) D#(2) E(3) F(1) F#(1) G(2) G#(2) A(3) A#(3) B(4) C(1)<br>Cruza o polegar sob o 3º dedo em E→F.</div>
-    <button class="done-btn" id="done-0" onclick="markDone(0)">✓ FEITO</button>
+    <div class="tip" id="escala-tip"></div>
   </div>
-</div>
 
-<!-- 02 ESCALA BLUES -->
-<div class="exercise-block" id="block-1">
-  <div class="block-header" onclick="toggleBlock(1)">
-    <div class="block-num">02</div>
-    <div class="block-title"><h3>Escala Blues</h3><div class="meta">8 MIN — A blue note que cria o feel</div></div>
-    <span class="block-tag tag-blues">BLUES</span>
-  </div>
-  <div class="block-body" id="body-1">
-    <div class="instruction">
-      A <strong>escala blues</strong> é a base do improviso. Em Fá:<br>
-      <strong>F — Ab — Bb — B — C — Eb</strong><br>
-      O B natural é a "blue note" — cria tensão e choro.
+  <!-- CAMPO -->
+  <div class="harm-content" id="step-campo" style="display:none">
+    <div class="harm-content-title" id="campo-title" style="color:var(--purple)">Campo Harmônico de C</div>
+    <div class="harm-content-sub">7 acordes que nasceram da escala — todos combinam entre si</div>
+    <div class="desc">
+      Cada nota da escala vira um acorde. Clique em cada um para ver no teclado.<br>
+      O <strong>2º, 5º e 1º</strong> são os mais importantes — são o 2-5-1!
     </div>
-    <div class="chord-row">
-      <div class="chord-card selected" onclick="selectScale('blues-f',this)"><div class="chord-name">Fá Blues</div><div class="chord-notes">F Ab Bb B C Eb</div></div>
-      <div class="chord-card" onclick="selectScale('blues-c',this)"><div class="chord-name">Dó Blues</div><div class="chord-notes">C Eb F F# G Bb</div></div>
-      <div class="chord-card" onclick="selectScale('blues-g',this)"><div class="chord-name">Sol Blues</div><div class="chord-notes">G Bb C C# D F</div></div>
-    </div>
-    <div class="keyboard-wrap"><div class="keyboard" id="kb-blues"></div></div>
+    <div class="campo-grid" id="campo-grid"></div>
+    <div class="kb-wrap"><div class="kb" id="kb-campo"></div></div>
     <div class="legend">
-      <div class="legend-item"><div class="legend-dot" style="background:#4ecdc4"></div> Escala Blues</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#ff6b6b"></div> Blue Note</div>
+      <div class="leg"><div class="leg-dot" style="background:var(--yellow)"></div> ME — raiz</div>
+      <div class="leg"><div class="leg-dot" style="background:var(--blue)"></div> MD — acorde</div>
     </div>
-    <div class="voz-box">
-      🎤 <strong>Exercício de voz:</strong> toque cada nota e <strong>cante junto</strong>.<br>
-      Sobe: F — Ab — Bb — B — C — Eb<br>
-      Desce: Eb — C — B — Bb — Ab — F<br>
-      Não precisa voz bonita — só afinado. Isso treina o ouvido interno.
-    </div>
-    <div class="bpm-control">
-      <span class="bpm-label">BPM</span>
-      <span class="bpm-num" id="bpm-1">70</span>
-      <input type="range" min="50" max="140" value="70" oninput="document.getElementById('bpm-1').textContent=this.value">
-      <button class="btn btn-ghost btn-sm" onclick="toggleMetro('metro-1',document.getElementById('bpm-1').textContent)">METRO</button>
-    </div>
-    <div class="metro-beat" id="metro-1"></div>
-    <button class="done-btn" id="done-1" onclick="markDone(1)">✓ FEITO</button>
-  </div>
-</div>
-
-<!-- 03 12 COMPASSOS -->
-<div class="exercise-block" id="block-2">
-  <div class="block-header" onclick="toggleBlock(2)">
-    <div class="block-num">03</div>
-    <div class="block-title"><h3>12 Compassos Blues em Fá</h3><div class="meta">8 MIN — Shuffle + improv</div></div>
-    <span class="block-tag tag-blues">BLUES</span>
-  </div>
-  <div class="block-body" id="body-2">
-    <div class="instruction">
-      <strong>3 acordes em 12 compassos.</strong><br>
-      ME faz o shuffle (tum-ca), MD improvisa com a escala blues de Fá.<br>
-      🟡 Amarelo = ME (raiz) &nbsp;|&nbsp; 🔵 Azul = MD (acorde)
-    </div>
-    <div class="prog-display">
-      <div class="prog-title">12 Compassos em Fá — clique para ver no teclado</div>
-      <div class="prog-chords">
-        <div class="prog-chord" style="color:#4ecdc4;border-color:#4ecdc444" onclick="showChord12('F7')">F7<span class="bars">1-2-3-4</span></div>
-        <div class="prog-chord" style="color:#4ecdc4;border-color:#4ecdc444" onclick="showChord12('Bb7')">Bb7<span class="bars">5-6</span></div>
-        <div class="prog-chord" style="color:#4ecdc4;border-color:#4ecdc444" onclick="showChord12('F7')">F7<span class="bars">7-8</span></div>
-        <div class="prog-chord" style="color:#ff6b6b;border-color:#ff6b6b44" onclick="showChord12('C7')">C7<span class="bars">9</span></div>
-        <div class="prog-chord" style="color:#4ecdc4;border-color:#4ecdc444" onclick="showChord12('Bb7')">Bb7<span class="bars">10</span></div>
-        <div class="prog-chord" style="color:#4ecdc4;border-color:#4ecdc444" onclick="showChord12('F7')">F7<span class="bars">11-12</span></div>
+    <div class="status" id="campo-label" style="margin-top:6px;"></div>
+    <div class="panel" style="margin-top:12px;">
+      <div class="panel-title">Animação — percorre o campo</div>
+      <div class="kb-wrap"><div class="kb" id="kb-campo-anim"></div></div>
+      <div class="status" id="campo-anim-status">Clique em animar</div>
+      <div class="btn-row" style="margin-top:8px;">
+        <button class="btn btn-play" id="play-campo" onclick="toggleCampo()">▶ Animar</button>
       </div>
     </div>
-    <div class="keyboard-wrap"><div class="keyboard" id="kb-blues12"></div></div>
+  </div>
+
+  <!-- 2-5-1 -->
+  <div class="harm-content" id="step-251" style="display:none">
+    <div class="harm-content-title" id="v251-title" style="color:var(--blue)">2-5-1 em C</div>
+    <div class="harm-content-sub" id="v251-sub">ii → V → I</div>
+    <div class="desc">
+      O <strong>2-5-1</strong> é a progressão mais usada no jazz — tensão → dominante → resolução.<br>
+      🟡 Amarelo = ME (raiz grave) &nbsp;|&nbsp; 🔵 Azul = MD (acorde)
+    </div>
+    <div class="chord-row" id="v251-chords"></div>
+    <div class="kb-wrap"><div class="kb" id="kb-251"></div></div>
     <div class="legend">
-      <div class="legend-item"><div class="legend-dot" style="background:#f5c842"></div> ME — raiz</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#4a9eff"></div> MD — acorde</div>
+      <div class="leg"><div class="leg-dot" style="background:var(--yellow)"></div> ME — raiz</div>
+      <div class="leg"><div class="leg-dot" style="background:var(--blue)"></div> MD — acorde</div>
     </div>
-    <div class="voz-box">
-      🎤 <strong>Call and Response vocal:</strong><br>
-      ME faz shuffle no F7 → MD improvisa 2 notas → <strong>você canta as mesmas notas</strong><br>
-      Teclado fala, voz responde. Isso é blues de verdade!
+    <div class="panel" style="margin-top:10px;">
+      <div class="panel-title">Animação — Dm7 → G7 → Cmaj7</div>
+      <div class="kb-wrap"><div class="kb" id="kb-251-anim"></div></div>
+      <div class="status" id="v251-status">Clique em animar</div>
+      <div class="btn-row" style="margin-top:8px;">
+        <button class="btn btn-play" id="play-251" onclick="toggle251()">▶ Animar</button>
+        <div class="bpm-row">
+          <span class="bpm-lbl">BPM</span>
+          <span class="bpm-val" id="bpm-251" style="color:var(--blue)">60</span>
+          <input type="range" min="40" max="120" value="60" oninput="document.getElementById('bpm-251').textContent=this.value;bpm251=+this.value;">
+        </div>
+      </div>
     </div>
-    <div class="bpm-control">
-      <span class="bpm-label">BPM</span>
-      <span class="bpm-num" id="bpm-2">75</span>
-      <input type="range" min="60" max="160" value="75" oninput="document.getElementById('bpm-2').textContent=this.value">
-      <button class="btn btn-ghost btn-sm" onclick="toggleMetro('metro-2',document.getElementById('bpm-2').textContent)">METRO</button>
-    </div>
-    <div class="metro-beat" id="metro-2"></div>
-    <div class="tip-box">💡 Shuffle ME: [F+C] → [F+D] → [F+C] → [F+D]. Metrônomo nos tempos 2 e 4.</div>
-    <div class="video-links">
-      <a class="video-link" href="https://www.youtube.com/watch?v=NMOGvsxXdaQ" target="_blank"><span class="video-icon">▶</span> 12 Bar Blues em 7 minutos — Iniciante</a>
-      <a class="video-link" href="https://www.youtube.com/watch?v=HAGH-5S2EJM" target="_blank"><span class="video-icon">▶</span> Shuffle Blues Passo a Passo</a>
-    </div>
-    <button class="done-btn" id="done-2" onclick="markDone(2)">✓ FEITO</button>
   </div>
-</div>
 
-<!-- 04 2-5-1 JAZZ -->
-<div class="exercise-block" id="block-3">
-  <div class="block-header" onclick="toggleBlock(3)">
-    <div class="block-num">04</div>
-    <div class="block-title"><h3>2-5-1 Jazz</h3><div class="meta">10 MIN — O DNA do jazz</div></div>
-    <span class="block-tag tag-jazz">JAZZ</span>
-  </div>
-  <div class="block-body" id="body-3">
-    <div class="instruction">
-      <strong>2-5-1 = 2º, 5º e 1º acorde do campo harmônico.</strong><br>
-      Em Dó: <strong>Dm7 → G7 → Cmaj7</strong><br>
-      🟡 Amarelo = ME (raiz grave) &nbsp;|&nbsp; 🔵 Azul = MD (4 notas do acorde)
+  <!-- MÚSICA -->
+  <div class="harm-content" id="step-musica" style="display:none">
+    <div class="harm-content-title" id="musica-title" style="color:var(--green)">Música em C</div>
+    <div class="harm-content-sub" id="musica-sub"></div>
+    <div class="desc" id="musica-desc"></div>
+    <div class="musica-card">
+      <div class="musica-card-title" id="mc-title"></div>
+      <div class="musica-card-sub" id="mc-sub"></div>
+      <div class="prog-inline" id="mc-chords"></div>
     </div>
-    <div class="chord-row">
-      <div class="chord-card selected" onclick="showJazzChord('Dm7',this)">
-        <div class="chord-name">Dm7</div><div class="chord-notes">D — F — A — C</div><div class="chord-hand">2º grau — tensão</div>
-      </div>
-      <div class="chord-card" onclick="showJazzChord('G7',this)">
-        <div class="chord-name">G7</div><div class="chord-notes">G — B — D — F</div><div class="chord-hand">5º grau — dominante</div>
-      </div>
-      <div class="chord-card" onclick="showJazzChord('Cmaj7',this)">
-        <div class="chord-name">Cmaj7</div><div class="chord-notes">C — E — G — B</div><div class="chord-hand">1º grau — resolução</div>
-      </div>
-    </div>
-    <div class="keyboard-wrap"><div class="keyboard" id="kb-jazz"></div></div>
+    <div class="kb-wrap"><div class="kb" id="kb-musica"></div></div>
     <div class="legend">
-      <div class="legend-item"><div class="legend-dot" style="background:#f5c842"></div> ME — raiz grave</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#4a9eff"></div> MD — acorde completo</div>
+      <div class="leg"><div class="leg-dot" style="background:var(--yellow)"></div> ME — raiz</div>
+      <div class="leg"><div class="leg-dot" style="background:var(--blue)"></div> MD — acorde</div>
     </div>
-    <div class="voz-box">
-      🎤 <strong>Melisma jazz — exercício:</strong><br>
-      Toque Dm7 → G7 → Cmaj7 devagar.<br>
-      Na resolução do Cmaj7 cante: <strong>"C — ah — ah — E"</strong> deslizando suave.<br>
-      Esse deslize vocal em cima da resolução é melisma. Repita até sair natural.
+    <div class="status" id="musica-label" style="margin-top:6px;"></div>
+    <div class="panel" style="margin-top:10px;">
+      <div class="panel-title">Animação — percorre a música</div>
+      <div class="kb-wrap"><div class="kb" id="kb-musica-anim"></div></div>
+      <div class="status" id="musica-anim-status">Clique em animar</div>
+      <div class="btn-row" style="margin-top:8px;">
+        <button class="btn btn-play" id="play-musica" onclick="toggleMusica()">▶ Animar</button>
+        <div class="bpm-row">
+          <span class="bpm-lbl">BPM</span>
+          <span class="bpm-val" id="bpm-musica" style="color:var(--green)">70</span>
+          <input type="range" min="40" max="120" value="70" oninput="document.getElementById('bpm-musica').textContent=this.value;bpmMusica=+this.value;">
+        </div>
+      </div>
     </div>
-    <div class="bpm-control">
-      <span class="bpm-label">BPM</span>
-      <span class="bpm-num" id="bpm-3">60</span>
-      <input type="range" min="40" max="120" value="60" oninput="document.getElementById('bpm-3').textContent=this.value">
-      <button class="btn btn-ghost btn-sm" onclick="toggleMetro('metro-3',document.getElementById('bpm-3').textContent)">METRO</button>
-    </div>
-    <div class="metro-beat" id="metro-3"></div>
-    <div class="tip-box">💡 Dedilhado MD: dedo 1 na nota mais grave, dedos 2-3-5 nas demais. ME: dedo 5 na raiz grave.</div>
-    <div class="video-links">
-      <a class="video-link" href="https://www.youtube.com/watch?v=_ldxtscmCpo" target="_blank"><span class="video-icon">▶</span> Shell Voicings para Jazz — Iniciante</a>
-      <a class="video-link" href="https://www.youtube.com/watch?v=NGeVdFkoxsQ" target="_blank"><span class="video-icon">▶</span> ii-V-I em todas as tonalidades</a>
-    </div>
-    <button class="done-btn" id="done-3" onclick="markDone(3)">✓ FEITO</button>
+    <div class="tip" id="musica-tip"></div>
   </div>
 </div>
 
-<!-- 05 SOUL/FUNK -->
-<div class="exercise-block" id="block-4">
-  <div class="block-header" onclick="toggleBlock(4)">
-    <div class="block-num">05</div>
-    <div class="block-title"><h3>Soul / Funk Groove</h3><div class="meta">8 MIN — Stevie Wonder · Earth Wind Fire · R&B</div></div>
-    <span class="block-tag tag-soul">SOUL</span>
-  </div>
-  <div class="block-body" id="body-4">
-    <div class="instruction">
-      Soul e funk usam os mesmos acordes do jazz mas com <strong>ritmo sincopado e groovy</strong>.<br>
-      O segredo é o <strong>espaço entre as notas</strong> — nota curta, acento no 2 e no 4.<br>
-      Progressão: <strong>Em7 → A7 → Dmaj7</strong> (2-5-1 em Ré)
-    </div>
-    <div class="chord-row">
-      <div class="chord-card selected" onclick="showSoulChord('Em7',this)">
-        <div class="chord-name">Em7</div><div class="chord-notes">E — G — B — D</div><div class="chord-hand">2º grau</div>
-      </div>
-      <div class="chord-card" onclick="showSoulChord('A7',this)">
-        <div class="chord-name">A7</div><div class="chord-notes">A — C# — E — G</div><div class="chord-hand">5º grau</div>
-      </div>
-      <div class="chord-card" onclick="showSoulChord('Dmaj7',this)">
-        <div class="chord-name">Dmaj7</div><div class="chord-notes">D — F# — A — C#</div><div class="chord-hand">1º grau</div>
-      </div>
-      <div class="chord-card" onclick="showSoulChord('Bm7',this)">
-        <div class="chord-name">Bm7</div><div class="chord-notes">B — D — F# — A</div><div class="chord-hand">6º grau</div>
-      </div>
-    </div>
-    <div class="keyboard-wrap"><div class="keyboard" id="kb-soul"></div></div>
-    <div class="legend">
-      <div class="legend-item"><div class="legend-dot" style="background:#f5c842"></div> ME — raiz</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#4a9eff"></div> MD — acorde</div>
-    </div>
-    <div class="prog-display">
-      <div class="prog-title">Ritmo Soul — Padrão de Groove</div>
-      <div style="font-family:'DM Mono',monospace;font-size:13px;color:#ccc;line-height:2.4;">
-        Tempo:&nbsp;&nbsp; 1 &nbsp;&nbsp; e &nbsp;&nbsp; <span style="color:#fb923c">2</span> &nbsp;&nbsp; e &nbsp;&nbsp; 3 &nbsp;&nbsp; e &nbsp;&nbsp; <span style="color:#fb923c">4</span>&nbsp;&nbsp; e<br>
-        ME:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#f5c842">♩</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#f5c842">♩</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#f5c842">♩</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#f5c842">♩</span><br>
-        MD:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#4a9eff">♩</span> &nbsp;&nbsp; <span style="color:#4a9eff">♪</span> &nbsp;&nbsp; <span style="color:#4a9eff">♩</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#4a9eff">♪</span> &nbsp;<span style="color:#ff6b6b">♩</span><br>
-        <span style="color:#555;font-size:10px">♩ = longa &nbsp;·&nbsp; ♪ = curta antecipada (sincopada)</span>
-      </div>
-    </div>
-    <div class="sec-label">Just The Two Of Us — Progressão R&B</div>
-    <div class="prog-display">
-      <div class="prog-title">Tom de Db — clique para ver no teclado</div>
-      <div class="prog-chords">
-        <div class="prog-chord" style="color:#fb923c;border-color:#fb923c44" onclick="showSoulChord('Dbmaj7',this)">Dbmaj7<span class="bars">I</span></div>
-        <div class="prog-chord" style="color:#fb923c;border-color:#fb923c44" onclick="showSoulChord('Fm7',this)">Fm7<span class="bars">iii</span></div>
-        <div class="prog-chord" style="color:#fb923c;border-color:#fb923c44" onclick="showSoulChord('Bb7',this)">Bb7<span class="bars">V/ii</span></div>
-        <div class="prog-chord" style="color:#fb923c;border-color:#fb923c44" onclick="showSoulChord('Ebm7',this)">Ebm7<span class="bars">ii</span></div>
-        <div class="prog-chord" style="color:#fb923c;border-color:#fb923c44" onclick="showSoulChord('Ab7',this)">Ab7<span class="bars">V</span></div>
-      </div>
-    </div>
-    <div class="voz-box">
-      🎤 <strong>Melisma Soul — exercício:</strong><br>
-      Toque Em7 → A7 → Dmaj7.<br>
-      Na resolução do Dmaj7 cante: <strong>"D — ah — F# — aaah"</strong> deslizando.<br>
-      Esse deslize entre notas em cima de uma sílaba É o melisma soul/gospel.<br>
-      Referência: Stevie Wonder — "Isn't She Lovely" — ouça como a voz passeia.
-    </div>
-    <div class="bpm-control">
-      <span class="bpm-label">BPM</span>
-      <span class="bpm-num" id="bpm-4">80</span>
-      <input type="range" min="60" max="140" value="80" oninput="document.getElementById('bpm-4').textContent=this.value">
-      <button class="btn btn-ghost btn-sm" onclick="toggleMetro('metro-4',document.getElementById('bpm-4').textContent)">METRO</button>
-    </div>
-    <div class="metro-beat" id="metro-4"></div>
-    <div class="tip-box">💡 Timbre: Electric Piano + chorus leve + reverb médio. Toque notas curtas e solte rápido — o groove vem do espaço entre as notas.</div>
-    <button class="done-btn" id="done-4" onclick="markDone(4)">✓ FEITO</button>
-  </div>
+<!-- ===================== BLUES ===================== -->
+<div class="section" id="sec-blues">
+  <div class="hero"><h1 style="color:var(--teal)">Blues</h1><p>Aquecimento · Escala · Shuffle · 12 Compassos</p></div>
+  <div id="blues-blocks"></div>
 </div>
 
-<!-- 06 GOSPEL / WORSHIP -->
-<div class="exercise-block" id="block-5">
-  <div class="block-header" onclick="toggleBlock(5)">
-    <div class="block-num">06</div>
-    <div class="block-title"><h3>Gospel & Worship</h3><div class="meta">10 MIN — Sus chords · Voicings ricos · Sounds of Home</div></div>
-    <span class="block-tag tag-gospel">GOSPEL</span>
-  </div>
-  <div class="block-body" id="body-5">
-    <div class="instruction">
-      Gospel usa acordes com extensões ricas (9ª, 11ª) e sus chords que criam tensão antes de resolver.<br>
-      <strong>Regra:</strong> ME toca a raiz grave, MD toca o voicing completo. Reverb longo sempre.
-    </div>
-    <div class="sec-label">Sus Chord — Tensão e Resolução</div>
-    <div class="chord-row">
-      <div class="chord-card selected" onclick="showGospelChord('Gsus4',this)">
-        <div class="chord-name">Gsus4</div><div class="chord-notes">G — C — D (sem B)</div><div class="chord-hand">Tensão</div>
-      </div>
-      <div class="chord-card" onclick="showGospelChord('G7',this)">
-        <div class="chord-name">G7</div><div class="chord-notes">G — B — D — F</div><div class="chord-hand">Dominante</div>
-      </div>
-      <div class="chord-card" onclick="showGospelChord('Cmaj7',this)">
-        <div class="chord-name">Cmaj7</div><div class="chord-notes">C — E — G — B</div><div class="chord-hand">Resolução</div>
-      </div>
-    </div>
-    <div class="keyboard-wrap"><div class="keyboard" id="kb-gospel"></div></div>
-    <div class="sec-label" style="margin-top:16px;">Voicings Gospel/Worship</div>
-    <div class="chord-row">
-      <div class="chord-card selected" onclick="showGWVoicing('Cmaj9',this)">
-        <div class="chord-name" style="color:#34d399">Cmaj9</div><div class="chord-notes">C E G B D</div><div class="chord-hand">I total</div>
-      </div>
-      <div class="chord-card" onclick="showGWVoicing('G9sus4',this)">
-        <div class="chord-name" style="color:#34d399">G9sus4</div><div class="chord-notes">G C D F A</div><div class="chord-hand">V tensão</div>
-      </div>
-      <div class="chord-card" onclick="showGWVoicing('Am9',this)">
-        <div class="chord-name" style="color:#34d399">Am9</div><div class="chord-notes">A C E G B</div><div class="chord-hand">vi emoção</div>
-      </div>
-      <div class="chord-card" onclick="showGWVoicing('Fmaj9',this)">
-        <div class="chord-name" style="color:#34d399">Fmaj9</div><div class="chord-notes">F A C E G</div><div class="chord-hand">IV estável</div>
-      </div>
-    </div>
-    <div class="keyboard-wrap"><div class="keyboard" id="kb-gw"></div></div>
-    <div class="legend">
-      <div class="legend-item"><div class="legend-dot" style="background:#f5c842"></div> ME — raiz</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#4a9eff"></div> MD — voicing</div>
-    </div>
-    <div id="gw-label" style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);margin-top:6px;"></div>
-    <div class="prog-display" style="margin-top:12px;">
-      <div class="prog-title">I — V — vi — IV (Way Maker / Sounds of Home)</div>
-      <div class="prog-chords">
-        <div class="prog-chord" style="color:#34d399;border-color:#34d39944">Cmaj9<span class="bars">I</span></div>
-        <div class="prog-chord" style="color:#34d399;border-color:#34d39944">G9sus4<span class="bars">V</span></div>
-        <div class="prog-chord" style="color:#34d399;border-color:#34d39944">Am9<span class="bars">vi</span></div>
-        <div class="prog-chord" style="color:#34d399;border-color:#34d39944">Fmaj9<span class="bars">IV</span></div>
-      </div>
-    </div>
-    <div class="voz-box">
-      🎤 <strong>Apojatura gospel — exercício:</strong><br>
-      Apojatura = nota vizinha que desliza para a nota alvo.<br>
-      Na progressão gospel, no Cmaj9 cante:<br>
-      <strong>B → C</strong> (sobe meio tom) ou <strong>D → C</strong> (desce um tom)<br>
-      Esse pequeño deslize vocal é a assinatura do gospel. Repita em cada resolução.
-    </div>
-    <div class="bpm-control">
-      <span class="bpm-label">BPM</span>
-      <span class="bpm-num" id="bpm-5">60</span>
-      <input type="range" min="40" max="100" value="60" oninput="document.getElementById('bpm-5').textContent=this.value">
-      <button class="btn btn-ghost btn-sm" onclick="toggleMetro('metro-5',document.getElementById('bpm-5').textContent)">METRO</button>
-    </div>
-    <div class="metro-beat" id="metro-5"></div>
-    <div class="tip-box">💡 Timbre: Electric Piano + Reverb Hall 14 + Chorus 6. Devagar, notas longas. Menos é mais.</div>
-    <div class="video-links">
-      <a class="video-link" href="https://www.youtube.com/watch?v=xonJT0LLTK8" target="_blank"><span class="video-icon">▶</span> Sounds of Home — Referência worship</a>
-      <a class="video-link" href="https://www.youtube.com/watch?v=ZPabFqOPrkg" target="_blank"><span class="video-icon">▶</span> I-V-vi-IV Worship Tutorial</a>
-    </div>
-    <button class="done-btn" id="done-5" onclick="markDone(5)">✓ FEITO</button>
-  </div>
+<!-- ===================== JAZZ ===================== -->
+<div class="section" id="sec-jazz">
+  <div class="hero"><h1 style="color:var(--purple)">Jazz</h1><p>Campo · 2-5-1 · Charleston · 12 Tons</p></div>
+  <div id="jazz-blocks"></div>
 </div>
 
-<!-- 07 MELISMAS & VOZ -->
-<div class="exercise-block" id="block-6">
-  <div class="block-header" onclick="toggleBlock(6)">
-    <div class="block-num">07</div>
-    <div class="block-title"><h3>Melismas & Voz</h3><div class="meta">8 MIN — Apojatura · Deslize · Call and Response</div></div>
-    <span class="block-tag tag-voz">VOZ</span>
-  </div>
-  <div class="block-body" id="body-6">
-    <div class="instruction">
-      <strong>Melisma</strong> = várias notas em uma sílaba. É a essência do gospel, soul e blues vocal.<br>
-      <strong>Apojatura</strong> = nota de apoio que desliza para a nota principal.<br>
-      Esses exercícios treinam voz + teclado juntos.
-    </div>
-
-    <div class="sec-label">Exercício 1 — Melisma na Pentatônica de Dó</div>
-    <div class="voz-box">
-      🎹 MD toca: <strong>C → E → G → A → G → E → C</strong><br>
-      🎤 Cante junto: uma sílaba "aah" para todas as notas subindo, uma para descer.<br>
-      Repete 3x subindo e 3x descendo. Depois muda para Fá maior.
-    </div>
-    <div class="note-seq">
-      <span class="note-pill">C</span><span class="note-pill">E</span><span class="note-pill">G</span><span class="note-pill">A</span><span class="note-pill">G</span><span class="note-pill">E</span><span class="note-pill">C</span>
-    </div>
-    <div class="keyboard-wrap"><div class="keyboard" id="kb-mel1"></div></div>
-
-    <div class="sec-label" style="margin-top:16px;">Exercício 2 — Apojatura (3 tipos)</div>
-    <div class="voz-box">
-      Apojatura = nota vizinha que "escorrega" para a nota alvo. Não pule — deslize!<br><br>
-      Tipo 1 — meio tom acima descendo: <strong>B → C</strong><br>
-      Tipo 2 — tom acima descendo: <strong>D → C</strong><br>
-      Tipo 3 — blues: <strong>Ab → G</strong><br><br>
-      🎹 Toque os dois → 🎤 Cante deslizando entre eles
-    </div>
-    <div class="note-seq">
-      <span class="note-pill blue">B</span><span class="sep">→</span><span class="note-pill">C</span>
-      <span class="sep" style="margin:0 12px;">|</span>
-      <span class="note-pill blue">D</span><span class="sep">→</span><span class="note-pill">C</span>
-      <span class="sep" style="margin:0 12px;">|</span>
-      <span class="note-pill red">Ab</span><span class="sep">→</span><span class="note-pill teal">G</span>
-    </div>
-    <div class="keyboard-wrap"><div class="keyboard" id="kb-mel2"></div></div>
-
-    <div class="sec-label" style="margin-top:16px;">Exercício 3 — Call and Response Vocal</div>
-    <div class="voz-box">
-      A base de todo gospel e blues:<br>
-      🎹 Teclado "pergunta" — improvise 2 notas (ex: F → Ab)<br>
-      🎤 Voz "responde" — cante as mesmas 2 notas<br>
-      🎹 Improvise mais 2 notas → 🎤 Cante de volta<br><br>
-      Vai alternando. Comece devagar, depois acelera.
-    </div>
-
-    <div class="sec-label" style="margin-top:16px;">Exercício 4 — Arpejo Cantado (Worship)</div>
-    <div class="voz-box">
-      🎹 ME segura Cmaj9 (C grave)<br>
-      🎹 MD faz arpejo: <strong>C → E → G → B → D</strong> subindo devagar<br>
-      🎤 Cante cada nota junto<br><br>
-      Depois desce: <strong>D → B → G → E → C</strong><br>
-      Com reverb fica incrível — esse é o som worship.
-    </div>
-    <div class="note-seq">
-      <span class="note-pill">C</span><span class="note-pill">E</span><span class="note-pill">G</span><span class="note-pill">B</span><span class="note-pill">D</span>
-      <span class="sep">↑ ↓</span>
-      <span class="note-pill">D</span><span class="note-pill">B</span><span class="note-pill">G</span><span class="note-pill">E</span><span class="note-pill">C</span>
-    </div>
-    <div class="keyboard-wrap"><div class="keyboard" id="kb-mel3"></div></div>
-    <div class="legend">
-      <div class="legend-item"><div class="legend-dot" style="background:#f5c842"></div> ME — raiz</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#4a9eff"></div> MD — arpejo</div>
-    </div>
-    <div class="bpm-control">
-      <span class="bpm-label">BPM</span>
-      <span class="bpm-num" id="bpm-6">55</span>
-      <input type="range" min="40" max="100" value="55" oninput="document.getElementById('bpm-6').textContent=this.value">
-      <button class="btn btn-ghost btn-sm" onclick="toggleMetro('metro-6',document.getElementById('bpm-6').textContent)">METRO</button>
-    </div>
-    <div class="metro-beat" id="metro-6"></div>
-    <div class="tip-box">💡 Não precisa de voz bonita — precisa de voz afinada. Comece sussurrando. O importante é o ouvido conectar o que toca com o que canta.</div>
-    <button class="done-btn" id="done-6" onclick="markDone(6)">✓ FEITO</button>
-  </div>
+<!-- ===================== SOUL ===================== -->
+<div class="section" id="sec-soul">
+  <div class="hero"><h1 style="color:var(--orange)">Soul</h1><p>Groove · Gospel · Im Not The Only One</p></div>
+  <div id="soul-blocks"></div>
 </div>
 
-<!-- 08 PENTATÔNICAS -->
-<div class="exercise-block" id="block-7">
-  <div class="block-header" onclick="toggleBlock(7)">
-    <div class="block-num">08</div>
-    <div class="block-title"><h3>Pentatônicas — 24 Tonalidades</h3><div class="meta">10 MIN — Maiores e menores</div></div>
-    <span class="block-tag tag-penta">PENTA</span>
-  </div>
-  <div class="block-body" id="body-7">
-    <div class="instruction">
-      <strong>Maior</strong> = alegre, worship, lo-fi &nbsp;|&nbsp; <strong>Menor</strong> = melancólico, blues, jazz<br>
-      Clique para ver as notas no teclado.
-    </div>
-    <div class="sec-label">▸ MAIORES</div>
-    <div class="chord-row" id="penta-major-row" style="flex-wrap:wrap;gap:8px;"></div>
-    <div class="sec-label" style="margin-top:12px;">▸ MENORES</div>
-    <div class="chord-row" id="penta-minor-row" style="flex-wrap:wrap;gap:8px;"></div>
-    <div class="keyboard-wrap" style="margin-top:14px;"><div class="keyboard" id="kb-penta"></div></div>
-    <div class="legend">
-      <div class="legend-item"><div class="legend-dot" style="background:#4a9eff"></div> Maior</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#a78bfa"></div> Menor</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#ff6b6b"></div> Tônica</div>
-    </div>
-    <div id="penta-label" style="font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);margin-top:8px;"></div>
-    <div class="voz-box" style="margin-top:12px;">
-      🎤 <strong>Desafio:</strong> escolha uma pentatônica, toque e cante cada nota.<br>
-      Improvise na MD e cante o que tocar — isso é ear training real!
-    </div>
-    <div class="tip-box">💡 Semana 1: C F G &nbsp;|&nbsp; Semana 2: Bb Eb Ab &nbsp;|&nbsp; Semana 3: D A E &nbsp;|&nbsp; Semana 4: B F# Db</div>
-    <button class="done-btn" id="done-7" onclick="markDone(7)">✓ FEITO</button>
-  </div>
-</div>
-
-<!-- 09 CHARLIE PARKER META -->
-<div class="exercise-block" id="block-8">
-  <div class="block-header" onclick="toggleBlock(8)">
-    <div class="block-num">🎷</div>
-    <div class="block-title"><h3>Charlie Parker — Billie's Bounce</h3><div class="meta">META — Solo em letras · 70 BPM</div></div>
-    <span class="block-tag tag-jazz">META</span>
-  </div>
-  <div class="block-body" id="body-8">
-    <div class="instruction">
-      Blues bebop em Fá. ME segura o acorde, MD toca o solo nota por nota.<br>
-      <strong>Começa sem metrônomo</strong> — só decora as notas. Depois coloca o tempo.
-    </div>
-    <div class="sec-label">ME — Acordes (clique para ver)</div>
-    <div class="chord-row" style="flex-wrap:wrap;gap:8px;">
-      <div class="chord-card" onclick="buildKb('kb-parker',{me:['F'],md:['F','A','C','Eb']})"><div class="chord-name">F7</div></div>
-      <div class="chord-card" onclick="buildKb('kb-parker',{me:['Bb'],md:['Bb','D','F','Ab']})"><div class="chord-name">Bb7</div></div>
-      <div class="chord-card" onclick="buildKb('kb-parker',{me:['G'],md:['G','Bb','D','F']})"><div class="chord-name">Gm7</div></div>
-      <div class="chord-card" onclick="buildKb('kb-parker',{me:['C'],md:['C','E','G','Bb']})"><div class="chord-name">C7</div></div>
-      <div class="chord-card" onclick="buildKb('kb-parker',{me:['A'],md:['A','C','E','G']})"><div class="chord-name">Am7</div></div>
-      <div class="chord-card" onclick="buildKb('kb-parker',{me:['D'],md:['D','F#','A','C']})"><div class="chord-name">D7</div></div>
-    </div>
-    <div class="keyboard-wrap"><div class="keyboard" id="kb-parker"></div></div>
-    <div class="legend">
-      <div class="legend-item"><div class="legend-dot" style="background:#f5c842"></div> ME — raiz</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#4a9eff"></div> MD — acorde</div>
-    </div>
-    <div class="sec-label" style="margin-top:16px;">MD — Solo Linha 1 (F7)</div>
-    <div class="note-seq">
-      <span class="note-pill">C</span><span class="note-pill">D</span><span class="note-pill">F</span><span class="note-pill">G</span><span class="note-pill">A</span><span class="note-pill">C</span>
-      <span style="width:100%"></span>
-      <span class="note-pill teal">C</span><span class="note-pill teal">A</span><span class="note-pill teal">G</span><span class="note-pill teal">F</span><span class="note-pill teal">D</span><span class="note-pill teal">C</span>
-    </div>
-    <div class="sec-label">MD — Solo Linha 2 (Bb7 → F7 → Am7)</div>
-    <div class="note-seq">
-      <span class="note-pill">Bb</span><span class="note-pill">C</span><span class="note-pill red">Db</span><span class="note-pill">Eb</span><span class="note-pill">F</span><span class="note-pill">Eb</span><span class="note-pill">D</span><span class="note-pill">C</span><span class="note-pill">Bb</span><span class="note-pill">Ab</span>
-      <span style="width:100%"></span>
-      <span class="note-pill red">G</span><span class="note-pill red">A</span><span class="note-pill red">Bb</span><span class="note-pill red">C</span><span class="note-pill red">C#</span><span class="note-pill red">D</span><span class="note-pill red">F#</span><span class="note-pill red">A</span>
-    </div>
-    <div class="sec-label">MD — Solo Linha 3 (Gm7 → C7 → F7)</div>
-    <div class="note-seq">
-      <span class="note-pill blue">G</span><span class="note-pill blue">A</span><span class="note-pill blue">Bb</span><span class="note-pill blue">C</span><span class="note-pill blue">D</span><span class="note-pill blue">Eb</span><span class="note-pill blue">D</span><span class="note-pill blue">C</span><span class="note-pill blue">Bb</span>
-      <span style="width:100%"></span>
-      <span class="note-pill blue">A</span><span class="note-pill blue">G</span><span class="note-pill blue">F</span><span class="note-pill blue">D</span><span class="note-pill blue">C</span><span class="note-pill blue">D</span><span class="note-pill blue">F</span><span class="note-pill blue">G</span>
-    </div>
-    <div class="tip-box" style="margin-top:12px;">
-      🎷 <strong>Como estudar:</strong> ME só → MD só → junta a 50 BPM → sobe 5 BPM por semana.<br>
-      🎯 Meta: 70 BPM limpo = você já é bebop!
-    </div>
-    <div class="video-links">
-      <a class="video-link" href="https://www.youtube.com/watch?v=oyBQnWLEPfk" target="_blank"><span class="video-icon">▶</span> Charlie Parker — Billie's Bounce (original 1945)</a>
-    </div>
-    <button class="done-btn" id="done-8" onclick="markDone(8)">✓ FEITO — TREINO COMPLETO!</button>
-  </div>
-</div>
-
-</div><!-- /content -->
 <script>
-// ===== KEYBOARD ENGINE =====
+// ===========================
+// KEYBOARD ENGINE
+// ===========================
 const _AL={Db:'C#',Eb:'D#',Gb:'F#',Ab:'G#',Bb:'A#'};
 function _n(n){return _AL[n]||n;}
 
-function buildKb(id, highlights={}) {
-  const container=document.getElementById(id);
-  if(!container)return;
-  container.innerHTML='';
-
-  const mob=window.innerWidth<=600;
-  const WW=mob?24:36, BW=mob?15:22, KH=mob?76:110, BH=mob?46:68;
-  const BP=mob?[{note:'C#',pos:15},{note:'D#',pos:39},{note:'F#',pos:87},{note:'G#',pos:111},{note:'A#',pos:135}]
-              :[{note:'C#',pos:22},{note:'D#',pos:58},{note:'F#',pos:130},{note:'G#',pos:166},{note:'A#',pos:202}];
-
-  let meNotes=new Set(), mdNotes=new Set(), legacyMode=false, legacyHl={};
-  if(highlights.me!==undefined||highlights.md!==undefined){
-    (highlights.me||[]).forEach(n=>meNotes.add(_n(n)));
-    (highlights.md||[]).forEach(n=>mdNotes.add(_n(n)));
-  } else {
-    legacyMode=true;
-    Object.entries(highlights).forEach(([k,v])=>{legacyHl[_n(k)]=v;});
-  }
-
-  const whiteKeys=['C','D','E','F','G','A','B'];
-  const whites=[];
-  for(let o=3;o<=4;o++) whiteKeys.forEach(note=>whites.push({note,oct:o}));
-  whites.push({note:'C',oct:5});
-
-  container.style.width=(whites.length*WW)+'px';
-  container.style.height=KH+'px';
-  container.style.position='relative';
-
-  whites.forEach(w=>{
-    const key=document.createElement('div');
-    key.className='key-white';
-    key.style.width=WW+'px';
-    key.style.height=KH+'px';
-    let hl=null;
-    if(legacyMode){ hl=legacyHl[w.note]; }
-    else {
-      if(w.oct===3 && meNotes.has(w.note)) hl={color:'yellow'};
-      else if(w.oct===4 && mdNotes.has(w.note)) hl={color:'blue'};
-    }
-    if(hl) key.classList.add('hl-'+hl.color);
-    const lb=document.createElement('div');lb.className='key-label';
-    lb.textContent=w.note==='C'?w.note+w.oct:w.note;
-    key.appendChild(lb);
-    if(hl?.finger){const fn=document.createElement('div');fn.className='finger-num';fn.textContent=hl.finger;if(hl.color!=='yellow')fn.style.color='#fff';key.appendChild(fn);}
-    container.appendChild(key);
+function buildKb(id,highlights={}){
+  const el=document.getElementById(id);
+  if(!el)return;el.innerHTML='';
+  const mob=window.innerWidth<=500;
+  const WW=mob?22:32,BW=mob?14:20,KH=mob?72:96,BH=mob?44:60;
+  const BP=mob?
+    [{n:'C#',p:14},{n:'D#',p:36},{n:'F#',p:80},{n:'G#',p:102},{n:'A#',p:124}]:
+    [{n:'C#',p:20},{n:'D#',p:52},{n:'F#',p:116},{n:'G#',p:148},{n:'A#',p:180}];
+  const hl={};
+  Object.entries(highlights).forEach(([k,v])=>{hl[_n(k)]=v;});
+  const meMd=Object.values(hl).some(v=>v.color==='yellow')&&Object.values(hl).some(v=>v.color==='blue');
+  const W=['C','D','E','F','G','A','B'];
+  const ws=[];for(let o=3;o<=4;o++)W.forEach(n=>ws.push({n,o}));ws.push({n:'C',o:5});
+  el.style.width=(ws.length*WW)+'px';el.style.position='relative';el.style.height=KH+'px';
+  ws.forEach(w=>{
+    const k=document.createElement('div');k.className='wk';
+    k.style.width=WW+'px';k.style.height=KH+'px';
+    let h=meMd?(w.o===3&&hl[w.n]?.color==='yellow'?hl[w.n]:w.o===4&&hl[w.n]?.color==='blue'?hl[w.n]:null):hl[w.n]||null;
+    if(h)k.classList.add('hl-'+h.color[0]);
+    const lb=document.createElement('div');lb.className='kl';
+    lb.style.fontSize=mob?'7px':'8px';
+    lb.textContent=w.n==='C'?w.n+w.o:w.n;k.appendChild(lb);el.appendChild(k);
   });
-
   for(let o=3;o<=4;o++){
     const off=(o-3)*7*WW;
     BP.forEach(b=>{
-      const key=document.createElement('div');
-      key.className='key-black';
-      key.style.width=BW+'px';
-      key.style.height=BH+'px';
-      key.style.left=(off+b.pos)+'px';
-      let hl=null;
-      if(legacyMode){ hl=legacyHl[b.note]; }
-      else {
-        if(o===3 && meNotes.has(b.note)) hl={color:'yellow'};
-        else if(o===4 && mdNotes.has(b.note)) hl={color:'blue'};
-      }
-      if(hl) key.classList.add('hl-'+hl.color);
-      const lb=document.createElement('div');lb.className='key-label';lb.textContent=b.note;key.appendChild(lb);
-      container.appendChild(key);
+      const k=document.createElement('div');k.className='bk';
+      k.style.left=(off+b.p)+'px';k.style.width=BW+'px';k.style.height=BH+'px';
+      let h=meMd?(o===3&&hl[b.n]?.color==='yellow'?hl[b.n]:o===4&&hl[b.n]?.color==='blue'?hl[b.n]:null):hl[b.n]||null;
+      if(h)k.classList.add('hl-'+h.color[0]);
+      const lb=document.createElement('div');lb.className='kl';
+      lb.style.fontSize=mob?'6px':'7px';
+      lb.textContent=b.n;k.appendChild(lb);el.appendChild(k);
     });
   }
 }
-function buildKeyboard(id,cfg){buildKb(id,cfg);}
+function mkHl(me,md){const h={};me.forEach(n=>{h[n]={color:'yellow'};});md.forEach(n=>{if(!h[n])h[n]={color:'blue'};});return h;}
 
-// ===== CHORD DATA (me=oitava3 amarelo, md=oitava4 azul) =====
-const BLUES12={
-  F7:  {me:['F'],  md:['F','A','C','Eb']},
-  Bb7: {me:['Bb'], md:['Bb','D','F','Ab']},
-  C7:  {me:['C'],  md:['C','E','G','Bb']},
-};
-const JAZZ_CH={
-  Dm7:   {me:['D'],  md:['D','F','A','C']},
-  G7:    {me:['G'],  md:['G','B','D','F']},
-  Cmaj7: {me:['C'],  md:['C','E','G','B']},
-};
-const SOUL_CH={
-  Em7:    {me:['E'],  md:['E','G','B','D']},
-  A7:     {me:['A'],  md:['A','C#','E','G']},
-  Dmaj7:  {me:['D'],  md:['D','F#','A','C#']},
-  Bm7:    {me:['B'],  md:['B','D','F#','A']},
-  Dbmaj7: {me:['Db'], md:['Db','F','Ab','C']},
-  Fm7:    {me:['F'],  md:['F','Ab','C','Eb']},
-  Bb7:    {me:['Bb'], md:['Bb','D','F','Ab']},
-  Ebm7:   {me:['Eb'], md:['Eb','Gb','Bb','Db']},
-  Ab7:    {me:['Ab'], md:['Ab','C','Eb','Gb']},
-};
-const GOSPEL_CH={
-  Gsus4: {me:['G'], md:['G','C','D']},
-  G7:    {me:['G'], md:['G','B','D','F']},
-  Cmaj7: {me:['C'], md:['C','E','G','B']},
-};
-const GW_CH={
-  Cmaj9:  {me:['C'], md:['C','E','G','B','D']},
-  G9sus4: {me:['G'], md:['G','C','D','F','A']},
-  Am9:    {me:['A'], md:['A','C','E','G','B']},
-  Fmaj9:  {me:['F'], md:['F','A','C','E','G']},
-};
-const GW_DESC={
-  Cmaj9:'Cmaj9 — C E G B D — resolução total',
-  G9sus4:'G9sus4 — G C D F A — tensão worship',
-  Am9:'Am9 — A C E G B — emoção gospel',
-  Fmaj9:'Fmaj9 — F A C E G — estabilidade IV grau',
-};
-const BLUES_SC={
-  'blues-f':{F:{color:'teal'},'G#':{color:'teal'},'A#':{color:'teal'},B:{color:'red'},C:{color:'teal'},'D#':{color:'teal'}},
-  'blues-c':{C:{color:'teal'},'D#':{color:'teal'},F:{color:'teal'},'F#':{color:'red'},G:{color:'teal'},'A#':{color:'teal'}},
-  'blues-g':{G:{color:'teal'},'A#':{color:'teal'},C:{color:'teal'},'C#':{color:'red'},D:{color:'teal'},F:{color:'teal'}},
+// ===========================
+// HARMONIA DATA
+// ===========================
+const HARMONIAS={
+  C: {
+    nome:'C maior',pretas:0,
+    escala:['C','D','E','F','G','A','B'],
+    campo:[
+      {grau:'I',  nome:'Cmaj7',me:['C'],md:['C','E','G','B']},
+      {grau:'ii', nome:'Dm7',  me:['D'],md:['D','F','A','C']},
+      {grau:'iii',nome:'Em7',  me:['E'],md:['E','G','B','D']},
+      {grau:'IV', nome:'Fmaj7',me:['F'],md:['F','A','C','E']},
+      {grau:'V',  nome:'G7',   me:['G'],md:['G','B','D','F']},
+      {grau:'vi', nome:'Am7',  me:['A'],md:['A','C','E','G']},
+      {grau:'vii',nome:'Bm7b5',me:['B'],md:['B','D','F','A']},
+    ],
+    musica:{nome:'Let It Be',artista:'Beatles',prog:['C','G','Am','F'],labels:['I','V','vi','IV']},
+    dica:'Tom base — só teclas brancas. Perfeito para começar!'
+  },
+  G: {
+    nome:'G maior',pretas:1,
+    escala:['G','A','B','C','D','E','F#'],
+    campo:[
+      {grau:'I',  nome:'Gmaj7',me:['G'],md:['G','B','D','F#']},
+      {grau:'ii', nome:'Am7',  me:['A'],md:['A','C','E','G']},
+      {grau:'iii',nome:'Bm7',  me:['B'],md:['B','D','F#','A']},
+      {grau:'IV', nome:'Cmaj7',me:['C'],md:['C','E','G','B']},
+      {grau:'V',  nome:'D7',   me:['D'],md:['D','F#','A','C']},
+      {grau:'vi', nome:'Em7',  me:['E'],md:['E','G','B','D']},
+      {grau:'vii',nome:'F#m7b5',me:['F#'],md:['F#','A','C','E']},
+    ],
+    musica:{nome:'Im Not The Only One',artista:'Sam Smith',prog:['G','D','Em','C'],labels:['I','V','vi','IV']},
+    dica:'1 tecla preta: F#. Atenção no F# da escala!'
+  },
+  F: {
+    nome:'F maior',pretas:1,
+    escala:['F','G','A','Bb','C','D','E'],
+    campo:[
+      {grau:'I',  nome:'Fmaj7',me:['F'],md:['F','A','C','E']},
+      {grau:'ii', nome:'Gm7',  me:['G'],md:['G','Bb','D','F']},
+      {grau:'iii',nome:'Am7',  me:['A'],md:['A','C','E','G']},
+      {grau:'IV', nome:'Bbmaj7',me:['Bb'],md:['Bb','D','F','A']},
+      {grau:'V',  nome:'C7',   me:['C'],md:['C','E','G','Bb']},
+      {grau:'vi', nome:'Dm7',  me:['D'],md:['D','F','A','C']},
+      {grau:'vii',nome:'Em7b5',me:['E'],md:['E','G','Bb','D']},
+    ],
+    musica:{nome:'Hallelujah',artista:'Leonard Cohen',prog:['F','Am','F','C'],labels:['I','iii','I','V']},
+    dica:'1 tecla preta: Bb. Cuidado no Bb da escala!'
+  },
+  D: {
+    nome:'D maior',pretas:2,
+    escala:['D','E','F#','G','A','B','C#'],
+    campo:[
+      {grau:'I',  nome:'Dmaj7',me:['D'],md:['D','F#','A','C#']},
+      {grau:'ii', nome:'Em7',  me:['E'],md:['E','G','B','D']},
+      {grau:'iii',nome:'F#m7', me:['F#'],md:['F#','A','C#','E']},
+      {grau:'IV', nome:'Gmaj7',me:['G'],md:['G','B','D','F#']},
+      {grau:'V',  nome:'A7',   me:['A'],md:['A','C#','E','G']},
+      {grau:'vi', nome:'Bm7',  me:['B'],md:['B','D','F#','A']},
+      {grau:'vii',nome:'C#m7b5',me:['C#'],md:['C#','E','G','B']},
+    ],
+    musica:{nome:'Thinking Out Loud',artista:'Ed Sheeran',prog:['D','A','Bm','G'],labels:['I','V','vi','IV']},
+    dica:'2 pretas: F# e C#. Tom popular no pop e soul!'
+  },
+  A: {
+    nome:'A maior',pretas:3,
+    escala:['A','B','C#','D','E','F#','G#'],
+    campo:[
+      {grau:'I',  nome:'Amaj7',me:['A'],md:['A','C#','E','G#']},
+      {grau:'ii', nome:'Bm7',  me:['B'],md:['B','D','F#','A']},
+      {grau:'iii',nome:'C#m7', me:['C#'],md:['C#','E','G#','B']},
+      {grau:'IV', nome:'Dmaj7',me:['D'],md:['D','F#','A','C#']},
+      {grau:'V',  nome:'E7',   me:['E'],md:['E','G#','B','D']},
+      {grau:'vi', nome:'F#m7', me:['F#'],md:['F#','A','C#','E']},
+      {grau:'vii',nome:'G#m7b5',me:['G#'],md:['G#','B','D','F#']},
+    ],
+    musica:{nome:'Someone Like You',artista:'Adele',prog:['A','E','F#m','D'],labels:['I','V','vi','IV']},
+    dica:'3 pretas: C#, F#, G#. Tom favorito do pop!'
+  },
+  E: {
+    nome:'E maior',pretas:4,
+    escala:['E','F#','G#','A','B','C#','D#'],
+    campo:[
+      {grau:'I',  nome:'Emaj7',me:['E'],md:['E','G#','B','D#']},
+      {grau:'ii', nome:'F#m7', me:['F#'],md:['F#','A','C#','E']},
+      {grau:'iii',nome:'G#m7', me:['G#'],md:['G#','B','D#','F#']},
+      {grau:'IV', nome:'Amaj7',me:['A'],md:['A','C#','E','G#']},
+      {grau:'V',  nome:'B7',   me:['B'],md:['B','D#','F#','A']},
+      {grau:'vi', nome:'C#m7', me:['C#'],md:['C#','E','G#','B']},
+      {grau:'vii',nome:'D#m7b5',me:['D#'],md:['D#','F#','A','C#']},
+    ],
+    musica:{nome:'Im Not The Only One',artista:'Sam Smith (original)',prog:['E','B','C#m','A'],labels:['I','V','vi','IV']},
+    dica:'4 pretas: F#, G#, C#, D#. Tom original do Sam Smith!'
+  },
+  Bb: {
+    nome:'Bb maior',pretas:2,
+    escala:['Bb','C','D','Eb','F','G','A'],
+    campo:[
+      {grau:'I',  nome:'Bbmaj7',me:['Bb'],md:['Bb','D','F','A']},
+      {grau:'ii', nome:'Cm7',   me:['C'],md:['C','Eb','G','Bb']},
+      {grau:'iii',nome:'Dm7',   me:['D'],md:['D','F','A','C']},
+      {grau:'IV', nome:'Ebmaj7',me:['Eb'],md:['Eb','G','Bb','D']},
+      {grau:'V',  nome:'F7',    me:['F'],md:['F','A','C','Eb']},
+      {grau:'vi', nome:'Gm7',   me:['G'],md:['G','Bb','D','F']},
+      {grau:'vii',nome:'Am7b5', me:['A'],md:['A','C','Eb','G']},
+    ],
+    musica:{nome:'Fly Me To The Moon',artista:'Frank Sinatra',prog:['Bb','Gm','Cm','F'],labels:['I','vi','ii','V']},
+    dica:'2 pretas: Bb e Eb. Tom muito usado no jazz!'
+  },
+  Eb: {
+    nome:'Eb maior',pretas:3,
+    escala:['Eb','F','G','Ab','Bb','C','D'],
+    campo:[
+      {grau:'I',  nome:'Ebmaj7',me:['Eb'],md:['Eb','G','Bb','D']},
+      {grau:'ii', nome:'Fm7',   me:['F'],md:['F','Ab','C','Eb']},
+      {grau:'iii',nome:'Gm7',   me:['G'],md:['G','Bb','D','F']},
+      {grau:'IV', nome:'Abmaj7',me:['Ab'],md:['Ab','C','Eb','G']},
+      {grau:'V',  nome:'Bb7',   me:['Bb'],md:['Bb','D','F','Ab']},
+      {grau:'vi', nome:'Cm7',   me:['C'],md:['C','Eb','G','Bb']},
+      {grau:'vii',nome:'Dm7b5', me:['D'],md:['D','F','Ab','C']},
+    ],
+    musica:{nome:'Autumn Leaves',artista:'Jazz Standard',prog:['Cm','Fm','Bb','Eb'],labels:['vi','ii','V','I']},
+    dica:'3 pretas: Eb, Ab, Bb. Tom favorito do jazz!'
+  },
+  Ab: {
+    nome:'Ab maior',pretas:4,
+    escala:['Ab','Bb','C','Db','Eb','F','G'],
+    campo:[
+      {grau:'I',  nome:'Abmaj7',me:['Ab'],md:['Ab','C','Eb','G']},
+      {grau:'ii', nome:'Bbm7',  me:['Bb'],md:['Bb','Db','F','Ab']},
+      {grau:'iii',nome:'Cm7',   me:['C'],md:['C','Eb','G','Bb']},
+      {grau:'IV', nome:'Dbmaj7',me:['Db'],md:['Db','F','Ab','C']},
+      {grau:'V',  nome:'Eb7',   me:['Eb'],md:['Eb','G','Bb','Db']},
+      {grau:'vi', nome:'Fm7',   me:['F'],md:['F','Ab','C','Eb']},
+      {grau:'vii',nome:'Gm7b5', me:['G'],md:['G','Bb','Db','F']},
+    ],
+    musica:{nome:'Im Not The Only One',artista:'Sam Smith (tom original Ab)',prog:['Ab','Eb','Fm','Db'],labels:['I','V','vi','IV']},
+    dica:'4 pretas: Ab, Bb, Db, Eb. Tom original do Sam Smith!'
+  },
+  Db: {
+    nome:'Db maior',pretas:5,
+    escala:['Db','Eb','F','Gb','Ab','Bb','C'],
+    campo:[
+      {grau:'I',  nome:'Dbmaj7',me:['Db'],md:['Db','F','Ab','C']},
+      {grau:'ii', nome:'Ebm7',  me:['Eb'],md:['Eb','Gb','Bb','Db']},
+      {grau:'iii',nome:'Fm7',   me:['F'],md:['F','Ab','C','Eb']},
+      {grau:'IV', nome:'Gbmaj7',me:['Gb'],md:['Gb','Bb','Db','F']},
+      {grau:'V',  nome:'Ab7',   me:['Ab'],md:['Ab','C','Eb','Gb']},
+      {grau:'vi', nome:'Bbm7',  me:['Bb'],md:['Bb','Db','F','Ab']},
+      {grau:'vii',nome:'Cm7b5', me:['C'],md:['C','Eb','Gb','Bb']},
+    ],
+    musica:{nome:'Just The Two Of Us',artista:'Bill Withers',prog:['Dbmaj7','Fm7','Bb7','Ebm7','Ab7'],labels:['I','iii','V/ii','ii','V']},
+    dica:'5 pretas: Db, Eb, Gb, Ab, Bb. Tom do Just The Two Of Us!'
+  },
+  B: {
+    nome:'B maior',pretas:5,
+    escala:['B','C#','D#','E','F#','G#','A#'],
+    campo:[
+      {grau:'I',  nome:'Bmaj7', me:['B'],md:['B','D#','F#','A#']},
+      {grau:'ii', nome:'C#m7',  me:['C#'],md:['C#','E','G#','B']},
+      {grau:'iii',nome:'D#m7',  me:['D#'],md:['D#','F#','A#','C#']},
+      {grau:'IV', nome:'Emaj7', me:['E'],md:['E','G#','B','D#']},
+      {grau:'V',  nome:'F#7',   me:['F#'],md:['F#','A#','C#','E']},
+      {grau:'vi', nome:'G#m7',  me:['G#'],md:['G#','B','D#','F#']},
+      {grau:'vii',nome:'A#m7b5',me:['A#'],md:['A#','C#','E','G#']},
+    ],
+    musica:{nome:'Billie Jean',artista:'Michael Jackson',prog:['B','C#m','F#','B'],labels:['I','ii','V','I']},
+    dica:'5 pretas: C#, D#, F#, G#, A#. Tom avançado!'
+  },
+  'F#': {
+    nome:'F# maior',pretas:6,
+    escala:['F#','G#','A#','B','C#','D#','F'],
+    campo:[
+      {grau:'I',  nome:'F#maj7',me:['F#'],md:['F#','A#','C#','F']},
+      {grau:'ii', nome:'G#m7',  me:['G#'],md:['G#','B','D#','F#']},
+      {grau:'iii',nome:'A#m7',  me:['A#'],md:['A#','C#','F','G#']},
+      {grau:'IV', nome:'Bmaj7', me:['B'],md:['B','D#','F#','A#']},
+      {grau:'V',  nome:'C#7',   me:['C#'],md:['C#','F','G#','B']},
+      {grau:'vi', nome:'D#m7',  me:['D#'],md:['D#','F#','A#','C#']},
+      {grau:'vii',nome:'Fm7b5', me:['F'],md:['F','G#','B','D#']},
+    ],
+    musica:{nome:'Black Or White',artista:'Michael Jackson',prog:['F#','C#','D#m','B'],labels:['I','V','vi','IV']},
+    dica:'O mais difícil — 6 pretas! Domine os outros antes.'
+  },
 };
 
-// ===== INTERACTIONS =====
-function showChord12(name){buildKb('kb-blues12',BLUES12[name]||{});}
-function showJazzChord(name,el){document.querySelectorAll('#block-3 .chord-card').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');buildKb('kb-jazz',JAZZ_CH[name]||{});}
-function showSoulChord(name,el){if(el&&el.classList){document.querySelectorAll('#block-4 .chord-card').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');}buildKb('kb-soul',SOUL_CH[name]||{});}
-function showGospelChord(name,el){document.querySelectorAll('#block-5 .chord-card').forEach(c=>c.classList.remove('selected'));if(el)el.classList.add('selected');buildKb('kb-gospel',GOSPEL_CH[name]||{});}
-function showGWVoicing(name,el){document.querySelectorAll('#block-5 .chord-card').forEach(c=>c.classList.remove('selected'));if(el)el.classList.add('selected');buildKb('kb-gw',GW_CH[name]||{});const lbl=document.getElementById('gw-label');if(lbl)lbl.textContent=GW_DESC[name]||'';}
-function selectScale(key,el){document.querySelectorAll('#block-1 .chord-card').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');buildKb('kb-blues',BLUES_SC[key]||{});}
+const KEY_ORDER=['C','G','F','D','A','E','Bb','Eb','Ab','Db','B','F#'];
+let curKey='C', curStep='escala';
+let pEscala=false,iEscala=null,bpmEscala=70,escalaIdx=0,escalaDir=1;
+let pCampo=false,iCampo=null,campoIdx=0;
+let p251=false,i251=null,bpm251=60,idx251=0;
+let pMusica=false,iMusica=null,bpmMusica=70,idxMusica=0;
 
-// ===== PENTATÔNICAS =====
-const PM={C:['C','D','E','G','A'],G:['G','A','B','D','E'],D:['D','E','F#','A','B'],A:['A','B','C#','E','F#'],E:['E','F#','G#','B','C#'],B:['B','C#','D#','F#','G#'],'F#':['F#','G#','A#','C#','D#'],Db:['C#','D#','F','G#','A#'],Ab:['G#','A#','C','D#','F'],Eb:['D#','F','G','A#','C'],Bb:['A#','C','D','F','G'],F:['F','G','A','C','D']};
-const Pm={Am:['A','C','D','E','G'],Em:['E','G','A','B','D'],Bm:['B','D','E','F#','A'],'F#m':['F#','A','B','C#','E'],'C#m':['C#','E','F#','G#','B'],'G#m':['G#','B','C#','D#','F#'],'D#m':['D#','F#','G#','A#','C#'],Bbm:['A#','C#','D#','F','G#'],Fm:['F','G#','A#','C','D#'],Cm:['C','D#','F','G','A#'],Gm:['G','A#','C','D','F'],Dm:['D','F','G','A','C']};
-function showPenta(key,type){const notes=type==='major'?PM[key]:Pm[key];const color=type==='major'?'yellow':'purple';const hl={};notes.forEach((n,i)=>{hl[n]={color:i===0?'red':color};});buildKb('kb-penta',hl);const lbl=document.getElementById('penta-label');if(lbl)lbl.textContent=`${key} ${type==='major'?'Maior':'Menor'}: ${notes.join(' — ')}`;document.querySelectorAll('#block-7 .chord-card').forEach(c=>c.classList.remove('selected'));document.getElementById('pb-'+key+type)?.classList.add('selected');}
-function buildPenta(){const mr=document.getElementById('penta-major-row');const nr=document.getElementById('penta-minor-row');if(!mr||!nr)return;Object.entries(PM).forEach(([k,n])=>{const c=document.createElement('div');c.className='chord-card';c.id='pb-'+k+'major';c.innerHTML=`<div class="chord-name" style="color:#4a9eff">${k}</div><div class="chord-notes">${n.join(' · ')}</div>`;c.onclick=()=>showPenta(k,'major');mr.appendChild(c);});Object.entries(Pm).forEach(([k,n])=>{const c=document.createElement('div');c.className='chord-card';c.id='pb-'+k+'minor';c.innerHTML=`<div class="chord-name" style="color:#a78bfa">${k}</div><div class="chord-notes">${n.join(' · ')}</div>`;c.onclick=()=>showPenta(k,'minor');nr.appendChild(c);});}
+// ===========================
+// BUILD KEY GRID
+// ===========================
+function buildKeyGrid(){
+  const grid=document.getElementById('key-grid');
+  grid.innerHTML='';
+  KEY_ORDER.forEach(k=>{
+    const h=HARMONIAS[k];
+    const btn=document.createElement('button');
+    btn.className='key-btn'+(k===curKey?' on':'');
+    btn.innerHTML=k+'<span class="kd">'+h.pretas+(h.pretas===1?' preta':' pretas')+'</span>';
+    btn.onclick=()=>selectKey(k);
+    grid.appendChild(btn);
+  });
+}
 
-// ===== TIMER =====
-let gSec=0,gRun=false,gInt=null;
-function toggleGlobalTimer(){if(gRun){clearInterval(gInt);gRun=false;document.getElementById('globalStartBtn').textContent='CONTINUAR';}else{gRun=true;document.getElementById('globalStartBtn').textContent='PAUSAR';gInt=setInterval(()=>{gSec++;const m=String(Math.floor(gSec/60)).padStart(2,'0'),s=String(gSec%60).padStart(2,'0');document.getElementById('globalTimer').textContent=m+':'+s;document.getElementById('timerLabel').textContent=Math.min(100,Math.round(gSec/3000*100))+'% do treino — '+m+':'+s+' em andamento';},1000);}}
-function resetGlobalTimer(){clearInterval(gInt);gRun=false;gSec=0;document.getElementById('globalTimer').textContent='00:00';document.getElementById('globalStartBtn').textContent='INICIAR';document.getElementById('timerLabel').textContent='Pronto para começar';}
+function selectKey(k){
+  curKey=k;
+  document.querySelectorAll('.key-btn').forEach((b,i)=>b.classList.toggle('on',KEY_ORDER[i]===k));
+  stopAll();
+  updateAll();
+}
 
-// ===== METRO =====
-const metros={};
-function toggleMetro(id,bpm){if(metros[id]){clearInterval(metros[id]);delete metros[id];const c=document.getElementById(id);if(c)c.innerHTML='';return;}const c=document.getElementById(id);if(!c)return;c.innerHTML='';for(let i=0;i<4;i++){const d=document.createElement('div');d.className='beat-dot'+(i===0?' accent':'');c.appendChild(d);}let beat=0;metros[id]=setInterval(()=>{const dots=document.getElementById(id)?.querySelectorAll('.beat-dot');if(!dots)return;dots.forEach((d,i)=>{d.classList.remove('on');d.className='beat-dot'+(i===0?' accent':'');});dots[beat]?.classList.add('on');beat=(beat+1)%4;},Math.round(60000/bpm));}
+function updateAll(){
+  const h=HARMONIAS[curKey];
+  // Escala
+  document.getElementById('escala-title').textContent='Escala de '+curKey+' maior';
+  document.getElementById('escala-sub').textContent=h.escala.join(' — ');
+  document.getElementById('escala-tip').textContent='💡 '+h.dica;
+  const scHl={};
+  h.escala.forEach((n,i)=>{scHl[n]={color:i===0?'yellow':'teal'};});
+  buildKb('kb-escala',scHl);buildKb('kb-escala-anim',scHl);
+  document.getElementById('escala-status').textContent='Clique em animar';
 
-// ===== BLOCKS =====
-const BLOCKS=[{label:'01 Aquecimento'},{label:'02 Blues Scale'},{label:'03 12 Compassos'},{label:'04 2-5-1 Jazz'},{label:'05 Soul Groove'},{label:'06 Gospel'},{label:'07 Melismas'},{label:'08 Pentatônicas'},{label:'🎷 Parker'}];
-const done=new Array(BLOCKS.length).fill(false);
-function buildProgress(){const row=document.getElementById('progressRow');row.innerHTML='';BLOCKS.forEach((b,i)=>{const p=document.createElement('div');p.className='pill'+(done[i]?' done':'');p.textContent=(done[i]?'✓ ':'')+b.label;p.onclick=()=>toggleBlock(i);row.appendChild(p);});}
-function toggleBlock(i){const body=document.getElementById('body-'+i);const isOpen=body?.classList.contains('open');document.querySelectorAll('.block-body').forEach(b=>b.classList.remove('open'));document.querySelectorAll('.exercise-block').forEach(b=>b.classList.remove('active-block'));if(!isOpen&&body){body.classList.add('open');document.getElementById('block-'+i)?.classList.add('active-block');}}
-function markDone(i){done[i]=true;const btn=document.getElementById('done-'+i);if(btn){btn.classList.add('done');btn.textContent='✓ CONCLUÍDO';}document.getElementById('block-'+i)?.classList.add('done-block');buildProgress();if(i<BLOCKS.length-1)setTimeout(()=>toggleBlock(i+1),300);}
+  // Campo
+  document.getElementById('campo-title').textContent='Campo Harmônico de '+curKey;
+  buildCampoGrid();
+  buildKb('kb-campo',mkHl(h.campo[0].me,h.campo[0].md));
+  buildKb('kb-campo-anim',mkHl(h.campo[0].me,h.campo[0].md));
+  document.getElementById('campo-label').textContent=h.campo[0].nome+' — I grau';
+  document.getElementById('campo-anim-status').textContent='Clique em animar';
 
-// ===== INIT =====
-buildProgress();buildPenta();
-buildKb('kb-chromatic',{C:{color:'yellow',finger:'1'},'C#':{color:'yellow',finger:'1'},D:{color:'yellow',finger:'2'},'D#':{color:'yellow',finger:'2'},E:{color:'yellow',finger:'3'},F:{color:'yellow',finger:'1'},'F#':{color:'yellow',finger:'1'},G:{color:'yellow',finger:'2'},'G#':{color:'yellow',finger:'2'},A:{color:'yellow',finger:'3'},'A#':{color:'yellow',finger:'3'},B:{color:'yellow',finger:'4'}});
-buildKb('kb-blues',BLUES_SC['blues-f']);
-buildKb('kb-blues12',BLUES12['F7']);
-buildKb('kb-jazz',JAZZ_CH['Dm7']);
-buildKb('kb-soul',SOUL_CH['Em7']);
-buildKb('kb-gospel',GOSPEL_CH['Gsus4']);
-buildKb('kb-gw',GW_CH['Cmaj9']);
-document.getElementById('gw-label').textContent=GW_DESC['Cmaj9'];
-buildKb('kb-mel1',{me:['C'],md:['C','E','G','A']});
-buildKb('kb-mel2',{me:['B'],md:['C','D','Ab','G']});
-buildKb('kb-mel3',{me:['C'],md:['C','E','G','B','D']});
-buildKb('kb-parker',BLUES12['F7']);
-showPenta('C','major');
-toggleBlock(0);
+  // 2-5-1
+  const ii=h.campo[1],V=h.campo[4],I=h.campo[0];
+  document.getElementById('v251-title').textContent='2-5-1 em '+curKey;
+  document.getElementById('v251-sub').textContent=ii.nome+' → '+V.nome+' → '+I.nome;
+  build251Chords(ii,V,I);
+  buildKb('kb-251',mkHl(ii.me,ii.md));
+  buildKb('kb-251-anim',mkHl(ii.me,ii.md));
+  document.getElementById('v251-status').textContent='Clique em animar';
+
+  // Música
+  const m=h.musica;
+  document.getElementById('musica-title').textContent='Música em '+curKey;
+  document.getElementById('musica-sub').textContent=m.nome+' — '+m.artista;
+  document.getElementById('musica-desc').innerHTML='Use essa música para praticar o campo de <strong>'+curKey+'</strong>. Toque os acordes em ordem, ME raiz + MD acorde.';
+  document.getElementById('mc-title').textContent=m.nome;
+  document.getElementById('mc-sub').textContent=m.artista+' · '+m.prog.join(' → ');
+  buildMusicaChords(m);
+  const firstChord=h.campo.find(c=>c.nome.startsWith(m.prog[0]))||h.campo[0];
+  buildKb('kb-musica',mkHl(firstChord.me,firstChord.md));
+  document.getElementById('musica-label').textContent=m.prog[0]+' — I grau';
+  document.getElementById('musica-anim-status').textContent='Clique em animar';
+  document.getElementById('musica-tip').textContent='💡 Coloca a música no Spotify e toca junto! Começa devagar.';
+}
+
+function buildCampoGrid(){
+  const grid=document.getElementById('campo-grid');
+  grid.innerHTML='';
+  const h=HARMONIAS[curKey];
+  h.campo.forEach((c,i)=>{
+    const cell=document.createElement('div');
+    cell.className='campo-cell'+(i===0?' on':'');
+    const color=i===1?'var(--red)':i===4?'var(--red)':i===0?'var(--green)':'var(--muted)';
+    cell.innerHTML=`<div class="cc-grau">${c.grau}</div><div class="cc-name" style="color:${color}">${c.nome}</div><div class="cc-notas">${c.md.join(' ')}</div>`;
+    cell.onclick=()=>{
+      document.querySelectorAll('.campo-cell').forEach(x=>x.classList.remove('on'));
+      cell.classList.add('on');
+      buildKb('kb-campo',mkHl(c.me,c.md));
+      document.getElementById('campo-label').textContent=c.nome+' — '+c.grau+' grau';
+    };
+    grid.appendChild(cell);
+  });
+}
+
+function build251Chords(ii,V,I){
+  const row=document.getElementById('v251-chords');
+  row.innerHTML='';
+  [[ii,'2º — tensão'],[V,'5º — dominante'],[I,'1º — resolução']].forEach(([c,desc],i)=>{
+    const btn=document.createElement('div');
+    btn.className='cb'+(i===0?' on':'');
+    btn.innerHTML=`<div class="cn" style="color:${i===2?'var(--green)':'var(--blue)'}">${c.nome}</div><div class="cv">${c.md.join(' — ')}</div><div class="cg">${desc}</div>`;
+    btn.onclick=()=>{
+      document.querySelectorAll('#v251-chords .cb').forEach(x=>x.classList.remove('on'));
+      btn.classList.add('on');
+      buildKb('kb-251',mkHl(c.me,c.md));
+    };
+    row.appendChild(btn);
+  });
+}
+
+function buildMusicaChords(m){
+  const row=document.getElementById('mc-chords');
+  row.innerHTML='';
+  const h=HARMONIAS[curKey];
+  m.prog.forEach((name,i)=>{
+    const chord=h.campo.find(c=>c.nome.startsWith(name))||{me:[name],md:[name],nome:name};
+    const div=document.createElement('div');
+    div.className='pi'+(i===0?' playing':'');
+    div.innerHTML=name+'<span class="pg">'+m.labels[i]+'</span>';
+    div.onclick=()=>{
+      document.querySelectorAll('.pi').forEach(x=>x.classList.remove('playing'));
+      div.classList.add('playing');
+      buildKb('kb-musica',mkHl(chord.me,chord.md));
+      document.getElementById('musica-label').textContent=name+' — '+m.labels[i]+' grau';
+    };
+    row.appendChild(div);
+  });
+}
+
+// ===========================
+// STEP NAVIGATION
+// ===========================
+function showStep(step,el){
+  curStep=step;
+  document.querySelectorAll('.step-btn').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  ['escala','campo','251','musica'].forEach(s=>{
+    document.getElementById('step-'+s).style.display=s===step?'block':'none';
+  });
+  stopAll();
+}
+
+// ===========================
+// ANIMAÇÕES
+// ===========================
+function toggleEscala(){
+  pEscala=!pEscala;
+  const btn=document.getElementById('play-escala');
+  if(pEscala){
+    btn.textContent='⏹ Parar';btn.classList.add('btn-stop');btn.classList.remove('btn-play');
+    escalaIdx=0;escalaDir=1;tickEscala();
+    iEscala=setInterval(tickEscala,Math.round(60000/bpmEscala));
+  }else{
+    btn.textContent='▶ Animar';btn.classList.remove('btn-stop');btn.classList.add('btn-play');
+    clearInterval(iEscala);
+  }
+}
+function tickEscala(){
+  const notes=HARMONIAS[curKey].escala;
+  const hl={};
+  notes.forEach((n,i)=>{hl[n]={color:i===escalaIdx?'yellow':'teal'};});
+  buildKb('kb-escala-anim',hl);
+  document.getElementById('escala-status').textContent='→ '+notes[escalaIdx]+(escalaIdx===0?' (tônica)':'');
+  escalaIdx+=escalaDir;
+  if(escalaIdx>=notes.length){escalaDir=-1;escalaIdx=notes.length-2;}
+  else if(escalaIdx<0){escalaDir=1;escalaIdx=1;}
+}
+
+function toggleCampo(){
+  pCampo=!pCampo;
+  const btn=document.getElementById('play-campo');
+  if(pCampo){
+    btn.textContent='⏹ Parar';btn.classList.add('btn-stop');btn.classList.remove('btn-play');
+    campoIdx=0;tickCampo();iCampo=setInterval(tickCampo,900);
+  }else{
+    btn.textContent='▶ Animar';btn.classList.remove('btn-stop');btn.classList.add('btn-play');
+    clearInterval(iCampo);
+  }
+}
+function tickCampo(){
+  const c=HARMONIAS[curKey].campo[campoIdx];
+  buildKb('kb-campo-anim',mkHl(c.me,c.md));
+  document.getElementById('campo-anim-status').textContent=c.grau+': '+c.nome+' — '+c.md.join(' ');
+  document.querySelectorAll('.campo-cell').forEach((x,i)=>x.classList.toggle('on',i===campoIdx));
+  campoIdx=(campoIdx+1)%7;
+}
+
+function toggle251(){
+  p251=!p251;
+  const btn=document.getElementById('play-251');
+  if(p251){
+    btn.textContent='⏹ Parar';btn.classList.add('btn-stop');btn.classList.remove('btn-play');
+    idx251=0;tick251();i251=setInterval(tick251,Math.round(60000/bpm251)*2);
+  }else{
+    btn.textContent='▶ Animar';btn.classList.remove('btn-stop');btn.classList.add('btn-play');
+    clearInterval(i251);
+  }
+}
+function tick251(){
+  const h=HARMONIAS[curKey];
+  const seq=[h.campo[1],h.campo[4],h.campo[0]];
+  const c=seq[idx251];
+  buildKb('kb-251-anim',mkHl(c.me,c.md));
+  const labels=['2º grau — tensão','5º grau — dominante','1º grau — RESOLUÇÃO ✓'];
+  document.getElementById('v251-status').textContent=c.nome+' — '+labels[idx251];
+  document.querySelectorAll('#v251-chords .cb').forEach((x,i)=>x.classList.toggle('on',i===idx251));
+  idx251=(idx251+1)%3;
+}
+
+function toggleMusica(){
+  pMusica=!pMusica;
+  const btn=document.getElementById('play-musica');
+  if(pMusica){
+    btn.textContent='⏹ Parar';btn.classList.add('btn-stop');btn.classList.remove('btn-play');
+    idxMusica=0;tickMusica();iMusica=setInterval(tickMusica,Math.round(60000/bpmMusica)*2);
+  }else{
+    btn.textContent='▶ Animar';btn.classList.remove('btn-stop');btn.classList.add('btn-play');
+    clearInterval(iMusica);
+  }
+}
+function tickMusica(){
+  const m=HARMONIAS[curKey].musica;
+  const name=m.prog[idxMusica%m.prog.length];
+  const chord=HARMONIAS[curKey].campo.find(c=>c.nome.startsWith(name))||{me:[name],md:[name]};
+  buildKb('kb-musica-anim',mkHl(chord.me,chord.md));
+  document.getElementById('musica-anim-status').textContent=name+' — '+m.labels[idxMusica%m.labels.length];
+  document.querySelectorAll('.pi').forEach((x,i)=>x.classList.toggle('playing',i===idxMusica%m.prog.length));
+  idxMusica++;
+}
+
+function stopAll(){
+  [pEscala,pCampo,p251,pMusica].forEach((_,i)=>{});
+  if(pEscala){pEscala=false;clearInterval(iEscala);const b=document.getElementById('play-escala');b.textContent='▶ Animar';b.classList.remove('btn-stop');b.classList.add('btn-play');}
+  if(pCampo){pCampo=false;clearInterval(iCampo);const b=document.getElementById('play-campo');b.textContent='▶ Animar';b.classList.remove('btn-stop');b.classList.add('btn-play');}
+  if(p251){p251=false;clearInterval(i251);const b=document.getElementById('play-251');b.textContent='▶ Animar';b.classList.remove('btn-stop');b.classList.add('btn-play');}
+  if(pMusica){pMusica=false;clearInterval(iMusica);const b=document.getElementById('play-musica');b.textContent='▶ Animar';b.classList.remove('btn-stop');b.classList.add('btn-play');}
+}
+
+// ===========================
+// SECTION NAV
+// ===========================
+function showSection(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  event.target.classList.add('active');
+  stopAll();
+}
+
+// ===========================
+// BLUES BLOCKS (inline)
+// ===========================
+function buildBluesSection(){
+  const cont=document.getElementById('blues-blocks');
+  cont.innerHTML=`
+  <div class="block active">
+    <div class="block-head" onclick="toggleBlock(this)">
+      <div class="block-num" style="color:var(--teal)">01</div>
+      <div class="block-info"><h3>Aquecimento</h3><span>5 MIN — Postura + cromática</span></div>
+      <span class="tag" style="background:#4ecdc422;color:#4ecdc4">WARM UP</span>
+    </div>
+    <div class="block-body open">
+      <div class="desc"><strong>Antes de tocar</strong> — 5 minutos evitam lesão.<br><br>
+      1. Sacuda os braços soltos 10x<br>2. Massageie cada dedo 5 segundos<br>
+      3. Toque a escala cromática devagar — C C# D D# E F F# G G# A A# B C</div>
+      <div class="kb-wrap"><div class="kb" id="kb-chrom"></div></div>
+      <div class="legend"><div class="leg"><div class="leg-dot" style="background:var(--yellow)"></div> Toque em ordem</div></div>
+      <div class="tip">💡 Cruza o polegar sob o 3º dedo em E→F.</div>
+      <button class="done-btn" onclick="this.classList.add('done');this.textContent='✓ CONCLUÍDO'">✓ FEITO</button>
+    </div>
+  </div>
+  <div class="block">
+    <div class="block-head" onclick="toggleBlock(this)">
+      <div class="block-num" style="color:var(--teal)">02</div>
+      <div class="block-info"><h3>Escala Blues em Fá</h3><span>8 MIN — F Ab Bb B C Eb</span></div>
+      <span class="tag" style="background:#4ecdc422;color:#4ecdc4">BLUES</span>
+    </div>
+    <div class="block-body">
+      <div class="desc">A <strong>escala blues</strong> é a ferramenta de improviso. O <strong>B natural</strong> é a "blue note" — cria tensão.</div>
+      <div class="kb-wrap"><div class="kb" id="kb-blues-f"></div></div>
+      <div class="legend">
+        <div class="leg"><div class="leg-dot" style="background:var(--teal)"></div> Escala</div>
+        <div class="leg"><div class="leg-dot" style="background:var(--red)"></div> Blue note</div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Animação</div>
+        <div class="kb-wrap"><div class="kb" id="kb-blues-anim"></div></div>
+        <div class="status" id="blues-status">Clique em animar</div>
+        <div class="btn-row" style="margin-top:8px;">
+          <button class="btn btn-play" id="play-blues" onclick="toggleBlues()">▶ Animar</button>
+          <div class="bpm-row"><span class="bpm-lbl">BPM</span><span class="bpm-val" style="color:var(--teal)" id="bpm-blues">70</span><input type="range" min="40" max="120" value="70" oninput="document.getElementById('bpm-blues').textContent=this.value;bpmBlues=+this.value;"></div>
+        </div>
+      </div>
+      <div class="tip">💡 Sobe e desce 3x lento. Depois improvise — toque qualquer nota da escala em qualquer ordem.</div>
+      <button class="done-btn" onclick="this.classList.add('done');this.textContent='✓ CONCLUÍDO'">✓ FEITO</button>
+    </div>
+  </div>
+  <div class="block">
+    <div class="block-head" onclick="toggleBlock(this)">
+      <div class="block-num" style="color:var(--teal)">03</div>
+      <div class="block-info"><h3>Shuffle — O Ritmo do Blues</h3><span>8 MIN — ME tum-ca · MD acorde</span></div>
+      <span class="tag" style="background:#4ecdc422;color:#4ecdc4">BLUES</span>
+    </div>
+    <div class="block-body">
+      <div class="desc">
+        <strong>ME</strong> faz o shuffle: <strong>TUM</strong> (F+C pesado) → <strong>ca</strong> (F+D leve) → TUM → ca...<br>
+        <strong>MD</strong> segura o acorde F7 parado em cima.
+      </div>
+      <div class="beat-row">
+        <div class="beat tum" id="sh0"><span class="bn">TUM</span><span class="bs">F+C</span></div>
+        <div class="beat ca"  id="sh1"><span class="bn">ca</span><span class="bs">F+D</span></div>
+        <div class="beat tum" id="sh2"><span class="bn">TUM</span><span class="bs">F+C</span></div>
+        <div class="beat ca"  id="sh3"><span class="bn">ca</span><span class="bs">F+D</span></div>
+      </div>
+      <div class="kb-wrap"><div class="kb" id="kb-shuffle"></div></div>
+      <div class="legend">
+        <div class="leg"><div class="leg-dot" style="background:var(--yellow)"></div> ME</div>
+        <div class="leg"><div class="leg-dot" style="background:var(--blue)"></div> MD — F7 parado</div>
+      </div>
+      <div class="status" id="shuffle-status">Clique em animar</div>
+      <div class="btn-row" style="margin-top:8px;">
+        <button class="btn btn-play" id="play-shuffle" onclick="toggleShuffle()">▶ Animar</button>
+        <div class="bpm-row"><span class="bpm-lbl">BPM</span><span class="bpm-val" style="color:var(--teal)" id="bpm-shuffle">70</span><input type="range" min="40" max="120" value="70" oninput="document.getElementById('bpm-shuffle').textContent=this.value;bpmShuffle=+this.value;"></div>
+      </div>
+      <div class="tip">💡 Primeiro só ME até sair automático. Depois adiciona MD. Por último junta as duas.</div>
+      <button class="done-btn" onclick="this.classList.add('done');this.textContent='✓ CONCLUÍDO'">✓ FEITO</button>
+    </div>
+  </div>`;
+
+  // init blues keyboards
+  setTimeout(()=>{
+    buildKb('kb-chrom',{C:{color:'yellow'},'C#':{color:'yellow'},D:{color:'yellow'},'D#':{color:'yellow'},E:{color:'yellow'},F:{color:'yellow'},'F#':{color:'yellow'},G:{color:'yellow'},'G#':{color:'yellow'},A:{color:'yellow'},'A#':{color:'yellow'},B:{color:'yellow'}});
+    buildKb('kb-blues-f',{F:{color:'teal'},'G#':{color:'teal'},'A#':{color:'teal'},B:{color:'red'},C:{color:'teal'},'D#':{color:'teal'}});
+    buildKb('kb-blues-anim',{F:{color:'teal'},'G#':{color:'teal'},'A#':{color:'teal'},B:{color:'red'},C:{color:'teal'},'D#':{color:'teal'}});
+    buildShuffleKb('kb-shuffle',['F','C']);
+  },100);
+}
+
+// Blues anim
+let pBlues=false,iBlues=null,bpmBlues=70,bluesIdx=0,bluesDir=1;
+const BLUES_NOTES=['F','G#','A#','B','C','D#'];
+function toggleBlues(){
+  pBlues=!pBlues;
+  const btn=document.getElementById('play-blues');
+  if(btn){
+    if(pBlues){btn.textContent='⏹ Parar';btn.classList.add('btn-stop');btn.classList.remove('btn-play');bluesIdx=0;bluesDir=1;tickBlues();iBlues=setInterval(tickBlues,Math.round(60000/bpmBlues));}
+    else{btn.textContent='▶ Animar';btn.classList.remove('btn-stop');btn.classList.add('btn-play');clearInterval(iBlues);}
+  }
+}
+function tickBlues(){
+  const hl={};BLUES_NOTES.forEach((n,i)=>{hl[n]={color:i===bluesIdx?(n==='B'?'red':'yellow'):(n==='B'?'red':'teal')};});
+  buildKb('kb-blues-anim',hl);
+  const st=document.getElementById('blues-status');if(st)st.textContent='→ '+BLUES_NOTES[bluesIdx]+(BLUES_NOTES[bluesIdx]==='B'?' ← Blue note!':'');
+  bluesIdx+=bluesDir;
+  if(bluesIdx>=BLUES_NOTES.length){bluesDir=-1;bluesIdx=BLUES_NOTES.length-2;}
+  else if(bluesIdx<0){bluesDir=1;bluesIdx=1;}
+}
+
+// Shuffle
+const MD_F7=['F','A','C','Eb'];
+const SH=[{id:'sh0',me:['F','C'],label:'TUM — ME: F+C + MD: F7'},{id:'sh1',me:['F','D'],label:'ca — ME: F+D + MD: F7'},{id:'sh2',me:['F','C'],label:'TUM — ME: F+C + MD: F7'},{id:'sh3',me:['F','D'],label:'ca — ME: F+D + MD: F7'}];
+let pShuffle=false,iShuffle=null,bpmShuffle=70,shBeat=0;
+function buildShuffleKb(id,me){const h={};me.forEach(n=>{h[n]={color:'yellow'};});MD_F7.forEach(n=>{if(!h[n])h[n]={color:'blue'};});buildKb(id,h);}
+function toggleShuffle(){
+  pShuffle=!pShuffle;
+  const btn=document.getElementById('play-shuffle');
+  if(btn){
+    if(pShuffle){btn.textContent='⏹ Parar';btn.classList.add('btn-stop');btn.classList.remove('btn-play');shBeat=0;tickShuffle();iShuffle=setInterval(tickShuffle,Math.round(60000/bpmShuffle));}
+    else{btn.textContent='▶ Animar';btn.classList.remove('btn-stop');btn.classList.add('btn-play');clearInterval(iShuffle);}
+  }
+}
+function tickShuffle(){
+  SH.forEach((b,i)=>{const el=document.getElementById(b.id);if(el)el.classList.toggle('active',i===shBeat);});
+  buildShuffleKb('kb-shuffle',SH[shBeat].me);
+  const st=document.getElementById('shuffle-status');if(st)st.textContent=SH[shBeat].label;
+  shBeat=(shBeat+1)%4;
+}
+
+// ===========================
+// BLOCK TOGGLE
+// ===========================
+function toggleBlock(head){
+  const body=head.nextElementSibling;
+  const block=head.parentElement;
+  const isOpen=body.classList.contains('open');
+  const parent=block.parentElement;
+  parent.querySelectorAll('.block-body').forEach(b=>b.classList.remove('open'));
+  parent.querySelectorAll('.block').forEach(b=>b.classList.remove('active'));
+  if(!isOpen){body.classList.add('open');block.classList.add('active');}
+}
+
+// ===========================
+// INIT
+// ===========================
+buildKeyGrid();
+updateAll();
+buildBluesSection();
 </script>
 </body>
 </html>
